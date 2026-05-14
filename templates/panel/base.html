@@ -1,0 +1,146 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block page_title %}Panel{% endblock %} — Cerveceros de Tecate</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/panel.css' %}">
+</head>
+<body class="panel-body">
+
+<div class="panel-wrapper">
+
+    {# ── SIDEBAR ───────────────────────────────── #}
+    <aside class="panel-sidebar" id="panelSidebar">
+        <div class="panel-brand">
+            <img src="{% static 'images/logo.png' %}" alt="Cerveceros" class="panel-brand-logo">
+            <div>
+                <div class="panel-brand-title">Cerveceros</div>
+                <div class="panel-brand-sub">Panel de Control</div>
+            </div>
+        </div>
+
+        <nav class="panel-nav">
+            <a href="{% url 'panel:dashboard' %}"
+               class="panel-nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                <span class="panel-nav-icon"><i class="fas fa-gauge"></i></span> Dashboard
+            </a>
+
+            <div class="panel-nav-section">INICIO</div>
+
+            <a href="{% url 'panel:hero_lista' %}"
+               class="panel-nav-link {% if 'hero' in request.resolver_match.url_name %}active{% endif %}">
+                <span class="panel-nav-icon"><i class="fas fa-image"></i></span> Hero Slides
+            </a>
+
+            <a href="{% url 'panel:patrocinadores_lista' %}"
+               class="panel-nav-link {% if 'patrocinador' in request.resolver_match.url_name %}active{% endif %}">
+                <span class="panel-nav-icon"><i class="fas fa-handshake"></i></span> Patrocinadores
+            </a>
+
+            <a href="{% url 'panel:faq_lista' %}"
+               class="panel-nav-link {% if 'faq' in request.resolver_match.url_name %}active{% endif %}">
+                <span class="panel-nav-icon"><i class="fas fa-circle-question"></i></span> FAQ / Acordeón
+            </a>
+
+            <div class="panel-nav-section">TIENDA</div>
+
+            <a href="{% url 'panel:categorias_lista' %}"
+               class="panel-nav-link {% if 'categoria' in request.resolver_match.url_name %}active{% endif %}">
+                <span class="panel-nav-icon"><i class="fas fa-folder-open"></i></span> Categorías
+            </a>
+
+            <a href="{% url 'panel:productos_lista' %}"
+               class="panel-nav-link {% if 'producto' in request.resolver_match.url_name %}active{% endif %}">
+                <span class="panel-nav-icon"><i class="fas fa-bag-shopping"></i></span> Productos
+            </a>
+
+            <div class="panel-nav-section">CONTENIDO</div>
+
+            <a href="{% url 'panel:noticias_lista' %}"
+               class="panel-nav-link {% if 'noticia' in request.resolver_match.url_name %}active{% endif %}">
+                <span class="panel-nav-icon"><i class="fas fa-newspaper"></i></span> Noticias
+            </a>
+
+            <a href="{% url 'panel:jugadores_lista' %}"
+               class="panel-nav-link {% if 'jugador' in request.resolver_match.url_name %}active{% endif %}">
+                <span class="panel-nav-icon"><i class="fas fa-users"></i></span> Jugadores
+            </a>
+
+            <div class="panel-nav-section">SITIO</div>
+
+            <a href="{% url 'equipo:inicio' %}" class="panel-nav-link" target="_blank" rel="noopener">
+                <span class="panel-nav-icon"><i class="fas fa-arrow-up-right-from-square"></i></span> Ver sitio web
+            </a>
+        </nav>
+    </aside>
+
+    {# ── MAIN ──────────────────────────────────── #}
+    <div class="panel-main" id="panelMain">
+
+        {# Top bar #}
+        <header class="panel-topbar">
+            <button class="panel-toggle-btn" id="sidebarToggle" aria-label="Toggle sidebar"><i class="fas fa-bars"></i></button>
+            <div class="panel-topbar-right">
+                <span class="panel-topbar-user">Hola, <strong>{{ request.user.username }}</strong></span>
+                <a href="{% url 'panel:logout' %}" class="panel-logout-link"><i class="fas fa-right-from-bracket"></i> Salir</a>
+            </div>
+        </header>
+
+        {# Messages #}
+        {% if messages %}
+        <div class="panel-messages">
+            {% for msg in messages %}
+            <div class="panel-message panel-message-{{ msg.tags }}">{{ msg }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {# Page content #}
+        <main class="panel-content">
+            {% block content %}{% endblock %}
+        </main>
+
+    </div>{# /panel-main #}
+</div>{# /panel-wrapper #}
+
+<script>
+(function () {
+    const toggle = document.getElementById('sidebarToggle');
+    const sidebar = document.getElementById('panelSidebar');
+    const main = document.getElementById('panelMain');
+
+    // Mobile: toggle open class; Desktop: toggle collapsed
+    toggle.addEventListener('click', function () {
+        if (window.innerWidth <= 900) {
+            sidebar.classList.toggle('open');
+        } else {
+            sidebar.classList.toggle('collapsed');
+            main.style.marginLeft = sidebar.classList.contains('collapsed') ? '0' : '';
+        }
+    });
+
+    // Close sidebar when clicking outside on mobile
+    document.addEventListener('click', function (e) {
+        if (window.innerWidth <= 900 && !sidebar.contains(e.target) && e.target !== toggle) {
+            sidebar.classList.remove('open');
+        }
+    });
+
+    // Auto-dismiss messages after 4 seconds
+    setTimeout(function () {
+        document.querySelectorAll('.panel-message').forEach(function (el) {
+            el.style.transition = 'opacity 0.4s';
+            el.style.opacity = '0';
+            setTimeout(function () { el.remove(); }, 400);
+        });
+    }, 4000);
+})();
+</script>
+
+</body>
+</html>

@@ -1,12 +1,13 @@
 {% extends 'equipo/base.html' %}
+{% load i18n %}
 
 {% block title %}Tabla de Posiciones - Cerveceros de Tecate{% endblock %}
 
 {% block content %}
 <div class="hero">
     <div class="hero-content">
-        <h1>Tabla de Posiciones</h1>
-        <p>Clasificación de la temporada</p>
+        <h1>{% trans "Tabla de Posiciones" %}</h1>
+        <p>{% trans "Clasificación de la temporada" %}</p>
     </div>
 </div>
 
@@ -15,15 +16,15 @@
         <table>
             <thead>
                 <tr>
-                    <th>Posición</th>
-                    <th>Equipo</th>
+                    <th>{% trans "Posición" %}</th>
+                    <th>{% trans "Equipo" %}</th>
                     <th>JJ</th>
                     <th>G</th>
                     <th>P</th>
                     <th>PCT</th>
                     <th>CF</th>
                     <th>CC</th>
-                    <th>Racha</th>
+                    <th>{% trans "Racha" %}</th>
                 </tr>
             </thead>
             <tbody>
@@ -41,7 +42,7 @@
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="9" style="text-align: center;">No hay datos de la tabla de posiciones.</td>
+                    <td colspan="9" style="text-align: center;">{% trans "No hay datos de la tabla de posiciones." %}</td>
                 </tr>
                 {% endfor %}
             </tbody>

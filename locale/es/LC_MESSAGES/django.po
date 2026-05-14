@@ -1,0 +1,397 @@
+# Spanish translations for Cerveceros de Tecate
+# This file is distributed under the same license as the Cerveceros de Tecate package.
+#
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: es\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# Top bar
+msgid "COMPRAR BOLETOS"
+msgstr ""
+
+msgid "INICIO"
+msgstr ""
+
+msgid "NOTICIAS"
+msgstr ""
+
+msgid "SÍGUENOS:"
+msgstr ""
+
+# Navbar
+msgid "HOME"
+msgstr ""
+
+msgid "EQUIPO"
+msgstr ""
+
+msgid "CALENDARIO"
+msgstr ""
+
+msgid "RESULTADOS"
+msgstr ""
+
+msgid "BOLETOS"
+msgstr ""
+
+# Footer brand
+msgid "Liga Mexicana del Pacífico · Temporada 2026"
+msgstr ""
+
+# Footer brand nav
+msgid "Inicio"
+msgstr ""
+
+msgid "Equipo"
+msgstr ""
+
+msgid "Calendario"
+msgstr ""
+
+msgid "Resultados"
+msgstr ""
+
+msgid "Noticias"
+msgstr ""
+
+msgid "Boletos"
+msgstr ""
+
+# Footer about
+msgid "ACERCA DEL CLUB"
+msgstr ""
+
+msgid "Los Cerveceros de Tecate son el equipo de béisbol profesional de la ciudad de Tecate, Baja California. Orgullo de la región y miembros de la Liga Mexicana del Pacífico."
+msgstr ""
+
+# Footer navigation
+msgid "NAVEGACIÓN"
+msgstr ""
+
+msgid "Nuestro Equipo"
+msgstr ""
+
+msgid "Tabla de Posiciones"
+msgstr ""
+
+msgid "Boletería"
+msgstr ""
+
+# Footer fixtures
+msgid "PRÓXIMOS PARTIDOS"
+msgstr ""
+
+msgid "Vie 15 Mayo"
+msgstr ""
+
+msgid "LOCAL"
+msgstr ""
+
+msgid "vs. Toros de Tijuana"
+msgstr ""
+
+msgid "Estadio Cerveceros"
+msgstr ""
+
+msgid "Sáb 16 Mayo"
+msgstr ""
+
+msgid "vs. Mayos de Navojoa"
+msgstr ""
+
+msgid "Dom 17 Mayo"
+msgstr ""
+
+msgid "VISITA"
+msgstr ""
+
+msgid "vs. Yaquis de Obregón"
+msgstr ""
+
+msgid "Estadio Yaquis"
+msgstr ""
+
+msgid "Ver calendario completo →"
+msgstr ""
+
+# Footer instagram
+msgid "SÍGUENOS EN INSTAGRAM"
+msgstr ""
+
+# Footer copyright
+msgid "© 2026 Cerveceros de Tecate · Todos los derechos reservados"
+msgstr ""
+
+msgid "Privacidad"
+msgstr ""
+
+msgid "Términos de uso"
+msgstr ""
+
+msgid "Contacto"
+msgstr ""
+
+# inicio.html - Hero slides
+msgid "CERVECEROS DE TECATE 2026"
+msgstr ""
+
+msgid "LA TRADICIÓN"
+msgstr ""
+
+msgid "SE VIVE EN EL DIAMANTE"
+msgstr ""
+
+msgid "CONOCE AL EQUIPO"
+msgstr ""
+
+msgid "ORGULLO DE BAJA CALIFORNIA"
+msgstr ""
+
+msgid "MÁS QUE UN EQUIPO"
+msgstr ""
+
+msgid "UNA FAMILIA CERVECERA"
+msgstr ""
+
+msgid "VER CALENDARIO"
+msgstr ""
+
+msgid "ÚLTIMAS NOTICIAS"
+msgstr ""
+
+msgid "TEMPORADA 2026 EN MARCHA"
+msgstr ""
+
+msgid "VIVE LA EMOCIÓN"
+msgstr ""
+
+msgid "DEL BÉISBOL PROFESIONAL"
+msgstr ""
+
+msgid "VER RESULTADOS"
+msgstr ""
+
+msgid "TABLA DE POSICIONES"
+msgstr ""
+
+# inicio.html - Scores section
+msgid "LO QUE ESTÁ EN TENDENCIA"
+msgstr ""
+
+msgid "REVISA LOS MARCADORES"
+msgstr ""
+
+msgid "SEDE DEL PARTIDO"
+msgstr ""
+
+msgid "VER TRANSMISIÓN"
+msgstr ""
+
+# inicio.html - Next match section
+msgid "PRÓXIMO PARTIDO"
+msgstr ""
+
+msgid "DÍA"
+msgstr ""
+
+msgid "HORA"
+msgstr ""
+
+msgid "MINUTO"
+msgstr ""
+
+msgid "SEGUNDO"
+msgstr ""
+
+# inicio.html - Featured player
+msgid "DEFENSIVO 2ND"
+msgstr ""
+
+msgid "BREVE BIOGRAFÍA"
+msgstr ""
+
+msgid "VER PERFIL"
+msgstr ""
+
+# inicio.html - News grid
+msgid "TEMPORADA"
+msgstr ""
+
+msgid "2010'S: UNA DÉCADA"
+msgstr ""
+
+msgid "LEER MÁS"
+msgstr ""
+
+msgid "SATURDAY SPORCLE"
+msgstr ""
+
+msgid "SECOND BASE"
+msgstr ""
+
+msgid "D-BACKS SPRING TRAINING"
+msgstr ""
+
+# inicio.html - Store section
+msgid "LA HISTORIA DEL CLUB"
+msgstr ""
+
+msgid "TIENDA OFICIAL"
+msgstr ""
+
+msgid "OFERTA"
+msgstr ""
+
+msgid "NUEVO"
+msgstr ""
+
+msgid "AÑADIR AL CARRITO"
+msgstr ""
+
+msgid "AGOTADO"
+msgstr ""
+
+# inicio.html - Features banner
+msgid "EXPLORA LAS CARACTERÍSTICAS"
+msgstr ""
+
+msgid "LOREM IPSUM DOLOR SIT AMET ADIPIS"
+msgstr ""
+
+# inicio.html - Skills section
+msgid "RANKING CADA PARTIDO"
+msgstr ""
+
+# noticias.html
+msgid "Mantente al día con las últimas novedades del equipo"
+msgstr ""
+
+msgid "Leer más"
+msgstr ""
+
+msgid "No hay noticias disponibles en este momento."
+msgstr ""
+
+# calendario.html
+msgid "Calendario de Partidos"
+msgstr ""
+
+msgid "Todos los partidos de la temporada"
+msgstr ""
+
+msgid "Próximos Partidos"
+msgstr ""
+
+msgid "No hay partidos programados próximamente."
+msgstr ""
+
+msgid "Partidos Pasados"
+msgstr ""
+
+msgid "No hay partidos pasados registrados."
+msgstr ""
+
+# resultados.html
+msgid "Resultados de los partidos finalizados"
+msgstr ""
+
+msgid "No hay resultados disponibles en este momento."
+msgstr ""
+
+# boleteria.html
+msgid "Compra tus boletos para los próximos partidos"
+msgstr ""
+
+msgid "Partidos Disponibles"
+msgstr ""
+
+msgid "Ver Boletos Disponibles"
+msgstr ""
+
+msgid "No hay partidos con boletos disponibles en este momento."
+msgstr ""
+
+# nuestro_equipo.html
+msgid "Conoce a los jugadores de Cerveceros de Tecate"
+msgstr ""
+
+msgid "Ver Perfil"
+msgstr ""
+
+msgid "No hay jugadores registrados en este momento."
+msgstr ""
+
+# tabla_posiciones.html
+msgid "Clasificación de la temporada"
+msgstr ""
+
+msgid "Posición"
+msgstr ""
+
+msgid "Racha"
+msgstr ""
+
+msgid "No hay datos de la tabla de posiciones."
+msgstr ""
+
+# jugador_detalle.html
+msgid "Información del Jugador"
+msgstr ""
+
+msgid "Número:"
+msgstr ""
+
+msgid "Posición:"
+msgstr ""
+
+msgid "Fecha de Nacimiento:"
+msgstr ""
+
+msgid "Altura:"
+msgstr ""
+
+msgid "Peso:"
+msgstr ""
+
+msgid "Bateo:"
+msgstr ""
+
+msgid "Lanzamiento:"
+msgstr ""
+
+msgid "Biografía"
+msgstr ""
+
+msgid "Volver al Equipo"
+msgstr ""
+
+# partido_boletos.html
+msgid "Boletos Disponibles"
+msgstr ""
+
+msgid "Tipos de Boletos"
+msgstr ""
+
+msgid "Sección:"
+msgstr ""
+
+msgid "Disponibles:"
+msgstr ""
+
+msgid "Comprar"
+msgstr ""
+
+msgid "No hay boletos disponibles para este partido."
+msgstr ""
+
+msgid "Volver a Boletería"
+msgstr ""
+
+# noticia_detalle.html
+msgid "Volver a Noticias"
+msgstr ""
+
+# tabla_posiciones.html - table headers

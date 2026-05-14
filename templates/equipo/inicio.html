@@ -1,193 +1,179 @@
 {% extends 'equipo/base.html' %}
-{% load static %}
+{% load static i18n %}
 
 {% block title %}Inicio - Cerveceros de Tecate{% endblock %}
 
 {% block content %}
+
+{# ─── HERO SLIDER ─────────────────────────────────────────── #}
 <div class="hero" id="heroSlider">
+    {% if hero_slides %}
+        {% for slide in hero_slides %}
+        <div class="hero-slide {% if forloop.first %}active{% endif %}"
+             style="background-image: linear-gradient(to right, rgba(0,0,0,0.7), rgba(0,0,0,0.3)), url('{{ slide.imagen_bg }}');">
+            <div class="hero-content">
+                <p class="hero-subtitle">{{ slide.subtitulo }}</p>
+                <h1>{{ slide.titulo_linea1 }}{% if slide.titulo_linea2 %}<br>{{ slide.titulo_linea2 }}{% endif %}</h1>
+                <div class="hero-buttons">
+                    {% if slide.btn1_texto %}<a href="{{ slide.btn1_url }}" class="btn">{{ slide.btn1_texto }}</a>{% endif %}
+                    {% if slide.btn2_texto %}<a href="{{ slide.btn2_url }}" class="btn btn-secondary">{{ slide.btn2_texto }}</a>{% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
     <div class="hero-slide active" style="background-image: linear-gradient(to right, rgba(0,0,0,0.7), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1566577739112-5180d4bf9390?w=1920');">
         <div class="hero-content">
-            <p class="hero-subtitle lang-text" data-es="CERVECEROS DE TECATE 2026" data-en="TECATE BREWERS 2026">CERVECEROS DE TECATE 2026</p>
-            <h1 class="lang-text" data-es="LA TRADICIÓN<br>SE VIVE EN EL DIAMANTE" data-en="TRADITION LIVES<br>ON THE DIAMOND">LA TRADICIÓN<br>SE VIVE EN EL DIAMANTE</h1>
+            <p class="hero-subtitle">{% trans "CERVECEROS DE TECATE 2026" %}</p>
+            <h1>{% trans "LA TRADICIÓN" %}<br>{% trans "SE VIVE EN EL DIAMANTE" %}</h1>
             <div class="hero-buttons">
-                <a href="{% url 'equipo:nuestro_equipo' %}" class="btn lang-text" data-es="CONOCE AL EQUIPO" data-en="MEET THE TEAM">CONOCE AL EQUIPO</a>
-                <a href="{% url 'equipo:boleteria' %}" class="btn btn-secondary lang-text" data-es="COMPRAR BOLETOS" data-en="BUY TICKETS">COMPRAR BOLETOS</a>
+                <a href="{% url 'equipo:nuestro_equipo' %}" class="btn">{% trans "CONOCE AL EQUIPO" %}</a>
+                <a href="{% url 'equipo:boleteria' %}" class="btn btn-secondary">{% trans "COMPRAR BOLETOS" %}</a>
             </div>
         </div>
     </div>
-    
     <div class="hero-slide" style="background-image: linear-gradient(to right, rgba(0,0,0,0.7), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=1920');">
         <div class="hero-content">
-            <p class="hero-subtitle lang-text" data-es="ORGULLO DE BAJA CALIFORNIA" data-en="PRIDE OF BAJA CALIFORNIA">ORGULLO DE BAJA CALIFORNIA</p>
-            <h1 class="lang-text" data-es="MÁS QUE UN EQUIPO<br>UNA FAMILIA CERVECERA" data-en="MORE THAN A TEAM<br>A BREWER FAMILY">MÁS QUE UN EQUIPO<br>UNA FAMILIA CERVECERA</h1>
+            <p class="hero-subtitle">{% trans "ORGULLO DE BAJA CALIFORNIA" %}</p>
+            <h1>{% trans "MÁS QUE UN EQUIPO" %}<br>{% trans "UNA FAMILIA CERVECERA" %}</h1>
             <div class="hero-buttons">
-                <a href="{% url 'equipo:calendario' %}" class="btn lang-text" data-es="VER CALENDARIO" data-en="VIEW SCHEDULE">VER CALENDARIO</a>
-                <a href="{% url 'equipo:noticias' %}" class="btn btn-secondary lang-text" data-es="ÚLTIMAS NOTICIAS" data-en="LATEST NEWS">ÚLTIMAS NOTICIAS</a>
+                <a href="{% url 'equipo:calendario' %}" class="btn">{% trans "VER CALENDARIO" %}</a>
+                <a href="{% url 'equipo:noticias' %}" class="btn btn-secondary">{% trans "ÚLTIMAS NOTICIAS" %}</a>
             </div>
         </div>
     </div>
-    
     <div class="hero-slide" style="background-image: linear-gradient(to right, rgba(0,0,0,0.7), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=1920');">
         <div class="hero-content">
-            <p class="hero-subtitle lang-text" data-es="TEMPORADA 2026 EN MARCHA" data-en="2026 SEASON UNDERWAY">TEMPORADA 2026 EN MARCHA</p>
-            <h1 class="lang-text" data-es="VIVE LA EMOCIÓN<br>DEL BÉISBOL PROFESIONAL" data-en="EXPERIENCE PROFESSIONAL<br>BASEBALL EXCITEMENT">VIVE LA EMOCIÓN<br>DEL BÉISBOL PROFESIONAL</h1>
+            <p class="hero-subtitle">{% trans "TEMPORADA 2026 EN MARCHA" %}</p>
+            <h1>{% trans "VIVE LA EMOCIÓN" %}<br>{% trans "DEL BÉISBOL PROFESIONAL" %}</h1>
             <div class="hero-buttons">
-                <a href="{% url 'equipo:resultados' %}" class="btn lang-text" data-es="VER RESULTADOS" data-en="VIEW RESULTS">VER RESULTADOS</a>
-                <a href="{% url 'equipo:tabla_posiciones' %}" class="btn btn-secondary lang-text" data-es="TABLA DE POSICIONES" data-en="STANDINGS">TABLA DE POSICIONES</a>
+                <a href="{% url 'equipo:resultados' %}" class="btn">{% trans "VER RESULTADOS" %}</a>
+                <a href="{% url 'equipo:tabla_posiciones' %}" class="btn btn-secondary">{% trans "TABLA DE POSICIONES" %}</a>
             </div>
         </div>
     </div>
-    
-    <button class="hero-nav prev" onclick="changeSlide(-1)">‹</button>
-    <button class="hero-nav next" onclick="changeSlide(1)">›</button>
-    
+    {% endif %}
+
+    <button class="hero-nav prev" onclick="changeSlide(-1)">&#8249;</button>
+    <button class="hero-nav next" onclick="changeSlide(1)">&#8250;</button>
+
     <div class="hero-sponsors">
-        <div class="sponsor-logo" style="font-family: 'Bebas Neue', cursive; font-size: 2rem; color: white;">SPONSOR 1</div>
-        <div class="sponsor-logo" style="font-family: 'Bebas Neue', cursive; font-size: 2rem; color: white;">SPONSOR 2</div>
-        <div class="sponsor-logo" style="font-family: 'Bebas Neue', cursive; font-size: 2rem; color: white;">SPONSOR 3</div>
-        <div class="sponsor-logo" style="font-family: 'Bebas Neue', cursive; font-size: 2rem; color: white;">SPONSOR 4</div>
+        {% if patrocinadores %}
+            {% for p in patrocinadores %}
+            <div class="sponsor-logo">
+                {% if p.logo %}<img src="{{ p.logo.url }}" alt="{{ p.nombre }}" style="max-height:40px;">
+                {% else %}<span style="font-family:'Bebas Neue',cursive;font-size:2rem;color:white;">{{ p.nombre }}</span>{% endif %}
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="sponsor-logo" style="font-family:'Bebas Neue',cursive;font-size:2rem;color:white;">SPONSOR 1</div>
+            <div class="sponsor-logo" style="font-family:'Bebas Neue',cursive;font-size:2rem;color:white;">SPONSOR 2</div>
+            <div class="sponsor-logo" style="font-family:'Bebas Neue',cursive;font-size:2rem;color:white;">SPONSOR 3</div>
+            <div class="sponsor-logo" style="font-family:'Bebas Neue',cursive;font-size:2rem;color:white;">SPONSOR 4</div>
+        {% endif %}
     </div>
 </div>
 
-<!-- Scores Section -->
+{# ─── SCORES / PRÓXIMOS PARTIDOS ────────────────────────────── #}
 <section class="scores-section">
     <div class="container">
         <div class="scores-header">
-            <p class="scores-subtitle lang-text" data-es="LO QUE ESTÁ EN TENDENCIA" data-en="WHAT'S TRENDING">LO QUE ESTÁ EN TENDENCIA</p>
-            <h2 class="scores-title lang-text" data-es="REVISA LOS MARCADORES" data-en="CHECK OUT THE SCORES">REVISA LOS MARCADORES</h2>
+            <p class="scores-subtitle">{% trans "LO QUE ESTÁ EN TENDENCIA" %}</p>
+            <h2 class="scores-title">{% trans "REVISA LOS MARCADORES" %}</h2>
         </div>
-        
         <div class="scores-grid">
-            {% for partido in proximos_partidos|slice:":3" %}
+            {% for partido in proximos_partidos %}
             <div class="score-card">
                 <div class="score-teams">
                     <div class="score-team">
                         {% if 'CERVECERO' in partido.equipo_local.nombre|upper %}
-                        <div class="team-logo-real">
-                            <img src="{% static 'images/logo.png' %}" alt="Cerveceros de Tecate">
-                        </div>
+                        <div class="team-logo-real"><img src="{% static 'images/logo.png' %}" alt="Cerveceros de Tecate"></div>
                         {% else %}
-                        <div class="team-logo-placeholder">
-                            <span class="team-initial">{{ partido.equipo_local.nombre|first }}</span>
-                        </div>
+                        <div class="team-logo-placeholder"><span class="team-initial">{{ partido.equipo_local.nombre|first }}</span></div>
                         {% endif %}
                         <h3 class="team-name">{{ partido.equipo_local.nombre|upper }}</h3>
                     </div>
-                    
                     <div class="score-vs">VS</div>
-                    
                     <div class="score-team">
                         {% if 'CERVECERO' in partido.equipo_visitante.nombre|upper %}
-                        <div class="team-logo-real">
-                            <img src="{% static 'images/logo.png' %}" alt="Cerveceros de Tecate">
-                        </div>
+                        <div class="team-logo-real"><img src="{% static 'images/logo.png' %}" alt="Cerveceros de Tecate"></div>
                         {% else %}
-                        <div class="team-logo-placeholder">
-                            <span class="team-initial">{{ partido.equipo_visitante.nombre|first }}</span>
-                        </div>
+                        <div class="team-logo-placeholder"><span class="team-initial">{{ partido.equipo_visitante.nombre|first }}</span></div>
                         {% endif %}
                         <h3 class="team-name">{{ partido.equipo_visitante.nombre|upper }}</h3>
                     </div>
                 </div>
-                
                 <div class="score-info">
-                    <p class="score-venue-label lang-text" data-es="SEDE DEL PARTIDO" data-en="STADIUM VENUE">SEDE DEL PARTIDO</p>
+                    <p class="score-venue-label">{% trans "SEDE DEL PARTIDO" %}</p>
                     <h3 class="score-venue">{{ partido.estadio|upper }}</h3>
                 </div>
-                
                 <div class="score-actions">
-                    <a href="{% url 'equipo:boleteria' %}" class="btn-score-outline lang-text" data-es="COMPRAR BOLETOS" data-en="GET TICKETS">COMPRAR BOLETOS</a>
-                    <a href="#" class="btn-score-filled lang-text" data-es="VER TRANSMISIÓN" data-en="WATCH STREAM">VER TRANSMISIÓN</a>
+                    <a href="{% url 'equipo:boleteria' %}" class="btn-score-outline">{% trans "COMPRAR BOLETOS" %}</a>
+                    <a href="#" class="btn-score-filled">{% trans "VER TRANSMISIÓN" %}</a>
                 </div>
             </div>
             {% empty %}
             <div class="score-card">
                 <div class="score-teams">
                     <div class="score-team">
-                        <div class="team-logo-real">
-                            <img src="{% static 'images/logo.png' %}" alt="Cerveceros de Tecate">
-                        </div>
+                        <div class="team-logo-real"><img src="{% static 'images/logo.png' %}" alt="Cerveceros"></div>
                         <h3 class="team-name">CERVECEROS</h3>
                     </div>
-                    
                     <div class="score-vs">VS</div>
-                    
                     <div class="score-team">
-                        <div class="team-logo-placeholder">
-                            <span class="team-initial">T</span>
-                        </div>
+                        <div class="team-logo-placeholder"><span class="team-initial">T</span></div>
                         <h3 class="team-name">TOROS</h3>
                     </div>
                 </div>
-                
                 <div class="score-info">
-                    <p class="score-venue-label lang-text" data-es="SEDE DEL PARTIDO" data-en="STADIUM VENUE">SEDE DEL PARTIDO</p>
+                    <p class="score-venue-label">{% trans "SEDE DEL PARTIDO" %}</p>
                     <h3 class="score-venue">ESTADIO CERVECEROS</h3>
                 </div>
-                
                 <div class="score-actions">
-                    <a href="{% url 'equipo:boleteria' %}" class="btn-score-outline lang-text" data-es="COMPRAR BOLETOS" data-en="GET TICKETS">COMPRAR BOLETOS</a>
-                    <a href="#" class="btn-score-filled lang-text" data-es="VER TRANSMISIÓN" data-en="WATCH STREAM">VER TRANSMISIÓN</a>
+                    <a href="{% url 'equipo:boleteria' %}" class="btn-score-outline">{% trans "COMPRAR BOLETOS" %}</a>
+                    <a href="#" class="btn-score-filled">{% trans "VER TRANSMISIÓN" %}</a>
                 </div>
             </div>
-            
             <div class="score-card">
                 <div class="score-teams">
                     <div class="score-team">
-                        <div class="team-logo-real">
-                            <img src="{% static 'images/logo.png' %}" alt="Cerveceros de Tecate">
-                        </div>
+                        <div class="team-logo-real"><img src="{% static 'images/logo.png' %}" alt="Cerveceros"></div>
                         <h3 class="team-name">CERVECEROS</h3>
                     </div>
-                    
                     <div class="score-vs">VS</div>
-                    
                     <div class="score-team">
-                        <div class="team-logo-placeholder">
-                            <span class="team-initial">A</span>
-                        </div>
+                        <div class="team-logo-placeholder"><span class="team-initial">A</span></div>
                         <h3 class="team-name">ÁGUILAS</h3>
                     </div>
                 </div>
-                
                 <div class="score-info">
-                    <p class="score-venue-label lang-text" data-es="SEDE DEL PARTIDO" data-en="STADIUM VENUE">SEDE DEL PARTIDO</p>
+                    <p class="score-venue-label">{% trans "SEDE DEL PARTIDO" %}</p>
                     <h3 class="score-venue">ESTADIO REGIONAL</h3>
                 </div>
-                
                 <div class="score-actions">
-                    <a href="{% url 'equipo:boleteria' %}" class="btn-score-outline lang-text" data-es="COMPRAR BOLETOS" data-en="GET TICKETS">COMPRAR BOLETOS</a>
-                    <a href="#" class="btn-score-filled lang-text" data-es="VER TRANSMISIÓN" data-en="WATCH STREAM">VER TRANSMISIÓN</a>
+                    <a href="{% url 'equipo:boleteria' %}" class="btn-score-outline">{% trans "COMPRAR BOLETOS" %}</a>
+                    <a href="#" class="btn-score-filled">{% trans "VER TRANSMISIÓN" %}</a>
                 </div>
             </div>
-            
             <div class="score-card">
                 <div class="score-teams">
                     <div class="score-team">
-                        <div class="team-logo-placeholder">
-                            <span class="team-initial">L</span>
-                        </div>
+                        <div class="team-logo-placeholder"><span class="team-initial">L</span></div>
                         <h3 class="team-name">LEONES</h3>
                     </div>
-                    
                     <div class="score-vs">VS</div>
-                    
                     <div class="score-team">
-                        <div class="team-logo-real">
-                            <img src="{% static 'images/logo.png' %}" alt="Cerveceros de Tecate">
-                        </div>
+                        <div class="team-logo-real"><img src="{% static 'images/logo.png' %}" alt="Cerveceros"></div>
                         <h3 class="team-name">CERVECEROS</h3>
                     </div>
                 </div>
-                
                 <div class="score-info">
-                    <p class="score-venue-label lang-text" data-es="SEDE DEL PARTIDO" data-en="STADIUM VENUE">SEDE DEL PARTIDO</p>
+                    <p class="score-venue-label">{% trans "SEDE DEL PARTIDO" %}</p>
                     <h3 class="score-venue">ESTADIO MUNICIPAL</h3>
                 </div>
-                
                 <div class="score-actions">
-                    <a href="{% url 'equipo:boleteria' %}" class="btn-score-outline lang-text" data-es="COMPRAR BOLETOS" data-en="GET TICKETS">COMPRAR BOLETOS</a>
-                    <a href="#" class="btn-score-filled lang-text" data-es="VER TRANSMISIÓN" data-en="WATCH STREAM">VER TRANSMISIÓN</a>
+                    <a href="{% url 'equipo:boleteria' %}" class="btn-score-outline">{% trans "COMPRAR BOLETOS" %}</a>
+                    <a href="#" class="btn-score-filled">{% trans "VER TRANSMISIÓN" %}</a>
                 </div>
             </div>
             {% endfor %}
@@ -195,370 +181,316 @@
     </div>
 </section>
 
-<!-- Next Match Section -->
+{# ─── PRÓXIMO PARTIDO / COUNTDOWN ────────────────────────── #}
 <section class="next-match-section">
     <div class="next-match-overlay"></div>
     <div class="container">
         <div class="next-match-content">
-            <p class="next-match-subtitle lang-text" data-es="LO QUE ESTÁ EN TENDENCIA" data-en="WHAT'S TRENDING">LO QUE ESTÁ EN TENDENCIA</p>
-            <h2 class="next-match-title lang-text" data-es="PRÓXIMO PARTIDO" data-en="NEXT MATCH">PRÓXIMO PARTIDO</h2>
-            
-            <div class="countdown-timer">
+            <p class="next-match-subtitle">{% trans "LO QUE ESTÁ EN TENDENCIA" %}</p>
+            <h2 class="next-match-title">{% trans "PRÓXIMO PARTIDO" %}</h2>
+            {% if proximo_partido %}
+            <p style="color:#fff;margin-bottom:1rem;font-size:1.1rem;">
+                {{ proximo_partido.equipo_local.nombre }} vs {{ proximo_partido.equipo_visitante.nombre }}
+                &nbsp;&middot;&nbsp; {{ proximo_partido.fecha|date:"d/m/Y H:i" }}
+            </p>
+            {% endif %}
+            <div class="countdown-timer" {% if proximo_partido %}data-fecha="{{ proximo_partido.fecha|date:'c' }}"{% endif %}>
                 <div class="countdown-item">
-                    <span class="countdown-label lang-text" data-es="17" data-en="17">17</span>
                     <span class="countdown-number" id="days">00</span>
+                    <span class="countdown-label">{% trans "DÍA" %}</span>
                 </div>
                 <div class="countdown-item">
-                    <span class="countdown-label lang-text" data-es="DÍA" data-en="DAY">DÍA</span>
                     <span class="countdown-number" id="hours">00</span>
+                    <span class="countdown-label">{% trans "HORA" %}</span>
                 </div>
                 <div class="countdown-item">
-                    <span class="countdown-label lang-text" data-es="HORA" data-en="HOUR">HORA</span>
                     <span class="countdown-number" id="minutes">00</span>
+                    <span class="countdown-label">{% trans "MINUTO" %}</span>
                 </div>
                 <div class="countdown-item">
-                    <span class="countdown-label lang-text" data-es="MINUTO" data-en="MINUTE">MINUTO</span>
                     <span class="countdown-number" id="seconds">00</span>
-                </div>
-                <div class="countdown-item">
-                    <span class="countdown-label lang-text" data-es="SEGUNDO" data-en="SECOND">SEGUNDO</span>
-                    <span class="countdown-number">00</span>
+                    <span class="countdown-label">{% trans "SEGUNDO" %}</span>
                 </div>
             </div>
-            
-            <a href="{% url 'equipo:boleteria' %}" class="btn-next-match lang-text" data-es="COMPRAR BOLETOS" data-en="GET TICKETS">COMPRAR BOLETOS</a>
+            <a href="{% url 'equipo:boleteria' %}" class="btn-next-match">{% trans "COMPRAR BOLETOS" %}</a>
         </div>
     </div>
 </section>
 
-<!-- Featured Player Section -->
+{# ─── JUGADOR DESTACADO ──────────────────────────────────── #}
+{% if jugador_destacado %}
+<section class="featured-player-section">
+    <div class="container">
+        <div class="featured-player-content">
+            <div class="featured-player-image">
+                {% if jugador_destacado.foto %}
+                    <img src="{{ jugador_destacado.foto.url }}" alt="{{ jugador_destacado.nombre }}">
+                {% else %}
+                    <img src="{% static 'images/player-featured.jpg' %}" alt="{{ jugador_destacado.nombre }}">
+                {% endif %}
+            </div>
+            <div class="featured-player-info">
+                <p class="player-position">{{ jugador_destacado.get_posicion_display|upper }}</p>
+                <h2 class="player-name">{{ jugador_destacado.nombre|upper }}</h2>
+                <div class="player-details">
+                    <span class="player-text">
+                        #{{ jugador_destacado.numero }}
+                        {% if jugador_destacado.altura %} | {{ jugador_destacado.altura }}{% endif %}
+                        {% if jugador_destacado.peso %} | {{ jugador_destacado.peso }}{% endif %}
+                    </span>
+                </div>
+                {% if jugador_destacado.biografia %}
+                <div class="player-bio">
+                    <h3 class="bio-title">{% trans "BREVE BIOGRAFÍA" %}</h3>
+                    <p class="bio-text">{{ jugador_destacado.biografia|truncatewords:50 }}</p>
+                    <a href="{% url 'equipo:jugador_detalle' jugador_destacado.pk %}" class="btn-view-profile">{% trans "VER PERFIL" %}</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% else %}
 <section class="featured-player-section">
     <div class="container">
         <div class="featured-player-content">
             <div class="featured-player-image">
                 <img src="{% static 'images/player-featured.jpg' %}" alt="Jugador Destacado">
             </div>
-            
             <div class="featured-player-info">
-                <p class="player-position lang-text" data-es="DEFENSIVO 2ND" data-en="DEFENSIVE 2ND">DEFENSIVO 2ND</p>
+                <p class="player-position">{% trans "DEFENSIVO 2ND" %}</p>
                 <h2 class="player-name">ANDREW SALAZAR</h2>
-                
                 <div class="player-details">
                     <span class="player-flag">🇨🇺</span>
-                    <span class="player-text">Cuba | Eagles, Eagles, Giants | Primary League | 2019, 2020 | 5 ft 10 in | 220 lb</span>
+                    <span class="player-text">Cuba | 5 ft 10 in | 220 lb</span>
                 </div>
-                
                 <div class="player-bio">
-                    <h3 class="bio-title lang-text" data-es="BREVE BIOGRAFÍA" data-en="SHORT BIOGRAPHY">BREVE BIOGRAFÍA</h3>
-                    <p class="bio-text">
-                        Lorem ipsum dolor sit amet, vis an altera torquatos, vel assum nostrum efficiendi at. Choro posidonium vix et, ei mei latque antiopam comprehensam. Putent repudiandae id sed, eu wisi accusamus adipiscing ines. Cu omnia nonumes mei. Est ex eiceri numquam, usu esse oporteat legendos ea. Nec ea partiendo appellantur. Efficiendi temporibus duo, at est vulputate abhorreant. In populo corrumpit eum.
-                    </p>
-                    <a href="#" class="btn-view-profile lang-text" data-es="VER PERFIL" data-en="VIEW PROFILE">VER PERFIL</a>
+                    <h3 class="bio-title">{% trans "BREVE BIOGRAFÍA" %}</h3>
+                    <p class="bio-text">Lorem ipsum dolor sit amet, vis an altera torquatos. Choro posidonium vix et.</p>
+                    <a href="{% url 'equipo:nuestro_equipo' %}" class="btn-view-profile">{% trans "VER PERFIL" %}</a>
                 </div>
             </div>
         </div>
     </div>
 </section>
+{% endif %}
 
-<!-- News Grid Section -->
+{# ─── NOTICIAS GRID ──────────────────────────────────────── #}
 <section class="news-grid-section">
     <div class="news-grid">
-        <!-- Article 1 -->
+        {% for noticia in noticias_inicio %}
+            {% if forloop.counter == 2 or forloop.counter == 4 or forloop.counter == 5 or forloop.counter == 7 %}
+            <article class="news-item news-item-image">
+                {% if noticia.imagen %}<img src="{{ noticia.imagen.url }}" alt="{{ noticia.titulo }}">
+                {% else %}<img src="{% static 'images/news-glove.jpg' %}" alt="{{ noticia.titulo }}">{% endif %}
+            </article>
+            {% else %}
+            <article class="news-item news-item-dark">
+                <div class="news-content">
+                    <p class="news-category">{% trans "TEMPORADA" %}</p>
+                    <h3 class="news-title">{{ noticia.titulo|upper|truncatechars:40 }}</h3>
+                    <p class="news-excerpt">{{ noticia.contenido|striptags|truncatewords:15 }}</p>
+                    <a href="{% url 'equipo:noticia_detalle' noticia.pk %}" class="news-link">{% trans "LEER MÁS" %}</a>
+                </div>
+            </article>
+            {% endif %}
+        {% empty %}
         <article class="news-item news-item-dark">
             <div class="news-content">
-                <p class="news-category lang-text" data-es="TEMPORADA" data-en="SEASON">TEMPORADA</p>
-                <h3 class="news-title lang-text" data-es="2010'S: UNA DÉCADA" data-en="2010'S: A DECADE">2010'S: UNA DÉCADA</h3>
-                <p class="news-excerpt">Lorem ipsum dolor sit amet, purto vocent volupatibus mei eu, ex convenire corru</p>
-                <a href="#" class="news-link lang-text" data-es="LEER MÁS" data-en="READ MORE">LEER MÁS</a>
+                <p class="news-category">{% trans "TEMPORADA" %}</p>
+                <h3 class="news-title">{% trans "2010'S: UNA DÉCADA" %}</h3>
+                <p class="news-excerpt">Lorem ipsum dolor sit amet, purto vocent volupatibus.</p>
+                <a href="{% url 'equipo:noticias' %}" class="news-link">{% trans "LEER MÁS" %}</a>
             </div>
         </article>
-
-        <!-- Article 2 - Image -->
-        <article class="news-item news-item-image">
-            <img src="{% static 'images/news-glove.jpg' %}" alt="Baseball Glove">
-        </article>
-
-        <!-- Article 3 -->
+        <article class="news-item news-item-image"><img src="{% static 'images/news-glove.jpg' %}" alt="Baseball"></article>
         <article class="news-item news-item-dark">
             <div class="news-content">
-                <p class="news-category lang-text" data-es="TEMPORADA" data-en="SEASON">TEMPORADA</p>
-                <h3 class="news-title lang-text" data-es="SATURDAY SPORCLE" data-en="SATURDAY SPORCLE">SATURDAY SPORCLE</h3>
-                <p class="news-excerpt">Lorem ipsum dolor sit amet, purto vocent volupatibus mei eu, ex convenire corru</p>
-                <a href="#" class="news-link lang-text" data-es="LEER MÁS" data-en="READ MORE">LEER MÁS</a>
+                <p class="news-category">{% trans "TEMPORADA" %}</p>
+                <h3 class="news-title">{% trans "SATURDAY SPORCLE" %}</h3>
+                <p class="news-excerpt">Lorem ipsum dolor sit amet, purto vocent volupatibus.</p>
+                <a href="{% url 'equipo:noticias' %}" class="news-link">{% trans "LEER MÁS" %}</a>
             </div>
         </article>
-
-        <!-- Article 4 - Image -->
-        <article class="news-item news-item-image">
-            <img src="{% static 'images/news-batter.jpg' %}" alt="Baseball Batter">
-        </article>
-
-        <!-- Article 5 - Image -->
-        <article class="news-item news-item-image">
-            <img src="{% static 'images/news-player.jpg' %}" alt="Baseball Player">
-        </article>
-
-        <!-- Article 6 -->
+        <article class="news-item news-item-image"><img src="{% static 'images/news-batter.jpg' %}" alt="Baseball"></article>
+        <article class="news-item news-item-image"><img src="{% static 'images/news-player.jpg' %}" alt="Baseball"></article>
         <article class="news-item news-item-dark">
             <div class="news-content">
-                <p class="news-category lang-text" data-es="TEMPORADA" data-en="SEASON">TEMPORADA</p>
-                <h3 class="news-title lang-text" data-es="SECOND BASE" data-en="SECOND BASE">SECOND BASE</h3>
-                <p class="news-excerpt">Lorem ipsum dolor sit amet, purto vocent volupatibus mei eu, ex convenire corru</p>
-                <a href="#" class="news-link lang-text" data-es="LEER MÁS" data-en="READ MORE">LEER MÁS</a>
+                <p class="news-category">{% trans "TEMPORADA" %}</p>
+                <h3 class="news-title">{% trans "SECOND BASE" %}</h3>
+                <p class="news-excerpt">Lorem ipsum dolor sit amet, purto vocent volupatibus.</p>
+                <a href="{% url 'equipo:noticias' %}" class="news-link">{% trans "LEER MÁS" %}</a>
             </div>
         </article>
-
-        <!-- Article 7 - Image -->
-        <article class="news-item news-item-image">
-            <img src="{% static 'images/news-stadium.jpg' %}" alt="Baseball Stadium">
-        </article>
-
-        <!-- Article 8 -->
+        <article class="news-item news-item-image"><img src="{% static 'images/news-stadium.jpg' %}" alt="Baseball"></article>
         <article class="news-item news-item-dark">
             <div class="news-content">
-                <p class="news-category lang-text" data-es="TEMPORADA" data-en="SEASON">TEMPORADA</p>
-                <h3 class="news-title lang-text" data-es="D-BACKS SPRING TRAINING" data-en="D-BACKS SPRING TRAINING">D-BACKS SPRING TRAINING</h3>
-                <p class="news-excerpt">Lorem ipsum dolor sit amet, purto vocent volupatibus mei eu, ex convenire corru</p>
-                <a href="#" class="news-link lang-text" data-es="LEER MÁS" data-en="READ MORE">LEER MÁS</a>
+                <p class="news-category">{% trans "TEMPORADA" %}</p>
+                <h3 class="news-title">{% trans "D-BACKS SPRING TRAINING" %}</h3>
+                <p class="news-excerpt">Lorem ipsum dolor sit amet, purto vocent volupatibus.</p>
+                <a href="{% url 'equipo:noticias' %}" class="news-link">{% trans "LEER MÁS" %}</a>
             </div>
         </article>
+        {% endfor %}
     </div>
 </section>
 
-<!-- Official Store Section -->
+{# ─── TIENDA OFICIAL ─────────────────────────────────────── #}
 <section class="official-store-section">
     <div class="store-background-text">EXPLORE</div>
     <div class="store-header">
-        <p class="store-subtitle lang-text" data-es="LA HISTORIA DEL CLUB" data-en="THE CLUB HISTORY">LA HISTORIA DEL CLUB</p>
-        <h2 class="store-title lang-text" data-es="TIENDA OFICIAL" data-en="OFFICIAL STORE">TIENDA OFICIAL</h2>
+        <p class="store-subtitle">{% trans "LA HISTORIA DEL CLUB" %}</p>
+        <h2 class="store-title">{% trans "TIENDA OFICIAL" %}</h2>
     </div>
-    
+
     <div class="store-carousel-wrapper">
-        <button class="store-nav store-prev" onclick="moveStoreCarousel(-1)">
-            <span>03</span>
-        </button>
-        
+        <button class="store-nav store-prev" onclick="moveStoreCarousel(-1)"><span>&#8249;</span></button>
         <div class="store-carousel-container">
             <div class="store-products" id="storeProducts">
-                <!-- Product 1 -->
+                {% for producto in productos_destacados %}
                 <div class="store-product">
-                    <span class="product-badge badge-sale lang-text" data-es="OFERTA" data-en="SALE">OFERTA</span>
+                    {% if producto.badge %}
+                    <span class="product-badge badge-{{ producto.badge }}">
+                        {% if producto.badge == 'sale' %}{% trans "OFERTA" %}{% elif producto.badge == 'new' %}{% trans "NUEVO" %}{% elif producto.badge == 'sold' %}{% trans "AGOTADO" %}{% endif %}
+                    </span>
+                    {% endif %}
                     <div class="product-image">
-                        <img src="{% static 'images/product-bat.jpg' %}" alt="BB Bat">
+                        {% if producto.imagen %}<img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
+                        {% else %}<img src="{% static 'images/product-bat.jpg' %}" alt="{{ producto.nombre }}">{% endif %}
                     </div>
+                    <div class="product-info">
+                        {% if producto.categoria %}<p class="product-category">{{ producto.categoria.nombre|upper }}</p>{% endif %}
+                        <h3 class="product-name">{{ producto.nombre|upper }}</h3>
+                        <div class="product-price">
+                            {% if producto.tiene_descuento %}<span class="price-old">${{ producto.precio_anterior }}</span>{% endif %}
+                            <span class="price-current">${{ producto.precio }}</span>
+                        </div>
+                        {% if producto.badge != 'sold' %}
+                        <a href="{% url 'equipo:producto_detalle' producto.pk %}" class="btn-add-cart">{% trans "VER PRODUCTO" %}</a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% empty %}
+                <div class="store-product">
+                    <span class="product-badge badge-sale">{% trans "OFERTA" %}</span>
+                    <div class="product-image"><img src="{% static 'images/product-bat.jpg' %}" alt="BB Bat"></div>
                     <div class="product-info">
                         <p class="product-category">DISCIPLINE / SPORT</p>
                         <h3 class="product-name">BB BAT</h3>
-                        <div class="product-price">
-                            <span class="price-old">$47.00</span>
-                            <span class="price-current">$35.00</span>
-                        </div>
+                        <div class="product-price"><span class="price-old">$47.00</span><span class="price-current">$35.00</span></div>
                     </div>
                 </div>
-
-                <!-- Product 2 -->
                 <div class="store-product">
-                    <span class="product-badge badge-new lang-text" data-es="NUEVO" data-en="NEW">NUEVO</span>
-                    <div class="product-image">
-                        <img src="{% static 'images/product-boots.jpg' %}" alt="T Boots">
-                    </div>
+                    <span class="product-badge badge-new">{% trans "NUEVO" %}</span>
+                    <div class="product-image"><img src="{% static 'images/product-boots.jpg' %}" alt="T Boots"></div>
                     <div class="product-info">
                         <p class="product-category">FAST / SPORT</p>
                         <h3 class="product-name">T BOOTS</h3>
-                        <div class="product-price">
-                            <span class="price-old">$210.00</span>
-                            <span class="price-current">$170.00</span>
-                        </div>
-                        <button class="btn-add-cart lang-text" data-es="AÑADIR AL CARRITO" data-en="ADD TO CART">AÑADIR AL CARRITO</button>
+                        <div class="product-price"><span class="price-old">$210.00</span><span class="price-current">$170.00</span></div>
+                        <a href="{% url 'equipo:tienda' %}" class="btn-add-cart">{% trans "VER TIENDA" %}</a>
                     </div>
                 </div>
-
-                <!-- Product 3 -->
                 <div class="store-product">
-                    <span class="product-badge badge-sale lang-text" data-es="OFERTA" data-en="SALE">OFERTA</span>
-                    <div class="product-image">
-                        <img src="{% static 'images/product-helmet1.jpg' %}" alt="B Helmet">
-                    </div>
+                    <span class="product-badge badge-sale">{% trans "OFERTA" %}</span>
+                    <div class="product-image"><img src="{% static 'images/product-helmet1.jpg' %}" alt="B Helmet"></div>
                     <div class="product-info">
                         <p class="product-category">SPORT</p>
                         <h3 class="product-name">B HELMET</h3>
-                        <div class="product-price">
-                            <span class="price-old">$40.00</span>
-                            <span class="price-current">$25.00</span>
-                        </div>
+                        <div class="product-price"><span class="price-old">$40.00</span><span class="price-current">$25.00</span></div>
                     </div>
                 </div>
-
-                <!-- Product 4 -->
-                <div class="store-product">
-                    <span class="product-badge badge-sold lang-text" data-es="AGOTADO" data-en="SOLD">AGOTADO</span>
-                    <div class="product-image">
-                        <img src="{% static 'images/product-helmet2.jpg' %}" alt="R Helmet">
-                    </div>
-                    <div class="product-info">
-                        <p class="product-category">FAST / SPORT</p>
-                        <h3 class="product-name">R HELMET</h3>
-                        <div class="product-price">
-                            <span class="price-current">$230.00</span>
-                        </div>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
-        
-        <button class="store-nav store-next" onclick="moveStoreCarousel(1)">
-            <span>08</span>
-        </button>
+        <button class="store-nav store-next" onclick="moveStoreCarousel(1)"><span>&#8250;</span></button>
+    </div>
+    <div style="text-align:center;margin-top:2rem;">
+        <a href="{% url 'equipo:tienda' %}" class="btn">{% trans "VER TODA LA TIENDA" %}</a>
     </div>
 </section>
 
-<!-- Features Banner Section -->
+{# ─── FEATURES BANNER ────────────────────────────────────── #}
 <section class="features-banner-section">
     <div class="features-overlay"></div>
     <div class="container">
         <div class="features-content">
-            <p class="features-subtitle lang-text" data-es="EXPLORA LAS CARACTERÍSTICAS" data-en="EXPLORE THE FEATURES">EXPLORA LAS CARACTERÍSTICAS</p>
-            <h2 class="features-title lang-text" data-es="LOREM IPSUM DOLOR SIT AMET ADIPIS" data-en="LOREM IPSUM DOLOR SIT AMET ADIPIS">LOREM IPSUM DOLOR SIT AMET ADIPIS</h2>
-            <a href="#" class="btn-features lang-text" data-es="LEER MÁS" data-en="READ MORE">LEER MÁS</a>
+            <p class="features-subtitle">{% trans "EXPLORA LAS CARACTERÍSTICAS" %}</p>
+            <h2 class="features-title">{% trans "LOREM IPSUM DOLOR SIT AMET ADIPIS" %}</h2>
+            <a href="#" class="btn-features">{% trans "LEER MÁS" %}</a>
         </div>
     </div>
 </section>
 
-<!-- Skills Progress Section -->
-<section class="skills-progress-section">
-    <div class="container">
-        <div class="skills-grid">
-            <div class="skills-bars">
-                <div class="skill-item">
-                    <div class="skill-header">
-                        <span class="skill-name">DESIGN</span>
-                        <span class="skill-percentage">95%</span>
-                    </div>
-                    <div class="skill-bar">
-                        <div class="skill-fill" style="width: 95%"></div>
-                    </div>
-                </div>
-
-                <div class="skill-item">
-                    <div class="skill-header">
-                        <span class="skill-name">DEVELOPMENT</span>
-                        <span class="skill-percentage">78%</span>
-                    </div>
-                    <div class="skill-bar">
-                        <div class="skill-fill" style="width: 78%"></div>
-                    </div>
-                </div>
-
-                <div class="skill-item">
-                    <div class="skill-header">
-                        <span class="skill-name">SUPPORT</span>
-                        <span class="skill-percentage">83%</span>
-                    </div>
-                    <div class="skill-bar">
-                        <div class="skill-fill" style="width: 83%"></div>
-                    </div>
-                </div>
-
-                <div class="skill-item">
-                    <div class="skill-header">
-                        <span class="skill-name">WORDPRESS</span>
-                        <span class="skill-percentage">56%</span>
-                    </div>
-                    <div class="skill-bar">
-                        <div class="skill-fill" style="width: 56%"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="skills-content">
-                <p class="skills-subtitle lang-text" data-es="LO QUE ESTÁ EN TENDENCIA" data-en="WHAT'S TRENDING">LO QUE ESTÁ EN TENDENCIA</p>
-                <h2 class="skills-title lang-text" data-es="RANKING CADA PARTIDO" data-en="RANKING EVERY MATCH">RANKING CADA PARTIDO</h2>
-                <p class="skills-text">
-                    Vel illum dolore eu feugiat nulla facilisis at vero eros et accu qui blandit praesent luptatum zzril delenit augue dolore eu. Autem vel eum inure dolor in hendrerit in vulputate velit.
-                </p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Instagram Gallery Section -->
+{# ─── INSTAGRAM GALLERY ──────────────────────────────────── #}
 <section class="instagram-gallery-section">
     <div class="instagram-grid">
         <div class="instagram-item">
             <img src="{% static 'images/ig-baseball-1.jpg' %}" alt="Baseball on field">
-            <div class="instagram-overlay">
-                <i class="fab fa-instagram"></i>
-            </div>
+            <div class="instagram-overlay"><i class="fab fa-instagram"></i></div>
         </div>
         <div class="instagram-item">
             <img src="{% static 'images/ig-batter-1.jpg' %}" alt="Baseball batter">
-            <div class="instagram-overlay">
-                <i class="fab fa-instagram"></i>
-            </div>
+            <div class="instagram-overlay"><i class="fab fa-instagram"></i></div>
         </div>
         <div class="instagram-item">
             <img src="{% static 'images/ig-team-1.jpg' %}" alt="Baseball team">
-            <div class="instagram-overlay">
-                <i class="fab fa-instagram"></i>
-            </div>
+            <div class="instagram-overlay"><i class="fab fa-instagram"></i></div>
         </div>
         <div class="instagram-item">
             <img src="{% static 'images/ig-balls-1.jpg' %}" alt="Baseballs">
-            <div class="instagram-overlay">
-                <i class="fab fa-instagram"></i>
-            </div>
+            <div class="instagram-overlay"><i class="fab fa-instagram"></i></div>
         </div>
     </div>
 </section>
 
-<!-- Accordion Section -->
+{# ─── FAQ / ACORDEÓN ─────────────────────────────────────── #}
 <section class="accordion-section">
     <div class="container">
         <div class="accordion-grid">
             <div class="accordion-image">
                 <img src="{% static 'images/baseball-glove.jpg' %}" alt="Baseball Glove">
             </div>
-            
             <div class="accordion-content">
-                <div class="accordion-item active">
-                    <div class="accordion-header">
-                        <h3 class="accordion-title">PROJECT PLANNING</h3>
-                        <span class="accordion-icon">-</span>
+                {% if faq_items %}
+                    {% for item in faq_items %}
+                    <div class="accordion-item {% if forloop.first %}active{% endif %}">
+                        <div class="accordion-header">
+                            <h3 class="accordion-title">{{ item.titulo }}</h3>
+                            <span class="accordion-icon">{% if forloop.first %}-{% else %}+{% endif %}</span>
+                        </div>
+                        <div class="accordion-body"><p>{{ item.contenido }}</p></div>
                     </div>
-                    <div class="accordion-body">
-                        <p>Phasellus vitae arcu hendrerit ipsum bibendum aliquet eliante ue habitant morbi tristique senectus.</p>
+                    {% endfor %}
+                {% else %}
+                    <div class="accordion-item active">
+                        <div class="accordion-header">
+                            <h3 class="accordion-title">PROJECT PLANNING</h3>
+                            <span class="accordion-icon">-</span>
+                        </div>
+                        <div class="accordion-body"><p>Phasellus vitae arcu hendrerit ipsum bibendum aliquet eliante ue habitant morbi tristique senectus.</p></div>
                     </div>
-                </div>
-
-                <div class="accordion-item">
-                    <div class="accordion-header">
-                        <h3 class="accordion-title">REFURBISHMENT</h3>
-                        <span class="accordion-icon">+</span>
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <h3 class="accordion-title">REFURBISHMENT</h3>
+                            <span class="accordion-icon">+</span>
+                        </div>
+                        <div class="accordion-body"><p>Phasellus vitae arcu hendrerit ipsum bibendum aliquet.</p></div>
                     </div>
-                    <div class="accordion-body">
-                        <p>Phasellus vitae arcu hendrerit ipsum bibendum aliquet eliante ue habitant morbi tristique senectus.</p>
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <h3 class="accordion-title">GENERAL CONTRACTING</h3>
+                            <span class="accordion-icon">+</span>
+                        </div>
+                        <div class="accordion-body"><p>Phasellus vitae arcu hendrerit ipsum bibendum aliquet.</p></div>
                     </div>
-                </div>
-
-                <div class="accordion-item">
-                    <div class="accordion-header">
-                        <h3 class="accordion-title">GENERAL CONTRACTING</h3>
-                        <span class="accordion-icon">+</span>
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <h3 class="accordion-title">INTERIOR DESIGN</h3>
+                            <span class="accordion-icon">+</span>
+                        </div>
+                        <div class="accordion-body"><p>Phasellus vitae arcu hendrerit ipsum bibendum aliquet.</p></div>
                     </div>
-                    <div class="accordion-body">
-                        <p>Phasellus vitae arcu hendrerit ipsum bibendum aliquet eliante ue habitant morbi tristique senectus.</p>
-                    </div>
-                </div>
-
-                <div class="accordion-item">
-                    <div class="accordion-header">
-                        <h3 class="accordion-title">INTERIOR DESIGN</h3>
-                        <span class="accordion-icon">+</span>
-                    </div>
-                    <div class="accordion-body">
-                        <p>Phasellus vitae arcu hendrerit ipsum bibendum aliquet eliante ue habitant morbi tristique senectus.</p>
-                    </div>
-                </div>
+                {% endif %}
             </div>
         </div>
     </div>

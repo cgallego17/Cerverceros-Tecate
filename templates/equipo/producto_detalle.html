@@ -1,0 +1,128 @@
+{% extends 'equipo/base.html' %}
+{% load static i18n %}
+
+{% block title %}{{ producto.nombre }} - {% trans "Tienda" %} - Cerveceros de Tecate{% endblock %}
+
+{% block content %}
+
+{# ─── PAGE HEADER ────────────────────────────────────────── #}
+<section class="page-header-section" style="background: linear-gradient(to right, rgba(0,0,0,0.75), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1566577739112-5180d4bf9390?w=1920') center/cover no-repeat; padding:4rem 0; text-align:center;">
+    <div class="container">
+        <h1 style="font-family:'Bebas Neue',cursive; font-size:3rem; color:#fff; letter-spacing:3px;">{{ producto.nombre|upper }}</h1>
+        <nav style="margin-top:0.75rem; font-size:0.9rem;">
+            <a href="{% url 'equipo:inicio' %}" style="color:#aaa;">{% trans "Inicio" %}</a>
+            <span style="color:#aaa; margin:0 0.5rem;">/</span>
+            <a href="{% url 'equipo:tienda' %}" style="color:#aaa;">{% trans "Tienda" %}</a>
+            <span style="color:#aaa; margin:0 0.5rem;">/</span>
+            <span style="color:#fff;">{{ producto.nombre }}</span>
+        </nav>
+    </div>
+</section>
+
+{# ─── DETALLE DEL PRODUCTO ───────────────────────────────── #}
+<section class="producto-detalle-section" style="padding:3rem 0; background:#f8f8f8;">
+    <div class="container">
+        <div class="producto-detalle-layout">
+
+            {# ── IMAGEN ────────────────────────────────── #}
+            <div class="producto-imagen-wrapper">
+                {% if producto.badge %}
+                <span class="product-badge badge-{{ producto.badge }}" style="position:absolute; top:1rem; left:1rem; z-index:2;">
+                    {% if producto.badge == 'sale' %}{% trans "OFERTA" %}
+                    {% elif producto.badge == 'new' %}{% trans "NUEVO" %}
+                    {% elif producto.badge == 'sold' %}{% trans "AGOTADO" %}
+                    {% endif %}
+                </span>
+                {% endif %}
+                {% if producto.imagen %}
+                    <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" style="width:100%; border-radius:4px;">
+                {% else %}
+                    <img src="{% static 'images/product-bat.jpg' %}" alt="{{ producto.nombre }}" style="width:100%; border-radius:4px;">
+                {% endif %}
+            </div>
+
+            {# ── INFO ──────────────────────────────────── #}
+            <div class="producto-info-wrapper">
+                {% if producto.categoria %}
+                <p class="product-category" style="margin-bottom:0.5rem;">{{ producto.categoria.nombre|upper }}</p>
+                {% endif %}
+                <h1 style="font-family:'Bebas Neue',cursive; font-size:2.8rem; letter-spacing:2px; margin-bottom:1rem;">{{ producto.nombre|upper }}</h1>
+
+                <div class="producto-precio" style="margin-bottom:1.5rem;">
+                    {% if producto.tiene_descuento %}
+                        <span class="price-old" style="font-size:1.3rem; color:#999; text-decoration:line-through; margin-right:0.75rem;">${{ producto.precio_anterior }}</span>
+                    {% endif %}
+                    <span class="price-current" style="font-size:2rem; font-weight:700; color:#e02020;">${{ producto.precio }}</span>
+                    {% if producto.tiene_descuento %}
+                        <span class="descuento-badge" style="background:#e02020; color:#fff; padding:0.2rem 0.6rem; border-radius:3px; font-size:0.85rem; margin-left:0.5rem;">
+                            -{% widthratio producto.precio_anterior 1 1 %}
+                        </span>
+                    {% endif %}
+                </div>
+
+                {% if producto.descripcion %}
+                <div class="producto-descripcion" style="margin-bottom:2rem; color:#555; line-height:1.7;">
+                    {{ producto.descripcion|linebreaksbr }}
+                </div>
+                {% endif %}
+
+                {% if producto.badge != 'sold' %}
+                <a href="{% url 'equipo:tienda' %}" class="btn" style="margin-right:1rem;">{% trans "VOLVER A LA TIENDA" %}</a>
+                {% else %}
+                <p style="color:#e02020; font-weight:700; font-size:1.1rem; margin-bottom:1rem;">{% trans "Este producto está agotado." %}</p>
+                <a href="{% url 'equipo:tienda' %}" class="btn">{% trans "VER OTROS PRODUCTOS" %}</a>
+                {% endif %}
+
+                <div class="producto-meta" style="margin-top:2rem; border-top:1px solid #ddd; padding-top:1rem; font-size:0.9rem; color:#666;">
+                    {% if producto.categoria %}
+                    <p>{% trans "Categoría:" %} <a href="{% url 'equipo:tienda' %}?categoria={{ producto.categoria.slug }}">{{ producto.categoria.nombre }}</a></p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        {# ─── PRODUCTOS RELACIONADOS ─────────────────── #}
+        {% if relacionados %}
+        <div class="relacionados-section" style="margin-top:4rem;">
+            <h2 style="font-family:'Bebas Neue',cursive; font-size:2rem; letter-spacing:2px; margin-bottom:1.5rem; border-bottom:3px solid #e02020; padding-bottom:0.5rem;">{% trans "PRODUCTOS RELACIONADOS" %}</h2>
+            <div class="products-grid">
+                {% for rel in relacionados %}
+                <div class="product-card">
+                    <div class="product-card-image">
+                        <a href="{% url 'equipo:producto_detalle' rel.pk %}">
+                            {% if rel.imagen %}
+                                <img src="{{ rel.imagen.url }}" alt="{{ rel.nombre }}">
+                            {% else %}
+                                <img src="{% static 'images/product-bat.jpg' %}" alt="{{ rel.nombre }}">
+                            {% endif %}
+                        </a>
+                        {% if rel.badge %}
+                        <span class="product-badge badge-{{ rel.badge }}">
+                            {% if rel.badge == 'sale' %}{% trans "OFERTA" %}
+                            {% elif rel.badge == 'new' %}{% trans "NUEVO" %}
+                            {% elif rel.badge == 'sold' %}{% trans "AGOTADO" %}
+                            {% endif %}
+                        </span>
+                        {% endif %}
+                    </div>
+                    <div class="product-card-info">
+                        {% if rel.categoria %}<p class="product-category">{{ rel.categoria.nombre|upper }}</p>{% endif %}
+                        <h3 class="product-name">
+                            <a href="{% url 'equipo:producto_detalle' rel.pk %}">{{ rel.nombre }}</a>
+                        </h3>
+                        <div class="product-price">
+                            {% if rel.tiene_descuento %}<span class="price-old">${{ rel.precio_anterior }}</span>{% endif %}
+                            <span class="price-current">${{ rel.precio }}</span>
+                        </div>
+                        <a href="{% url 'equipo:producto_detalle' rel.pk %}" class="btn-add-cart">{% trans "VER PRODUCTO" %}</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+</section>
+
+{% endblock %}

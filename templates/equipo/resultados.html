@@ -1,12 +1,13 @@
 {% extends 'equipo/base.html' %}
+{% load i18n %}
 
 {% block title %}Resultados - Cerveceros de Tecate{% endblock %}
 
 {% block content %}
 <div class="hero">
     <div class="hero-content">
-        <h1>Resultados</h1>
-        <p>Resultados de los partidos finalizados</p>
+        <h1>{% trans "Resultados" %}</h1>
+        <p>{% trans "Resultados de los partidos finalizados" %}</p>
     </div>
 </div>
 
@@ -28,7 +29,7 @@
         </div>
     </div>
     {% empty %}
-    <p>No hay resultados disponibles en este momento.</p>
+    <p>{% trans "No hay resultados disponibles en este momento." %}</p>
     {% endfor %}
 </div>
 {% endblock %}

@@ -1,0 +1,397 @@
+# English translations for Cerveceros de Tecate
+# This file is distributed under the same license as the Cerveceros de Tecate package.
+#
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# Top bar
+msgid "COMPRAR BOLETOS"
+msgstr "GET TICKETS"
+
+msgid "INICIO"
+msgstr "HOME"
+
+msgid "NOTICIAS"
+msgstr "NEWS"
+
+msgid "SÍGUENOS:"
+msgstr "FOLLOW US:"
+
+# Navbar
+msgid "HOME"
+msgstr "HOME"
+
+msgid "EQUIPO"
+msgstr "TEAM"
+
+msgid "CALENDARIO"
+msgstr "SCHEDULE"
+
+msgid "RESULTADOS"
+msgstr "RESULTS"
+
+msgid "BOLETOS"
+msgstr "TICKETS"
+
+# Footer brand
+msgid "Liga Mexicana del Pacífico · Temporada 2026"
+msgstr "Mexican Pacific League · 2026 Season"
+
+# Footer brand nav
+msgid "Inicio"
+msgstr "Home"
+
+msgid "Equipo"
+msgstr "Team"
+
+msgid "Calendario"
+msgstr "Schedule"
+
+msgid "Resultados"
+msgstr "Results"
+
+msgid "Noticias"
+msgstr "News"
+
+msgid "Boletos"
+msgstr "Tickets"
+
+# Footer about
+msgid "ACERCA DEL CLUB"
+msgstr "ABOUT THE CLUB"
+
+msgid "Los Cerveceros de Tecate son el equipo de béisbol profesional de la ciudad de Tecate, Baja California. Orgullo de la región y miembros de la Liga Mexicana del Pacífico."
+msgstr "Cerveceros de Tecate is the professional baseball team from Tecate, Baja California. Pride of the region and members of the Mexican Pacific League."
+
+# Footer navigation
+msgid "NAVEGACIÓN"
+msgstr "NAVIGATION"
+
+msgid "Nuestro Equipo"
+msgstr "Our Team"
+
+msgid "Tabla de Posiciones"
+msgstr "Standings"
+
+msgid "Boletería"
+msgstr "Tickets"
+
+# Footer fixtures
+msgid "PRÓXIMOS PARTIDOS"
+msgstr "UPCOMING GAMES"
+
+msgid "Vie 15 Mayo"
+msgstr "Fri May 15"
+
+msgid "LOCAL"
+msgstr "HOME"
+
+msgid "vs. Toros de Tijuana"
+msgstr "vs. Toros de Tijuana"
+
+msgid "Estadio Cerveceros"
+msgstr "Cerveceros Stadium"
+
+msgid "Sáb 16 Mayo"
+msgstr "Sat May 16"
+
+msgid "vs. Mayos de Navojoa"
+msgstr "vs. Mayos de Navojoa"
+
+msgid "Dom 17 Mayo"
+msgstr "Sun May 17"
+
+msgid "VISITA"
+msgstr "AWAY"
+
+msgid "vs. Yaquis de Obregón"
+msgstr "vs. Yaquis de Obregón"
+
+msgid "Estadio Yaquis"
+msgstr "Yaquis Stadium"
+
+msgid "Ver calendario completo →"
+msgstr "View full schedule →"
+
+# Footer instagram
+msgid "SÍGUENOS EN INSTAGRAM"
+msgstr "FOLLOW US ON INSTAGRAM"
+
+# Footer copyright
+msgid "© 2026 Cerveceros de Tecate · Todos los derechos reservados"
+msgstr "© 2026 Cerveceros de Tecate · All rights reserved"
+
+msgid "Privacidad"
+msgstr "Privacy"
+
+msgid "Términos de uso"
+msgstr "Terms of use"
+
+msgid "Contacto"
+msgstr "Contact"
+
+# inicio.html - Hero slides
+msgid "CERVECEROS DE TECATE 2026"
+msgstr "TECATE BREWERS 2026"
+
+msgid "LA TRADICIÓN"
+msgstr "TRADITION LIVES"
+
+msgid "SE VIVE EN EL DIAMANTE"
+msgstr "ON THE DIAMOND"
+
+msgid "CONOCE AL EQUIPO"
+msgstr "MEET THE TEAM"
+
+msgid "ORGULLO DE BAJA CALIFORNIA"
+msgstr "PRIDE OF BAJA CALIFORNIA"
+
+msgid "MÁS QUE UN EQUIPO"
+msgstr "MORE THAN A TEAM"
+
+msgid "UNA FAMILIA CERVECERA"
+msgstr "A BREWER FAMILY"
+
+msgid "VER CALENDARIO"
+msgstr "VIEW SCHEDULE"
+
+msgid "ÚLTIMAS NOTICIAS"
+msgstr "LATEST NEWS"
+
+msgid "TEMPORADA 2026 EN MARCHA"
+msgstr "2026 SEASON UNDERWAY"
+
+msgid "VIVE LA EMOCIÓN"
+msgstr "EXPERIENCE THE EXCITEMENT"
+
+msgid "DEL BÉISBOL PROFESIONAL"
+msgstr "OF PROFESSIONAL BASEBALL"
+
+msgid "VER RESULTADOS"
+msgstr "VIEW RESULTS"
+
+msgid "TABLA DE POSICIONES"
+msgstr "STANDINGS"
+
+# inicio.html - Scores section
+msgid "LO QUE ESTÁ EN TENDENCIA"
+msgstr "WHAT'S TRENDING"
+
+msgid "REVISA LOS MARCADORES"
+msgstr "CHECK OUT THE SCORES"
+
+msgid "SEDE DEL PARTIDO"
+msgstr "STADIUM VENUE"
+
+msgid "VER TRANSMISIÓN"
+msgstr "WATCH STREAM"
+
+# inicio.html - Next match section
+msgid "PRÓXIMO PARTIDO"
+msgstr "NEXT MATCH"
+
+msgid "DÍA"
+msgstr "DAY"
+
+msgid "HORA"
+msgstr "HOUR"
+
+msgid "MINUTO"
+msgstr "MINUTE"
+
+msgid "SEGUNDO"
+msgstr "SECOND"
+
+# inicio.html - Featured player
+msgid "DEFENSIVO 2ND"
+msgstr "DEFENSIVE 2ND"
+
+msgid "BREVE BIOGRAFÍA"
+msgstr "SHORT BIOGRAPHY"
+
+msgid "VER PERFIL"
+msgstr "VIEW PROFILE"
+
+# inicio.html - News grid
+msgid "TEMPORADA"
+msgstr "SEASON"
+
+msgid "2010'S: UNA DÉCADA"
+msgstr "2010'S: A DECADE"
+
+msgid "LEER MÁS"
+msgstr "READ MORE"
+
+msgid "SATURDAY SPORCLE"
+msgstr "SATURDAY SPORCLE"
+
+msgid "SECOND BASE"
+msgstr "SECOND BASE"
+
+msgid "D-BACKS SPRING TRAINING"
+msgstr "D-BACKS SPRING TRAINING"
+
+# inicio.html - Store section
+msgid "LA HISTORIA DEL CLUB"
+msgstr "THE CLUB HISTORY"
+
+msgid "TIENDA OFICIAL"
+msgstr "OFFICIAL STORE"
+
+msgid "OFERTA"
+msgstr "SALE"
+
+msgid "NUEVO"
+msgstr "NEW"
+
+msgid "AÑADIR AL CARRITO"
+msgstr "ADD TO CART"
+
+msgid "AGOTADO"
+msgstr "SOLD OUT"
+
+# inicio.html - Features banner
+msgid "EXPLORA LAS CARACTERÍSTICAS"
+msgstr "EXPLORE THE FEATURES"
+
+msgid "LOREM IPSUM DOLOR SIT AMET ADIPIS"
+msgstr "LOREM IPSUM DOLOR SIT AMET ADIPIS"
+
+# inicio.html - Skills section
+msgid "RANKING CADA PARTIDO"
+msgstr "RANKING EVERY MATCH"
+
+# noticias.html
+msgid "Mantente al día con las últimas novedades del equipo"
+msgstr "Stay up to date with the latest team news"
+
+msgid "Leer más"
+msgstr "Read more"
+
+msgid "No hay noticias disponibles en este momento."
+msgstr "No news available at the moment."
+
+# calendario.html
+msgid "Calendario de Partidos"
+msgstr "Game Schedule"
+
+msgid "Todos los partidos de la temporada"
+msgstr "All games of the season"
+
+msgid "Próximos Partidos"
+msgstr "Upcoming Games"
+
+msgid "No hay partidos programados próximamente."
+msgstr "No games scheduled soon."
+
+msgid "Partidos Pasados"
+msgstr "Past Games"
+
+msgid "No hay partidos pasados registrados."
+msgstr "No past games on record."
+
+# resultados.html
+msgid "Resultados de los partidos finalizados"
+msgstr "Results of completed games"
+
+msgid "No hay resultados disponibles en este momento."
+msgstr "No results available at the moment."
+
+# boleteria.html
+msgid "Compra tus boletos para los próximos partidos"
+msgstr "Buy your tickets for upcoming games"
+
+msgid "Partidos Disponibles"
+msgstr "Available Games"
+
+msgid "Ver Boletos Disponibles"
+msgstr "View Available Tickets"
+
+msgid "No hay partidos con boletos disponibles en este momento."
+msgstr "No games with available tickets at the moment."
+
+# nuestro_equipo.html
+msgid "Conoce a los jugadores de Cerveceros de Tecate"
+msgstr "Meet the players of Cerveceros de Tecate"
+
+msgid "Ver Perfil"
+msgstr "View Profile"
+
+msgid "No hay jugadores registrados en este momento."
+msgstr "No players registered at the moment."
+
+# tabla_posiciones.html
+msgid "Clasificación de la temporada"
+msgstr "Season standings"
+
+msgid "Posición"
+msgstr "Position"
+
+msgid "Racha"
+msgstr "Streak"
+
+msgid "No hay datos de la tabla de posiciones."
+msgstr "No standings data available."
+
+# jugador_detalle.html
+msgid "Información del Jugador"
+msgstr "Player Information"
+
+msgid "Número:"
+msgstr "Number:"
+
+msgid "Posición:"
+msgstr "Position:"
+
+msgid "Fecha de Nacimiento:"
+msgstr "Date of Birth:"
+
+msgid "Altura:"
+msgstr "Height:"
+
+msgid "Peso:"
+msgstr "Weight:"
+
+msgid "Bateo:"
+msgstr "Batting:"
+
+msgid "Lanzamiento:"
+msgstr "Pitching:"
+
+msgid "Biografía"
+msgstr "Biography"
+
+msgid "Volver al Equipo"
+msgstr "Back to Team"
+
+# partido_boletos.html
+msgid "Boletos Disponibles"
+msgstr "Available Tickets"
+
+msgid "Tipos de Boletos"
+msgstr "Ticket Types"
+
+msgid "Sección:"
+msgstr "Section:"
+
+msgid "Disponibles:"
+msgstr "Available:"
+
+msgid "Comprar"
+msgstr "Buy"
+
+msgid "No hay boletos disponibles para este partido."
+msgstr "No tickets available for this game."
+
+msgid "Volver a Boletería"
+msgstr "Back to Tickets"
+
+# noticia_detalle.html
+msgid "Volver a Noticias"
+msgstr "Back to News"
+
+# tabla_posiciones.html - table headers

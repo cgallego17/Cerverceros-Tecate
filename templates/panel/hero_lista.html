@@ -1,0 +1,66 @@
+{% extends 'panel/base.html' %}
+
+{% block page_title %}Hero Slides{% endblock %}
+
+{% block content %}
+<div class="panel-page-header">
+    <div class="panel-page-title">Hero Slides <small>Imágenes y textos del banner principal</small></div>
+    <a href="{% url 'panel:hero_nuevo' %}" class="panel-btn panel-btn-primary">+ Nueva diapositiva</a>
+</div>
+
+<div class="panel-card">
+    {% if slides %}
+    <div class="panel-table-wrap">
+        <table class="panel-table">
+            <thead>
+                <tr>
+                    <th>Orden</th>
+                    <th>Imagen</th>
+                    <th>Subtítulo</th>
+                    <th>Título</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for slide in slides %}
+                <tr>
+                    <td>{{ slide.orden }}</td>
+                    <td>
+                        {% if slide.imagen %}
+                            <img src="{{ slide.imagen.url }}" alt="" class="panel-table-thumb">
+                        {% elif slide.imagen_url %}
+                            <img src="{{ slide.imagen_url }}" alt="" class="panel-table-thumb">
+                        {% else %}
+                            <span style="color:#ccc;">—</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ slide.subtitulo }}</td>
+                    <td>{{ slide.titulo_linea1 }}{% if slide.titulo_linea2 %} / {{ slide.titulo_linea2 }}{% endif %}</td>
+                    <td>
+                        {% if slide.activo %}
+                            <span class="panel-badge panel-badge-green">Activo</span>
+                        {% else %}
+                            <span class="panel-badge panel-badge-gray">Inactivo</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="panel-table-actions">
+                            <a href="{% url 'panel:hero_editar' slide.pk %}" class="panel-btn panel-btn-secondary panel-btn-sm"><i class="fas fa-pen"></i> Editar</a>
+                            <a href="{% url 'panel:hero_eliminar' slide.pk %}" class="panel-btn panel-btn-danger panel-btn-sm"><i class="fas fa-trash"></i></a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="panel-empty">
+        <div class="panel-empty-icon"><i class="fas fa-image"></i></div>
+        <p>No hay diapositivas aún. El hero mostrará contenido por defecto.</p>
+        <a href="{% url 'panel:hero_nuevo' %}" class="panel-btn panel-btn-primary">+ Crear primera diapositiva</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

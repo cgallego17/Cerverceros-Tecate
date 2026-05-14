@@ -1,24 +1,77 @@
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
-from .models import Jugador, Partido, Noticia, Boleto, TablaPosiciones
+from .models import (
+    Jugador, Partido, Noticia, Boleto, TablaPosiciones,
+    HeroSlide, Patrocinador, Producto, CategoriaProducto, ItemFaq,
+)
 
 
 def inicio(request):
-    noticias_destacadas = Noticia.objects.filter(destacada=True)[:3]
+    # Hero
+    hero_slides = HeroSlide.objects.filter(activo=True).order_by('orden')
+    patrocinadores = Patrocinador.objects.filter(activo=True).order_by('orden')
+
+    # Partidos
     proximos_partidos = Partido.objects.filter(
-        fecha__gte=timezone.now(),
-        estado='programado'
+        fecha__gte=timezone.now(), estado='programado'
     ).order_by('fecha')[:3]
-    ultimos_resultados = Partido.objects.filter(
-        estado='finalizado'
-    ).order_by('-fecha')[:3]
-    
+    proximo_partido = proximos_partidos.first()
+
+    # Jugador destacado
+    jugador_destacado = Jugador.objects.filter(activo=True, destacado_inicio=True).first()
+
+    # Noticias para la grilla del home (8 más recientes con imagen)
+    noticias_inicio = Noticia.objects.all().order_by('-fecha_publicacion')[:8]
+    noticias_destacadas = Noticia.objects.filter(destacada=True)[:3]
+
+    # Productos destacados en el carrusel de tienda
+    productos_destacados = Producto.objects.filter(activo=True, destacado=True).order_by('nombre')
+
+    # FAQ / Acordeón
+    faq_items = ItemFaq.objects.filter(activo=True).order_by('orden')
+
     context = {
-        'noticias_destacadas': noticias_destacadas,
+        'hero_slides': hero_slides,
+        'patrocinadores': patrocinadores,
         'proximos_partidos': proximos_partidos,
-        'ultimos_resultados': ultimos_resultados,
+        'proximo_partido': proximo_partido,
+        'jugador_destacado': jugador_destacado,
+        'noticias_inicio': noticias_inicio,
+        'noticias_destacadas': noticias_destacadas,
+        'productos_destacados': productos_destacados,
+        'faq_items': faq_items,
     }
     return render(request, 'equipo/inicio.html', context)
+
+
+def tienda(request):
+    categorias = CategoriaProducto.objects.all()
+    categoria_slug = request.GET.get('categoria')
+    productos = Producto.objects.filter(activo=True)
+    categoria_activa = None
+    if categoria_slug:
+        categoria_activa = get_object_or_404(CategoriaProducto, slug=categoria_slug)
+        productos = productos.filter(categoria=categoria_activa)
+    productos = productos.order_by('nombre')
+    context = {
+        'productos': productos,
+        'categorias': categorias,
+        'categoria_activa': categoria_activa,
+        'total_productos': Producto.objects.filter(activo=True).count(),
+    }
+    return render(request, 'equipo/tienda.html', context)
+
+
+def producto_detalle(request, pk):
+    producto = get_object_or_404(Producto, pk=pk, activo=True)
+    relacionados = Producto.objects.filter(
+        activo=True, categoria=producto.categoria
+    ).exclude(pk=pk)[:4]
+    context = {
+        'producto': producto,
+        'relacionados': relacionados,
+    }
+    return render(request, 'equipo/producto_detalle.html', context)
 
 
 def nuestro_equipo(request):

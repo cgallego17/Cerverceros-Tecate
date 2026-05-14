@@ -1,0 +1,53 @@
+{% extends 'panel/base.html' %}
+
+{% block page_title %}{% if objeto %}Editar{% else %}Nuevo{% endif %} {{ titulo }}{% endblock %}
+
+{% block content %}
+<div class="panel-page-header">
+    <div class="panel-page-title">
+        {% if objeto %}Editar{% else %}Nuevo{% endif %} {{ titulo }}
+        <small>{% if objeto %}Modificar registro existente{% else %}Crear nuevo registro{% endif %}</small>
+    </div>
+    <a href="{% url back_url %}" class="panel-btn panel-btn-secondary">← Volver</a>
+</div>
+
+<div class="panel-card panel-form-section">
+    <form method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+
+        <div class="panel-form-grid">
+            {% for field in form %}
+            <div class="panel-form-group
+                {% if field.field.widget.attrs.class == 'panel-textarea' or field.field.widget.input_type == 'textarea' %}span-2{% endif %}
+                {% if field.field.widget.input_type == 'checkbox' %}span-2{% endif %}">
+
+                {% if field.field.widget.input_type == 'checkbox' %}
+                    <div class="panel-check-group">
+                        {{ field }}
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    </div>
+                {% else %}
+                    <label class="panel-form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                {% endif %}
+
+                {% if field.help_text %}
+                <span class="panel-form-help">{{ field.help_text }}</span>
+                {% endif %}
+
+                {% for error in field.errors %}
+                <span class="panel-field-error"><i class="fas fa-triangle-exclamation"></i> {{ error }}</span>
+                {% endfor %}
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="panel-form-actions">
+            <button type="submit" class="panel-btn panel-btn-primary panel-btn-lg">
+                <i class="fas fa-floppy-disk"></i> {% if objeto %}Guardar cambios{% else %}Crear registro{% endif %}
+            </button>
+            <a href="{% url back_url %}" class="panel-btn panel-btn-secondary panel-btn-lg">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

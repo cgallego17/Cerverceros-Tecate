@@ -1,4 +1,5 @@
 {% extends 'equipo/base.html' %}
+{% load i18n %}
 
 {% block title %}{{ noticia.titulo }} - Cerveceros de Tecate{% endblock %}
 
@@ -22,7 +23,7 @@
                     {{ noticia.contenido|linebreaks }}
                 </div>
                 
-                <a href="{% url 'equipo:noticias' %}" class="btn" style="margin-top: 2rem;">Volver a Noticias</a>
+                <a href="{% url 'equipo:noticias' %}" class="btn" style="margin-top: 2rem;">{% trans "Volver a Noticias" %}</a>
             </div>
         </div>
     </div>

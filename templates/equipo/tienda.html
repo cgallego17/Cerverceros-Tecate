@@ -1,0 +1,122 @@
+{% extends 'equipo/base.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans "Tienda Oficial" %} - Cerveceros de Tecate{% endblock %}
+
+{% block content %}
+
+{# ─── PAGE HEADER ────────────────────────────────────────── #}
+<section class="page-header-section" style="background: linear-gradient(to right, rgba(0,0,0,0.75), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1566577739112-5180d4bf9390?w=1920') center/cover no-repeat; padding: 5rem 0; text-align:center;">
+    <div class="container">
+        <p class="hero-subtitle">{% trans "CERVECEROS DE TECATE" %}</p>
+        <h1 style="font-family:'Bebas Neue',cursive; font-size:3.5rem; color:#fff; letter-spacing:3px;">{% trans "TIENDA OFICIAL" %}</h1>
+        <nav style="margin-top:1rem; font-size:0.9rem;">
+            <a href="{% url 'equipo:inicio' %}" style="color:#aaa;">{% trans "Inicio" %}</a>
+            <span style="color:#aaa; margin:0 0.5rem;">/</span>
+            <span style="color:#fff;">{% trans "Tienda" %}</span>
+        </nav>
+    </div>
+</section>
+
+{# ─── TIENDA CONTENT ─────────────────────────────────────── #}
+<section class="tienda-section" style="padding:3rem 0; background:#f8f8f8;">
+    <div class="container">
+        <div class="tienda-layout">
+
+            {# ── SIDEBAR CATEGORÍAS ──────────────────────── #}
+            <aside class="tienda-sidebar">
+                <div class="sidebar-widget">
+                    <h3 class="widget-title">{% trans "CATEGORÍAS" %}</h3>
+                    <ul class="category-list">
+                        <li class="{% if not categoria_activa %}active{% endif %}">
+                            <a href="{% url 'equipo:tienda' %}">{% trans "Todos los productos" %}
+                                <span class="cat-count">({{ total_productos }})</span>
+                            </a>
+                        </li>
+                        {% for cat in categorias %}
+                        <li class="{% if categoria_activa.slug == cat.slug %}active{% endif %}">
+                            <a href="{% url 'equipo:tienda' %}?categoria={{ cat.slug }}">
+                                {{ cat.nombre }}
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="sidebar-widget">
+                    <h3 class="widget-title">{% trans "FILTROS" %}</h3>
+                    <ul class="filter-list">
+                        <li><a href="{% url 'equipo:tienda' %}?badge=sale">{% trans "Ofertas" %}</a></li>
+                        <li><a href="{% url 'equipo:tienda' %}?badge=new">{% trans "Nuevos" %}</a></li>
+                    </ul>
+                </div>
+            </aside>
+
+            {# ── PRODUCTOS GRID ──────────────────────────── #}
+            <div class="tienda-main">
+                <div class="tienda-header">
+                    <p class="tienda-count">
+                        {% blocktrans count count=productos|length %}{{ count }} producto encontrado{% plural %}{{ count }} productos encontrados{% endblocktrans %}
+                    </p>
+                    {% if categoria_activa %}
+                    <p class="tienda-filter-active">
+                        {% trans "Categoría:" %} <strong>{{ categoria_activa.nombre }}</strong>
+                        &nbsp;<a href="{% url 'equipo:tienda' %}" style="color:#e02020;">[x]</a>
+                    </p>
+                    {% endif %}
+                </div>
+
+                <div class="products-grid">
+                    {% for producto in productos %}
+                    <div class="product-card">
+                        <div class="product-card-image">
+                            <a href="{% url 'equipo:producto_detalle' producto.pk %}">
+                                {% if producto.imagen %}
+                                    <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
+                                {% else %}
+                                    <img src="{% static 'images/product-bat.jpg' %}" alt="{{ producto.nombre }}">
+                                {% endif %}
+                            </a>
+                            {% if producto.badge %}
+                            <span class="product-badge badge-{{ producto.badge }}">
+                                {% if producto.badge == 'sale' %}{% trans "OFERTA" %}
+                                {% elif producto.badge == 'new' %}{% trans "NUEVO" %}
+                                {% elif producto.badge == 'sold' %}{% trans "AGOTADO" %}
+                                {% endif %}
+                            </span>
+                            {% endif %}
+                        </div>
+                        <div class="product-card-info">
+                            {% if producto.categoria %}
+                            <p class="product-category">{{ producto.categoria.nombre|upper }}</p>
+                            {% endif %}
+                            <h3 class="product-name">
+                                <a href="{% url 'equipo:producto_detalle' producto.pk %}">{{ producto.nombre }}</a>
+                            </h3>
+                            <div class="product-price">
+                                {% if producto.tiene_descuento %}
+                                    <span class="price-old">${{ producto.precio_anterior }}</span>
+                                {% endif %}
+                                <span class="price-current">${{ producto.precio }}</span>
+                            </div>
+                            {% if producto.badge != 'sold' %}
+                            <a href="{% url 'equipo:producto_detalle' producto.pk %}" class="btn-add-cart">{% trans "VER PRODUCTO" %}</a>
+                            {% else %}
+                            <span class="btn-add-cart disabled">{% trans "AGOTADO" %}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="no-products-msg" style="grid-column:1/-1; text-align:center; padding:3rem;">
+                        <p style="font-size:1.2rem; color:#666;">{% trans "No se encontraron productos en esta categoría." %}</p>
+                        <a href="{% url 'equipo:tienda' %}" class="btn" style="margin-top:1rem;">{% trans "VER TODOS" %}</a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+{% endblock %}

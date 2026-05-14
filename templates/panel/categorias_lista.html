@@ -1,0 +1,50 @@
+{% extends 'panel/base.html' %}
+
+{% block page_title %}Categorías{% endblock %}
+
+{% block content %}
+<div class="panel-page-header">
+    <div class="panel-page-title">Categorías <small>Organización de productos</small></div>
+    <a href="{% url 'panel:categoria_nueva' %}" class="panel-btn panel-btn-primary">+ Nueva categoría</a>
+</div>
+
+<div class="panel-card">
+    {% if categorias %}
+    <div class="panel-table-wrap">
+        <table class="panel-table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Slug (URL)</th>
+                    <th>Productos</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cat in categorias %}
+                <tr>
+                    <td><strong>{{ cat.nombre }}</strong></td>
+                    <td><code style="background:#f3f4f6; padding:0.15rem 0.4rem; border-radius:3px; font-size:0.75rem;">{{ cat.slug }}</code></td>
+                    <td>
+                        <span class="panel-badge panel-badge-blue">{{ cat.producto_set.count }}</span>
+                    </td>
+                    <td>
+                        <div class="panel-table-actions">
+                            <a href="{% url 'panel:categoria_editar' cat.pk %}" class="panel-btn panel-btn-secondary panel-btn-sm"><i class="fas fa-pen"></i> Editar</a>
+                            <a href="{% url 'panel:categoria_eliminar' cat.pk %}" class="panel-btn panel-btn-danger panel-btn-sm"><i class="fas fa-trash"></i></a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="panel-empty">
+        <div class="panel-empty-icon"><i class="fas fa-folder-open"></i></div>
+        <p>No hay categorías. Crea una antes de agregar productos.</p>
+        <a href="{% url 'panel:categoria_nueva' %}" class="panel-btn panel-btn-primary">+ Crear categoría</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

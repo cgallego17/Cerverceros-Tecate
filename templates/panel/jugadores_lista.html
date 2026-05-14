@@ -1,0 +1,72 @@
+{% extends 'panel/base.html' %}
+
+{% block page_title %}Jugadores{% endblock %}
+
+{% block content %}
+<div class="panel-page-header">
+    <div class="panel-page-title">Jugadores <small>Plantilla del equipo</small></div>
+    <a href="{% url 'panel:jugador_nuevo' %}" class="panel-btn panel-btn-primary">+ Nuevo jugador</a>
+</div>
+
+<div class="panel-card">
+    {% if jugadores %}
+    <div class="panel-table-wrap">
+        <table class="panel-table">
+            <thead>
+                <tr>
+                    <th>Foto</th>
+                    <th>#</th>
+                    <th>Nombre</th>
+                    <th>Posición</th>
+                    <th>Destacado</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for j in jugadores %}
+                <tr>
+                    <td>
+                        {% if j.foto %}
+                            <img src="{{ j.foto.url }}" alt="{{ j.nombre }}" class="panel-table-thumb" style="border-radius:50%;">
+                        {% else %}
+                            <span style="color:#d1d5db; font-size:1.25rem;"><i class="fas fa-user"></i></span>
+                        {% endif %}
+                    </td>
+                    <td><strong>{{ j.numero }}</strong></td>
+                    <td>{{ j.nombre }}</td>
+                    <td>
+                        <span class="panel-badge panel-badge-blue">{{ j.get_posicion_display }}</span>
+                    </td>
+                    <td>
+                        {% if j.destacado_inicio %}
+                            <span class="panel-badge panel-badge-yellow"><i class="fas fa-star"></i> Inicio</span>
+                        {% else %}—{% endif %}
+                    </td>
+                    <td>
+                        {% if j.activo %}
+                            <span class="panel-badge panel-badge-green">Activo</span>
+                        {% else %}
+                            <span class="panel-badge panel-badge-gray">Inactivo</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="panel-table-actions">
+                            <a href="{% url 'panel:jugador_editar' j.pk %}" class="panel-btn panel-btn-secondary panel-btn-sm"><i class="fas fa-pen"></i> Editar</a>
+                            <a href="{% url 'panel:jugador_eliminar' j.pk %}" class="panel-btn panel-btn-danger panel-btn-sm"><i class="fas fa-trash"></i></a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="panel-empty">
+        <div class="panel-empty-icon"><i class="fas fa-users"></i></div>
+        <p>No hay jugadores registrados.</p>
+        <a href="{% url 'panel:jugador_nuevo' %}" class="panel-btn panel-btn-primary">+ Agregar jugador</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends 'panel/base.html' %}
+
+{% block page_title %}Patrocinadores{% endblock %}
+
+{% block content %}
+<div class="panel-page-header">
+    <div class="panel-page-title">Patrocinadores <small>Logos que aparecen en el hero</small></div>
+    <a href="{% url 'panel:patrocinador_nuevo' %}" class="panel-btn panel-btn-primary">+ Nuevo patrocinador</a>
+</div>
+
+<div class="panel-card">
+    {% if patrocinadores %}
+    <div class="panel-table-wrap">
+        <table class="panel-table">
+            <thead>
+                <tr>
+                    <th>Orden</th>
+                    <th>Logo</th>
+                    <th>Nombre</th>
+                    <th>Enlace</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in patrocinadores %}
+                <tr>
+                    <td>{{ p.orden }}</td>
+                    <td>
+                        {% if p.logo %}
+                            <img src="{{ p.logo.url }}" alt="{{ p.nombre }}" class="panel-table-thumb" style="object-fit:contain; background:#f5f5f5;">
+                        {% else %}
+                            <span style="color:#ccc;">Sin logo</span>
+                        {% endif %}
+                    </td>
+                    <td><strong>{{ p.nombre }}</strong></td>
+                    <td>
+                        {% if p.url %}
+                            <a href="{{ p.url }}" target="_blank" style="color:var(--p-accent); font-size:0.75rem;">{{ p.url|truncatechars:30 }}</a>
+                        {% else %}—{% endif %}
+                    </td>
+                    <td>
+                        {% if p.activo %}
+                            <span class="panel-badge panel-badge-green">Activo</span>
+                        {% else %}
+                            <span class="panel-badge panel-badge-gray">Inactivo</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="panel-table-actions">
+                            <a href="{% url 'panel:patrocinador_editar' p.pk %}" class="panel-btn panel-btn-secondary panel-btn-sm"><i class="fas fa-pen"></i> Editar</a>
+                            <a href="{% url 'panel:patrocinador_eliminar' p.pk %}" class="panel-btn panel-btn-danger panel-btn-sm"><i class="fas fa-trash"></i></a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="panel-empty">
+        <div class="panel-empty-icon"><i class="fas fa-handshake"></i></div>
+        <p>No hay patrocinadores registrados.</p>
+        <a href="{% url 'panel:patrocinador_nuevo' %}" class="panel-btn panel-btn-primary">+ Agregar patrocinador</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,4 +1,5 @@
 {% extends 'equipo/base.html' %}
+{% load i18n %}
 
 {% block title %}{{ jugador.nombre }} - Cerveceros de Tecate{% endblock %}
 
@@ -18,54 +19,54 @@
         
         <div class="card">
             <div class="card-content">
-                <h2 class="card-title">Información del Jugador</h2>
+                <h2 class="card-title">{% trans "Información del Jugador" %}</h2>
                 <table style="width: 100%;">
                     <tr>
-                        <td><strong>Número:</strong></td>
+                        <td><strong>{% trans "Número:" %}</strong></td>
                         <td>{{ jugador.numero }}</td>
                     </tr>
                     <tr>
-                        <td><strong>Posición:</strong></td>
+                        <td><strong>{% trans "Posición:" %}</strong></td>
                         <td>{{ jugador.get_posicion_display }}</td>
                     </tr>
                     {% if jugador.fecha_nacimiento %}
                     <tr>
-                        <td><strong>Fecha de Nacimiento:</strong></td>
+                        <td><strong>{% trans "Fecha de Nacimiento:" %}</strong></td>
                         <td>{{ jugador.fecha_nacimiento|date:"d/m/Y" }}</td>
                     </tr>
                     {% endif %}
                     {% if jugador.altura %}
                     <tr>
-                        <td><strong>Altura:</strong></td>
+                        <td><strong>{% trans "Altura:" %}</strong></td>
                         <td>{{ jugador.altura }}</td>
                     </tr>
                     {% endif %}
                     {% if jugador.peso %}
                     <tr>
-                        <td><strong>Peso:</strong></td>
+                        <td><strong>{% trans "Peso:" %}</strong></td>
                         <td>{{ jugador.peso }}</td>
                     </tr>
                     {% endif %}
                     {% if jugador.bateo %}
                     <tr>
-                        <td><strong>Bateo:</strong></td>
+                        <td><strong>{% trans "Bateo:" %}</strong></td>
                         <td>{{ jugador.bateo }}</td>
                     </tr>
                     {% endif %}
                     {% if jugador.lanzamiento %}
                     <tr>
-                        <td><strong>Lanzamiento:</strong></td>
+                        <td><strong>{% trans "Lanzamiento:" %}</strong></td>
                         <td>{{ jugador.lanzamiento }}</td>
                     </tr>
                     {% endif %}
                 </table>
                 
                 {% if jugador.biografia %}
-                <h3 style="margin-top: 2rem;">Biografía</h3>
+                <h3 style="margin-top: 2rem;">{% trans "Biografía" %}</h3>
                 <p>{{ jugador.biografia }}</p>
                 {% endif %}
                 
-                <a href="{% url 'equipo:nuestro_equipo' %}" class="btn" style="margin-top: 2rem;">Volver al Equipo</a>
+                <a href="{% url 'equipo:nuestro_equipo' %}" class="btn" style="margin-top: 2rem;">{% trans "Volver al Equipo" %}</a>
             </div>
         </div>
     </div>

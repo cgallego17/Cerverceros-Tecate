@@ -1,0 +1,56 @@
+{% extends 'panel/base.html' %}
+
+{% block page_title %}FAQ / Acordeón{% endblock %}
+
+{% block content %}
+<div class="panel-page-header">
+    <div class="panel-page-title">FAQ / Acordeón <small>Preguntas frecuentes en el inicio</small></div>
+    <a href="{% url 'panel:faq_nueva' %}" class="panel-btn panel-btn-primary">+ Nueva pregunta</a>
+</div>
+
+<div class="panel-card">
+    {% if items %}
+    <div class="panel-table-wrap">
+        <table class="panel-table">
+            <thead>
+                <tr>
+                    <th>Orden</th>
+                    <th>Título</th>
+                    <th>Contenido (vista previa)</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td>{{ item.orden }}</td>
+                    <td><strong>{{ item.titulo }}</strong></td>
+                    <td style="color:#6b7280; max-width:300px;">{{ item.contenido|truncatewords:15 }}</td>
+                    <td>
+                        {% if item.activo %}
+                            <span class="panel-badge panel-badge-green">Activo</span>
+                        {% else %}
+                            <span class="panel-badge panel-badge-gray">Inactivo</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="panel-table-actions">
+                            <a href="{% url 'panel:faq_editar' item.pk %}" class="panel-btn panel-btn-secondary panel-btn-sm"><i class="fas fa-pen"></i> Editar</a>
+                            <a href="{% url 'panel:faq_eliminar' item.pk %}" class="panel-btn panel-btn-danger panel-btn-sm"><i class="fas fa-trash"></i></a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="panel-empty">
+        <div class="panel-empty-icon"><i class="fas fa-circle-question"></i></div>
+        <p>No hay preguntas frecuentes. La sección mostrará contenido por defecto.</p>
+        <a href="{% url 'panel:faq_nueva' %}" class="panel-btn panel-btn-primary">+ Crear primera pregunta</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

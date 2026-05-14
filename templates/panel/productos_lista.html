@@ -1,0 +1,87 @@
+{% extends 'panel/base.html' %}
+
+{% block page_title %}Productos{% endblock %}
+
+{% block content %}
+<div class="panel-page-header">
+    <div class="panel-page-title">Productos <small>Tienda oficial</small></div>
+    <div style="display:flex; gap:0.75rem;">
+        <a href="{% url 'panel:categorias_lista' %}" class="panel-btn panel-btn-secondary"><i class="fas fa-folder-open"></i> Categorías</a>
+        <a href="{% url 'panel:producto_nuevo' %}" class="panel-btn panel-btn-primary">+ Nuevo producto</a>
+    </div>
+</div>
+
+<div class="panel-card">
+    {% if productos %}
+    <div class="panel-table-wrap">
+        <table class="panel-table">
+            <thead>
+                <tr>
+                    <th>Imagen</th>
+                    <th>Nombre</th>
+                    <th>Categoría</th>
+                    <th>Precio</th>
+                    <th>Etiqueta</th>
+                    <th>Destacado</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in productos %}
+                <tr>
+                    <td>
+                        {% if p.imagen %}
+                            <img src="{{ p.imagen.url }}" alt="{{ p.nombre }}" class="panel-table-thumb">
+                        {% else %}
+                            <span style="color:#d1d5db; font-size:1.25rem;"><i class="fas fa-image"></i></span>
+                        {% endif %}
+                    </td>
+                    <td><strong>{{ p.nombre }}</strong></td>
+                    <td>
+                        {% if p.categoria %}
+                            <span class="panel-badge panel-badge-blue">{{ p.categoria.nombre }}</span>
+                        {% else %}—{% endif %}
+                    </td>
+                    <td>
+                        <strong>${{ p.precio }}</strong>
+                        {% if p.precio_anterior %}
+                            <br><span style="text-decoration:line-through; color:#999; font-size:0.75rem;">${{ p.precio_anterior }}</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if p.badge == 'sale' %}<span class="panel-badge panel-badge-red">Oferta</span>
+                        {% elif p.badge == 'new' %}<span class="panel-badge panel-badge-green">Nuevo</span>
+                        {% elif p.badge == 'sold' %}<span class="panel-badge panel-badge-gray">Agotado</span>
+                        {% else %}—{% endif %}
+                    </td>
+                    <td>
+                        {% if p.destacado %}<span class="panel-badge panel-badge-yellow"><i class="fas fa-star"></i> Sí</span>{% else %}—{% endif %}
+                    </td>
+                    <td>
+                        {% if p.activo %}
+                            <span class="panel-badge panel-badge-green">Activo</span>
+                        {% else %}
+                            <span class="panel-badge panel-badge-gray">Inactivo</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="panel-table-actions">
+                            <a href="{% url 'panel:producto_editar' p.pk %}" class="panel-btn panel-btn-secondary panel-btn-sm"><i class="fas fa-pen"></i> Editar</a>
+                            <a href="{% url 'panel:producto_eliminar' p.pk %}" class="panel-btn panel-btn-danger panel-btn-sm"><i class="fas fa-trash"></i></a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="panel-empty">
+        <div class="panel-empty-icon"><i class="fas fa-bag-shopping"></i></div>
+        <p>No hay productos en la tienda.</p>
+        <a href="{% url 'panel:producto_nuevo' %}" class="panel-btn panel-btn-primary">+ Agregar producto</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

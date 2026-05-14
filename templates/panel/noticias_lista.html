@@ -1,0 +1,65 @@
+{% extends 'panel/base.html' %}
+
+{% block page_title %}Noticias{% endblock %}
+
+{% block content %}
+<div class="panel-page-header">
+    <div class="panel-page-title">Noticias <small>Artículos y novedades del equipo</small></div>
+    <a href="{% url 'panel:noticia_nueva' %}" class="panel-btn panel-btn-primary">+ Nueva noticia</a>
+</div>
+
+<div class="panel-card">
+    {% if noticias %}
+    <div class="panel-table-wrap">
+        <table class="panel-table">
+            <thead>
+                <tr>
+                    <th>Imagen</th>
+                    <th>Título</th>
+                    <th>Autor</th>
+                    <th>Fecha</th>
+                    <th>Destacada</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for n in noticias %}
+                <tr>
+                    <td>
+                        {% if n.imagen %}
+                            <img src="{{ n.imagen.url }}" alt="{{ n.titulo }}" class="panel-table-thumb">
+                        {% else %}
+                            <span style="color:#d1d5db; font-size:1.25rem;"><i class="fas fa-newspaper"></i></span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <strong>{{ n.titulo|truncatechars:50 }}</strong>
+                        <br><span style="font-size:0.75rem; color:#9ca3af;">{{ n.contenido|striptags|truncatewords:10 }}</span>
+                    </td>
+                    <td>{{ n.autor|default:"—" }}</td>
+                    <td style="white-space:nowrap;">{{ n.fecha_publicacion|date:"d/m/Y" }}</td>
+                    <td>
+                        {% if n.destacada %}
+                            <span class="panel-badge panel-badge-yellow"><i class="fas fa-star"></i> Sí</span>
+                        {% else %}—{% endif %}
+                    </td>
+                    <td>
+                        <div class="panel-table-actions">
+                            <a href="{% url 'panel:noticia_editar' n.pk %}" class="panel-btn panel-btn-secondary panel-btn-sm"><i class="fas fa-pen"></i> Editar</a>
+                            <a href="{% url 'panel:noticia_eliminar' n.pk %}" class="panel-btn panel-btn-danger panel-btn-sm"><i class="fas fa-trash"></i></a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="panel-empty">
+        <div class="panel-empty-icon"><i class="fas fa-newspaper"></i></div>
+        <p>No hay noticias publicadas todavía.</p>
+        <a href="{% url 'panel:noticia_nueva' %}" class="panel-btn panel-btn-primary">+ Escribir primera noticia</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

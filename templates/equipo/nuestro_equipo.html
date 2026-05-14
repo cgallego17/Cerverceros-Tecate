@@ -1,12 +1,13 @@
 {% extends 'equipo/base.html' %}
+{% load i18n %}
 
 {% block title %}Nuestro Equipo - Cerveceros de Tecate{% endblock %}
 
 {% block content %}
 <div class="hero">
     <div class="hero-content">
-        <h1>Nuestro Equipo</h1>
-        <p>Conoce a los jugadores de Cerveceros de Tecate</p>
+        <h1>{% trans "Nuestro Equipo" %}</h1>
+        <p>{% trans "Conoce a los jugadores de Cerveceros de Tecate" %}</p>
     </div>
 </div>
 
@@ -21,11 +22,11 @@
                 <div class="jugador-numero">#{{ jugador.numero }}</div>
                 <h3 class="jugador-nombre">{{ jugador.nombre }}</h3>
                 <p class="jugador-posicion">{{ jugador.get_posicion_display }}</p>
-                <a href="{% url 'equipo:jugador_detalle' jugador.pk %}" class="btn">Ver Perfil</a>
+                <a href="{% url 'equipo:jugador_detalle' jugador.pk %}" class="btn">{% trans "Ver Perfil" %}</a>
             </div>
         </div>
         {% empty %}
-        <p>No hay jugadores registrados en este momento.</p>
+        <p>{% trans "No hay jugadores registrados en este momento." %}</p>
         {% endfor %}
     </div>
 </div>

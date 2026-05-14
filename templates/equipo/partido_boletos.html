@@ -1,37 +1,38 @@
 {% extends 'equipo/base.html' %}
+{% load i18n %}
 
 {% block title %}Boletos - Cerveceros de Tecate{% endblock %}
 
 {% block content %}
 <div class="hero">
     <div class="hero-content">
-        <h1>Boletos Disponibles</h1>
+        <h1>{% trans "Boletos Disponibles" %}</h1>
         <p>{{ partido.equipo_local.nombre }} vs {{ partido.equipo_visitante.nombre }}</p>
         <p>{{ partido.fecha|date:"d/m/Y H:i" }}</p>
     </div>
 </div>
 
 <div class="container">
-    <h2 class="section-title">Tipos de Boletos</h2>
+    <h2 class="section-title">{% trans "Tipos de Boletos" %}</h2>
     
     {% for boleto in boletos %}
     <div class="boleto-item">
         <div class="boleto-info">
             <div class="boleto-tipo">{{ boleto.get_tipo_display }}</div>
             {% if boleto.seccion %}
-            <p style="color: #666;">Sección: {{ boleto.seccion }}</p>
+            <p style="color: #666;">{% trans "Sección:" %} {{ boleto.seccion }}</p>
             {% endif %}
-            <p class="disponibilidad">Disponibles: {{ boleto.cantidad_disponible }}</p>
+            <p class="disponibilidad">{% trans "Disponibles:" %} {{ boleto.cantidad_disponible }}</p>
         </div>
         <div>
             <div class="boleto-precio">${{ boleto.precio }}</div>
-            <button class="btn" style="margin-top: 0.5rem;">Comprar</button>
+            <button class="btn" style="margin-top: 0.5rem;">{% trans "Comprar" %}</button>
         </div>
     </div>
     {% empty %}
-    <p>No hay boletos disponibles para este partido.</p>
+    <p>{% trans "No hay boletos disponibles para este partido." %}</p>
     {% endfor %}
     
-    <a href="{% url 'equipo:boleteria' %}" class="btn btn-secondary" style="margin-top: 2rem;">Volver a Boletería</a>
+    <a href="{% url 'equipo:boleteria' %}" class="btn btn-secondary" style="margin-top: 2rem;">{% trans "Volver a Boletaría" %}</a>
 </div>
 {% endblock %}

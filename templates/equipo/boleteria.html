@@ -1,17 +1,18 @@
 {% extends 'equipo/base.html' %}
+{% load i18n %}
 
 {% block title %}Boletería - Cerveceros de Tecate{% endblock %}
 
 {% block content %}
 <div class="hero">
     <div class="hero-content">
-        <h1>Boletería</h1>
-        <p>Compra tus boletos para los próximos partidos</p>
+        <h1>{% trans "Boletaría" %}</h1>
+        <p>{% trans "Compra tus boletos para los próximos partidos" %}</p>
     </div>
 </div>
 
 <div class="container">
-    <h2 class="section-title">Partidos Disponibles</h2>
+<h2 class="section-title">{% trans "Partidos Disponibles" %}</h2>
     
     {% for partido in partidos %}
     <div class="card" style="margin-bottom: 2rem;">
@@ -30,11 +31,11 @@
                     <p class="equipo-nombre">{{ partido.equipo_visitante.nombre }}</p>
                 </div>
             </div>
-            <a href="{% url 'equipo:partido_boletos' partido.pk %}" class="btn">Ver Boletos Disponibles</a>
+            <a href="{% url 'equipo:partido_boletos' partido.pk %}" class="btn">{% trans "Ver Boletos Disponibles" %}</a>
         </div>
     </div>
     {% empty %}
-    <p>No hay partidos con boletos disponibles en este momento.</p>
+    <p>{% trans "No hay partidos con boletos disponibles en este momento." %}</p>
     {% endfor %}
 </div>
 {% endblock %}

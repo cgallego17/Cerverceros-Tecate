@@ -1,0 +1,91 @@
+{% extends 'panel/base.html' %}
+
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="panel-page-header">
+    <div class="panel-page-title">
+        Dashboard
+        <small>Resumen del contenido del sitio</small>
+    </div>
+    <a href="{% url 'equipo:inicio' %}" target="_blank" class="panel-btn panel-btn-secondary"><i class="fas fa-arrow-up-right-from-square"></i> Ver sitio</a>
+</div>
+
+{# Stats #}
+<div class="panel-stats-grid">
+    <a href="{% url 'panel:hero_lista' %}" class="panel-stat-card">
+        <div class="panel-stat-icon"><i class="fas fa-image"></i></div>
+        <div class="panel-stat-value">{{ total_hero }}</div>
+        <div class="panel-stat-label">Hero Slides</div>
+    </a>
+    <a href="{% url 'panel:patrocinadores_lista' %}" class="panel-stat-card">
+        <div class="panel-stat-icon"><i class="fas fa-handshake"></i></div>
+        <div class="panel-stat-value">{{ total_patrocinadores }}</div>
+        <div class="panel-stat-label">Patrocinadores</div>
+    </a>
+    <a href="{% url 'panel:faq_lista' %}" class="panel-stat-card">
+        <div class="panel-stat-icon"><i class="fas fa-circle-question"></i></div>
+        <div class="panel-stat-value">{{ total_faq }}</div>
+        <div class="panel-stat-label">Preguntas FAQ</div>
+    </a>
+    <a href="{% url 'panel:categorias_lista' %}" class="panel-stat-card">
+        <div class="panel-stat-icon"><i class="fas fa-folder-open"></i></div>
+        <div class="panel-stat-value">{{ total_categorias }}</div>
+        <div class="panel-stat-label">Categorías</div>
+    </a>
+    <a href="{% url 'panel:productos_lista' %}" class="panel-stat-card">
+        <div class="panel-stat-icon"><i class="fas fa-bag-shopping"></i></div>
+        <div class="panel-stat-value">{{ total_productos }}</div>
+        <div class="panel-stat-label">Productos</div>
+    </a>
+    <a href="{% url 'panel:noticias_lista' %}" class="panel-stat-card">
+        <div class="panel-stat-icon"><i class="fas fa-newspaper"></i></div>
+        <div class="panel-stat-value">{{ total_noticias }}</div>
+        <div class="panel-stat-label">Noticias</div>
+    </a>
+    <a href="{% url 'panel:jugadores_lista' %}" class="panel-stat-card">
+        <div class="panel-stat-icon"><i class="fas fa-users"></i></div>
+        <div class="panel-stat-value">{{ total_jugadores }}</div>
+        <div class="panel-stat-label">Jugadores</div>
+    </a>
+</div>
+
+{# Quick-access sections #}
+<div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); gap:1rem;">
+
+    <div class="panel-card">
+        <div class="panel-card-header">
+            <span class="panel-card-title"><i class="fas fa-image" style="color:var(--p-accent);"></i> Sección Inicio</span>
+            <a href="{% url 'panel:hero_lista' %}" class="panel-btn panel-btn-secondary panel-btn-sm">Gestionar</a>
+        </div>
+        <div style="padding:1rem; font-size:0.8125rem; color:#6b7280; line-height:1.7;">
+            <p>• <a href="{% url 'panel:hero_lista' %}">Hero Slides</a> — imágenes y textos del banner principal</p>
+            <p>• <a href="{% url 'panel:patrocinadores_lista' %}">Patrocinadores</a> — logos en el pie del slider</p>
+            <p>• <a href="{% url 'panel:faq_lista' %}">FAQ / Acordeón</a> — preguntas frecuentes</p>
+        </div>
+    </div>
+
+    <div class="panel-card">
+        <div class="panel-card-header">
+            <span class="panel-card-title"><i class="fas fa-bag-shopping" style="color:var(--p-accent);"></i> Tienda Oficial</span>
+            <a href="{% url 'panel:productos_lista' %}" class="panel-btn panel-btn-secondary panel-btn-sm">Gestionar</a>
+        </div>
+        <div style="padding:1rem; font-size:0.8125rem; color:#6b7280; line-height:1.7;">
+            <p>• <a href="{% url 'panel:categorias_lista' %}">Categorías</a> — organiza los productos</p>
+            <p>• <a href="{% url 'panel:productos_lista' %}">Productos</a> — precios, imágenes y etiquetas</p>
+        </div>
+    </div>
+
+    <div class="panel-card">
+        <div class="panel-card-header">
+            <span class="panel-card-title"><i class="fas fa-newspaper" style="color:var(--p-accent);"></i> Contenido</span>
+            <a href="{% url 'panel:noticias_lista' %}" class="panel-btn panel-btn-secondary panel-btn-sm">Gestionar</a>
+        </div>
+        <div style="padding:1rem; font-size:0.8125rem; color:#6b7280; line-height:1.7;">
+            <p>• <a href="{% url 'panel:noticias_lista' %}">Noticias</a> — artículos del blog</p>
+            <p>• <a href="{% url 'panel:jugadores_lista' %}">Jugadores</a> — plantilla del equipo</p>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

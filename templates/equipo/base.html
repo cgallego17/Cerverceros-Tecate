@@ -1,11 +1,12 @@
-{% load static %}
+{% load static i18n %}
 <!DOCTYPE html>
-<html lang="es">
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Cerveceros de Tecate{% endblock %}</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
@@ -14,18 +15,22 @@
         <div class="top-bar-container">
             <div class="top-bar-left">
                 <a href="{% url 'equipo:boleteria' %}" class="top-bar-link">
-                    <span class="top-bar-icon">🎫</span> GET TICKETS
+                    <span class="top-bar-icon">🎫</span> {% trans "COMPRAR BOLETOS" %}
                 </a>
                 <span class="top-bar-separator">|</span>
-                <a href="{% url 'equipo:inicio' %}" class="top-bar-link">HOME</a>
-                <a href="{% url 'equipo:noticias' %}" class="top-bar-link">NOTICIAS</a>
+                <a href="{% url 'equipo:inicio' %}" class="top-bar-link">{% trans "INICIO" %}</a>
+                <a href="{% url 'equipo:noticias' %}" class="top-bar-link">{% trans "NOTICIAS" %}</a>
             </div>
             <div class="top-bar-right">
-                <button id="langToggle" class="lang-toggle" onclick="toggleLanguage()">
-                    <span id="langIcon">&#127474;&#127485; ES | &#127482;&#127480; EN</span>
-                </button>
+                <form action="{% url 'set_language' %}" method="post" class="lang-toggle-form">
+                    {% csrf_token %}
+                    <input name="next" type="hidden" value="{{ request.get_full_path }}">
+                    <button type="submit" name="language" value="es" class="lang-btn{% if LANGUAGE_CODE == 'es' %} active{% endif %}"><span class="fi fi-mx"></span> ES</button>
+                    <span class="top-bar-separator">|</span>
+                    <button type="submit" name="language" value="en" class="lang-btn{% if LANGUAGE_CODE == 'en' %} active{% endif %}"><span class="fi fi-us"></span> EN</button>
+                </form>
                 <span class="top-bar-separator">|</span>
-                <span class="top-bar-text">SÍGUENOS:</span>
+                <span class="top-bar-text">{% trans "SÍGUENOS:" %}</span>
                 <a href="#" class="social-link" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
                 <a href="#" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
                 <a href="#" class="social-link" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
@@ -38,9 +43,9 @@
     <nav class="navbar">
         <div class="navbar-container">
             <ul class="navbar-menu navbar-menu-left">
-                <li><a href="{% url 'equipo:inicio' %}" class="navbar-link">HOME</a></li>
-                <li><a href="{% url 'equipo:nuestro_equipo' %}" class="navbar-link">EQUIPO</a></li>
-                <li><a href="{% url 'equipo:calendario' %}" class="navbar-link">CALENDARIO</a></li>
+                <li><a href="{% url 'equipo:inicio' %}" class="navbar-link">{% trans "HOME" %}</a></li>
+                <li><a href="{% url 'equipo:nuestro_equipo' %}" class="navbar-link">{% trans "EQUIPO" %}</a></li>
+                <li><a href="{% url 'equipo:calendario' %}" class="navbar-link">{% trans "CALENDARIO" %}</a></li>
             </ul>
             
             <a href="{% url 'equipo:inicio' %}" class="navbar-brand">
@@ -48,9 +53,10 @@
             </a>
             
             <ul class="navbar-menu navbar-menu-right">
-                <li><a href="{% url 'equipo:resultados' %}" class="navbar-link">RESULTADOS</a></li>
-                <li><a href="{% url 'equipo:noticias' %}" class="navbar-link">NOTICIAS</a></li>
-                <li><a href="{% url 'equipo:boleteria' %}" class="navbar-link">BOLETOS</a></li>
+                <li><a href="{% url 'equipo:resultados' %}" class="navbar-link">{% trans "RESULTADOS" %}</a></li>
+                <li><a href="{% url 'equipo:noticias' %}" class="navbar-link">{% trans "NOTICIAS" %}</a></li>
+                <li><a href="{% url 'equipo:tienda' %}" class="navbar-link">{% trans "TIENDA" %}</a></li>
+                <li><a href="{% url 'equipo:boleteria' %}" class="navbar-link">{% trans "BOLETOS" %}</a></li>
             </ul>
             
             <button class="navbar-toggle" id="navbarToggle" aria-label="Toggle navigation">
@@ -66,139 +72,146 @@
 
     <!-- Footer -->
     <footer class="footer">
+
+        <!-- Footer Brand Bar -->
+        <div class="footer-brand-bar">
+            <div class="footer-brand-inner">
+                <div class="footer-brand-left">
+                    <img src="{% static 'images/logo.png' %}" alt="Cerveceros de Tecate" class="footer-brand-logo">
+                    <div class="footer-brand-text">
+                        <span class="footer-brand-name">CERVECEROS DE TECATE</span>
+                        <span class="footer-brand-league">{% trans "Liga Mexicana del Pacífico · Temporada 2026" %}</span>
+                        <div class="footer-brand-social">
+                            <a href="#" class="footer-social-link" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="footer-social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="footer-social-link" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="footer-social-link" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <nav class="footer-brand-nav">
+                    <a href="{% url 'equipo:inicio' %}">{% trans "Inicio" %}</a>
+                    <a href="{% url 'equipo:nuestro_equipo' %}">{% trans "Equipo" %}</a>
+                    <a href="{% url 'equipo:calendario' %}">{% trans "Calendario" %}</a>
+                    <a href="{% url 'equipo:resultados' %}">{% trans "Resultados" %}</a>
+                    <a href="{% url 'equipo:noticias' %}">{% trans "Noticias" %}</a>
+                    <a href="{% url 'equipo:tienda' %}">{% trans "Tienda" %}</a>
+                    <a href="{% url 'equipo:boleteria' %}">{% trans "Boletos" %}</a>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Footer Main -->
         <div class="footer-main">
-            <div class="container">
-                <div class="footer-grid">
-                    <!-- About Club -->
-                    <div class="footer-column">
-                        <h3 class="footer-title lang-text" data-es="ACERCA DEL CLUB" data-en="ABOUT CLUB">ACERCA DEL CLUB</h3>
-                        <p class="footer-text">
-                            Bienvenido al estadio hogar del deporte y el progreso! Este es Top Scorer, un tema deportivo premium.
-                        </p>
-                        <div class="footer-contact">
-                            <p><i class="fas fa-map-marker-alt"></i> Calle 198 Oeste 21 Nueva York, NY 10011</p>
-                            <p><i class="fas fa-envelope"></i> topscorer@godeninteractive.com</p>
-                            <p><i class="fas fa-phone"></i> +88 (0) 101 0000 000</p>
-                        </div>
-                    </div>
+            <div class="footer-grid">
 
-                    <!-- Our Services -->
-                    <div class="footer-column">
-                        <h3 class="footer-title lang-text" data-es="NUESTROS SERVICIOS" data-en="OUR SERVICES">NUESTROS SERVICIOS</h3>
-                        <ul class="footer-list">
-                            <li><a href="#">Full 2021 season overview</a></li>
-                            <li><a href="#">Top ten defensive tactics</a></li>
-                            <li><a href="#">Meet this year's team captain</a></li>
-                            <li><a href="#">Monthly match analysis</a></li>
-                            <li><a href="#">Learn who's who on the pitch</a></li>
-                            <li><a href="#">It's time for coaching 101</a></li>
-                        </ul>
-                    </div>
-
-                    <!-- Latest Blog Posts -->
-                    <div class="footer-column">
-                        <h3 class="footer-title lang-text" data-es="ÚLTIMAS PUBLICACIONES" data-en="LATEST BLOG POSTS">ÚLTIMAS PUBLICACIONES</h3>
-                        <ul class="footer-blog-list">
-                            <li>
-                                <a href="#" class="footer-blog-link">Latest NFL firings</a>
-                                <span class="footer-blog-date">FEBRUARY 13, 2020</span>
-                            </li>
-                            <li>
-                                <a href="#" class="footer-blog-link">Biggest NFL veterans</a>
-                                <span class="footer-blog-date">FEBRUARY 13, 2020</span>
-                            </li>
-                            <li>
-                                <a href="#" class="footer-blog-link">Super Bowl halftime</a>
-                                <span class="footer-blog-date">FEBRUARY 13, 2020</span>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- Follow Us on Instagram -->
-                    <div class="footer-column">
-                        <h3 class="footer-title lang-text" data-es="SÍGUENOS EN INSTAGRAM" data-en="FOLLOW US ON INSTAGRAM">SÍGUENOS EN INSTAGRAM</h3>
-                        <div class="footer-instagram">
-                            <a href="#" class="footer-ig-item"><img src="{% static 'images/ig-footer-1.jpg' %}" alt="Instagram"></a>
-                            <a href="#" class="footer-ig-item"><img src="{% static 'images/ig-footer-2.jpg' %}" alt="Instagram"></a>
-                            <a href="#" class="footer-ig-item"><img src="{% static 'images/ig-footer-3.jpg' %}" alt="Instagram"></a>
-                            <a href="#" class="footer-ig-item"><img src="{% static 'images/ig-footer-4.jpg' %}" alt="Instagram"></a>
-                            <a href="#" class="footer-ig-item"><img src="{% static 'images/ig-footer-5.jpg' %}" alt="Instagram"></a>
-                            <a href="#" class="footer-ig-item"><img src="{% static 'images/ig-footer-6.jpg' %}" alt="Instagram"></a>
-                        </div>
+                <!-- Acerca del club -->
+                <div class="footer-column">
+                    <h3 class="footer-title">{% trans "ACERCA DEL CLUB" %}</h3>
+                    <p class="footer-text">{% trans "Los Cerveceros de Tecate son el equipo de béisbol profesional de la ciudad de Tecate, Baja California. Orgullo de la región y miembros de la Liga Mexicana del Pacífico." %}</p>
+                    <div class="footer-contact">
+                        <p><i class="fas fa-map-marker-alt"></i> Tecate, Baja California, México</p>
+                        <p><i class="fas fa-envelope"></i> contacto@cervecerosdtecate.mx</p>
+                        <p><i class="fas fa-phone"></i> +52 (665) 654-0000</p>
                     </div>
                 </div>
+
+                <!-- Navegación -->
+                <div class="footer-column">
+                    <h3 class="footer-title">{% trans "NAVEGACIÓN" %}</h3>
+                    <ul class="footer-list">
+                        <li><a href="{% url 'equipo:inicio' %}">{% trans "Inicio" %}</a></li>
+                        <li><a href="{% url 'equipo:nuestro_equipo' %}">{% trans "Nuestro Equipo" %}</a></li>
+                        <li><a href="{% url 'equipo:calendario' %}">{% trans "Calendario" %}</a></li>
+                        <li><a href="{% url 'equipo:resultados' %}">{% trans "Resultados" %}</a></li>
+                        <li><a href="{% url 'equipo:tabla_posiciones' %}">{% trans "Tabla de Posiciones" %}</a></li>
+                        <li><a href="{% url 'equipo:noticias' %}">{% trans "Noticias" %}</a></li>
+                        <li><a href="{% url 'equipo:boleteria' %}">{% trans "Boletería" %}</a></li>
+                    </ul>
+                </div>
+
+                <!-- Próximos Partidos -->
+                <div class="footer-column">
+                    <h3 class="footer-title">{% trans "PRÓXIMOS PARTIDOS" %}</h3>
+                    <ul class="footer-fixtures">
+                        <li class="footer-fixture-item">
+                            <div class="fixture-header">
+                                <span class="fixture-date">{% trans "Vie 15 Mayo" %}</span>
+                                <span class="fixture-tag">{% trans "LOCAL" %}</span>
+                            </div>
+                            <a href="{% url 'equipo:calendario' %}" class="fixture-match">{% trans "vs. Toros de Tijuana" %}</a>
+                            <span class="fixture-venue"><i class="fas fa-map-marker-alt"></i> <span>{% trans "Estadio Cerveceros" %}</span></span>
+                        </li>
+                        <li class="footer-fixture-item">
+                            <div class="fixture-header">
+                                <span class="fixture-date">{% trans "Sáb 16 Mayo" %}</span>
+                                <span class="fixture-tag">{% trans "LOCAL" %}</span>
+                            </div>
+                            <a href="{% url 'equipo:calendario' %}" class="fixture-match">{% trans "vs. Mayos de Navojoa" %}</a>
+                            <span class="fixture-venue"><i class="fas fa-map-marker-alt"></i> <span>{% trans "Estadio Cerveceros" %}</span></span>
+                        </li>
+                        <li class="footer-fixture-item">
+                            <div class="fixture-header">
+                                <span class="fixture-date">{% trans "Dom 17 Mayo" %}</span>
+                                <span class="fixture-tag fixture-tag--away">{% trans "VISITA" %}</span>
+                            </div>
+                            <a href="{% url 'equipo:calendario' %}" class="fixture-match">{% trans "vs. Yaquis de Obregón" %}</a>
+                            <span class="fixture-venue"><i class="fas fa-map-marker-alt"></i> <span>{% trans "Estadio Yaquis" %}</span></span>
+                        </li>
+                    </ul>
+                    <a href="{% url 'equipo:calendario' %}" class="footer-fixtures-more">{% trans "Ver calendario completo →" %}</a>
+                </div>
+
+                <!-- Síguenos -->
+                <div class="footer-column">
+                    <h3 class="footer-title">{% trans "SÍGUENOS EN INSTAGRAM" %}</h3>
+                    <div class="footer-instagram">
+                        <a href="#" class="footer-ig-item">
+                            <img src="{% static 'images/ig-footer-1.jpg' %}" alt="Instagram post 1">
+                            <span class="footer-ig-overlay"><i class="fab fa-instagram"></i></span>
+                        </a>
+                        <a href="#" class="footer-ig-item">
+                            <img src="{% static 'images/ig-footer-2.jpg' %}" alt="Instagram post 2">
+                            <span class="footer-ig-overlay"><i class="fab fa-instagram"></i></span>
+                        </a>
+                        <a href="#" class="footer-ig-item">
+                            <img src="{% static 'images/ig-footer-3.jpg' %}" alt="Instagram post 3">
+                            <span class="footer-ig-overlay"><i class="fab fa-instagram"></i></span>
+                        </a>
+                        <a href="#" class="footer-ig-item">
+                            <img src="{% static 'images/ig-footer-4.jpg' %}" alt="Instagram post 4">
+                            <span class="footer-ig-overlay"><i class="fab fa-instagram"></i></span>
+                        </a>
+                        <a href="#" class="footer-ig-item">
+                            <img src="{% static 'images/ig-footer-5.jpg' %}" alt="Instagram post 5">
+                            <span class="footer-ig-overlay"><i class="fab fa-instagram"></i></span>
+                        </a>
+                        <a href="#" class="footer-ig-item">
+                            <img src="{% static 'images/ig-footer-6.jpg' %}" alt="Instagram post 6">
+                            <span class="footer-ig-overlay"><i class="fab fa-instagram"></i></span>
+                        </a>
+                    </div>
+                    <a href="#" class="footer-ig-cta">@cervecerosdtecate</a>
+                </div>
+
             </div>
         </div>
 
-        <!-- Footer Bottom -->
-        <div class="footer-bottom">
-            <div class="container">
-                <div class="footer-bottom-content">
-                    <div class="footer-logo">
-                        <img src="{% static 'images/logo.png' %}" alt="Cerveceros de Tecate">
-                    </div>
-                    <p class="footer-copyright">© 2026 Goden Interactive. All Rights Reserved</p>
-                    <div class="footer-social">
-                        <a href="#" class="footer-social-link"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="footer-social-link"><i class="fab fa-vimeo-v"></i></a>
-                        <a href="#" class="footer-social-link"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="footer-social-link"><i class="fab fa-linkedin-in"></i></a>
-                    </div>
-                </div>
+        <!-- Footer Copyright -->
+        <div class="footer-copyright-bar">
+            <span>{% trans "© 2026 Cerveceros de Tecate · Todos los derechos reservados" %}</span>
+            <div class="footer-legal-links">
+                <a href="#">{% trans "Privacidad" %}</a>
+                <span>·</span>
+                <a href="#">{% trans "Términos de uso" %}</a>
+                <span>·</span>
+                <a href="#">{% trans "Contacto" %}</a>
             </div>
         </div>
+
     </footer>
 
     <script>
-        // Language Toggle
-        let currentLang = 'es';
-        
-        function toggleLanguage() {
-            currentLang = currentLang === 'es' ? 'en' : 'es';
-            updateLanguageButton();
-            
-            // Update all text elements
-            const langElements = document.querySelectorAll('.lang-text');
-            langElements.forEach(element => {
-                const text = element.getAttribute('data-' + currentLang);
-                if (text) {
-                    element.innerHTML = text;
-                }
-            });
-            
-            // Save preference
-            localStorage.setItem('preferredLang', currentLang);
-        }
-        
-        function updateLanguageButton() {
-            const langIcon = document.getElementById('langIcon');
-            if (currentLang === 'en') {
-                langIcon.innerHTML = '<span style="opacity: 0.5">&#127474;&#127485; ES</span> | <span style="font-weight: 700">&#127482;&#127480; EN</span>';
-            } else {
-                langIcon.innerHTML = '<span style="font-weight: 700">&#127474;&#127485; ES</span> | <span style="opacity: 0.5">&#127482;&#127480; EN</span>';
-            }
-        }
-        
-        // Load saved language preference
-        document.addEventListener('DOMContentLoaded', function() {
-            const savedLang = localStorage.getItem('preferredLang');
-            if (savedLang && savedLang !== currentLang) {
-                currentLang = savedLang;
-            }
-            updateLanguageButton();
-            
-            // Update texts if language is English
-            if (currentLang === 'en') {
-                const langElements = document.querySelectorAll('.lang-text');
-                langElements.forEach(element => {
-                    const text = element.getAttribute('data-en');
-                    if (text) {
-                        element.innerHTML = text;
-                    }
-                });
-            }
-        });
-
         // Toggle mobile menu
         const navbarToggle = document.getElementById('navbarToggle');
         const navbarMenus = document.querySelectorAll('.navbar-menu');

@@ -1,12 +1,13 @@
 {% extends 'equipo/base.html' %}
+{% load i18n %}
 
 {% block title %}Noticias - Cerveceros de Tecate{% endblock %}
 
 {% block content %}
 <div class="hero">
     <div class="hero-content">
-        <h1>Noticias</h1>
-        <p>Mantente al día con las últimas novedades del equipo</p>
+        <h1>{% trans "Noticias" %}</h1>
+        <p>{% trans "Manténte al día con las últimas novedades del equipo" %}</p>
     </div>
 </div>
 
@@ -24,11 +25,11 @@
                     {% if noticia.autor %} - Por {{ noticia.autor }}{% endif %}
                 </p>
                 <p class="card-text">{{ noticia.contenido|truncatewords:30 }}</p>
-                <a href="{% url 'equipo:noticia_detalle' noticia.pk %}" class="btn">Leer más</a>
+                <a href="{% url 'equipo:noticia_detalle' noticia.pk %}" class="btn">{% trans "Leer más" %}</a>
             </div>
         </div>
         {% empty %}
-        <p>No hay noticias disponibles en este momento.</p>
+        <p>{% trans "No hay noticias disponibles en este momento." %}</p>
         {% endfor %}
     </div>
 </div>

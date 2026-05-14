@@ -1,0 +1,25 @@
+{% extends 'panel/base.html' %}
+
+{% block page_title %}Eliminar {{ titulo }}{% endblock %}
+
+{% block content %}
+<div class="panel-confirm-wrap">
+    <div class="panel-confirm-card">
+        <div class="panel-confirm-icon"><i class="fas fa-trash"></i></div>
+        <div class="panel-confirm-title">Confirmar eliminación</div>
+        <div class="panel-confirm-body">
+            ¿Estás seguro de que deseas eliminar <strong>{{ objeto }}</strong>?<br>
+            Esta acción <strong>no se puede deshacer</strong>.
+        </div>
+        <div class="panel-confirm-actions">
+            <form method="post" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="panel-btn panel-btn-danger panel-btn-lg">
+                    Sí, eliminar
+                </button>
+            </form>
+            <a href="{% url back_url %}" class="panel-btn panel-btn-secondary panel-btn-lg">Cancelar</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
