@@ -1,0 +1,40 @@
+{% extends 'equipo/base.html' %}
+
+{% block title %}Boletería - Cerveceros de Tecate{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <div class="hero-content">
+        <h1>Boletería</h1>
+        <p>Compra tus boletos para los próximos partidos</p>
+    </div>
+</div>
+
+<div class="container">
+    <h2 class="section-title">Partidos Disponibles</h2>
+    
+    {% for partido in partidos %}
+    <div class="card" style="margin-bottom: 2rem;">
+        <div class="card-content">
+            <div class="partido-card" style="box-shadow: none; padding: 0; margin-bottom: 1rem;">
+                <div class="equipo">
+                    <p class="equipo-nombre">{{ partido.equipo_local.nombre }}</p>
+                </div>
+                <div class="marcador">
+                    <p class="fecha-partido">{{ partido.fecha|date:"d/m/Y H:i" }}</p>
+                    {% if partido.estadio %}
+                    <p class="fecha-partido">{{ partido.estadio }}</p>
+                    {% endif %}
+                </div>
+                <div class="equipo">
+                    <p class="equipo-nombre">{{ partido.equipo_visitante.nombre }}</p>
+                </div>
+            </div>
+            <a href="{% url 'equipo:partido_boletos' partido.pk %}" class="btn">Ver Boletos Disponibles</a>
+        </div>
+    </div>
+    {% empty %}
+    <p>No hay partidos con boletos disponibles en este momento.</p>
+    {% endfor %}
+</div>
+{% endblock %}

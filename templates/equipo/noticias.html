@@ -1,0 +1,35 @@
+{% extends 'equipo/base.html' %}
+
+{% block title %}Noticias - Cerveceros de Tecate{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <div class="hero-content">
+        <h1>Noticias</h1>
+        <p>Mantente al día con las últimas novedades del equipo</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="card-grid">
+        {% for noticia in noticias %}
+        <div class="card {% if noticia.destacada %}noticia-destacada{% endif %}">
+            {% if noticia.imagen %}
+            <img src="{{ noticia.imagen.url }}" alt="{{ noticia.titulo }}" class="card-image">
+            {% endif %}
+            <div class="card-content">
+                <h3 class="card-title">{{ noticia.titulo }}</h3>
+                <p class="card-text" style="color: #999; font-size: 0.9rem;">
+                    {{ noticia.fecha_publicacion|date:"d/m/Y" }}
+                    {% if noticia.autor %} - Por {{ noticia.autor }}{% endif %}
+                </p>
+                <p class="card-text">{{ noticia.contenido|truncatewords:30 }}</p>
+                <a href="{% url 'equipo:noticia_detalle' noticia.pk %}" class="btn">Leer más</a>
+            </div>
+        </div>
+        {% empty %}
+        <p>No hay noticias disponibles en este momento.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

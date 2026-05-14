@@ -1,0 +1,32 @@
+{% extends 'equipo/base.html' %}
+
+{% block title %}Nuestro Equipo - Cerveceros de Tecate{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <div class="hero-content">
+        <h1>Nuestro Equipo</h1>
+        <p>Conoce a los jugadores de Cerveceros de Tecate</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="card-grid">
+        {% for jugador in jugadores %}
+        <div class="card jugador-card">
+            {% if jugador.foto %}
+            <img src="{{ jugador.foto.url }}" alt="{{ jugador.nombre }}" class="card-image">
+            {% endif %}
+            <div class="card-content">
+                <div class="jugador-numero">#{{ jugador.numero }}</div>
+                <h3 class="jugador-nombre">{{ jugador.nombre }}</h3>
+                <p class="jugador-posicion">{{ jugador.get_posicion_display }}</p>
+                <a href="{% url 'equipo:jugador_detalle' jugador.pk %}" class="btn">Ver Perfil</a>
+            </div>
+        </div>
+        {% empty %}
+        <p>No hay jugadores registrados en este momento.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

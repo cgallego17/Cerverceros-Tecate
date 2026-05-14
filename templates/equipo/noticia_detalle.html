@@ -1,0 +1,30 @@
+{% extends 'equipo/base.html' %}
+
+{% block title %}{{ noticia.titulo }} - Cerveceros de Tecate{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <div class="hero-content">
+        <h1>{{ noticia.titulo }}</h1>
+        <p>{{ noticia.fecha_publicacion|date:"d/m/Y" }}{% if noticia.autor %} - Por {{ noticia.autor }}{% endif %}</p>
+    </div>
+</div>
+
+<div class="container">
+    <div style="max-width: 800px; margin: 0 auto;">
+        {% if noticia.imagen %}
+        <img src="{{ noticia.imagen.url }}" alt="{{ noticia.titulo }}" style="width: 100%; border-radius: 10px; margin-bottom: 2rem;">
+        {% endif %}
+        
+        <div class="card">
+            <div class="card-content">
+                <div style="line-height: 1.8; font-size: 1.1rem;">
+                    {{ noticia.contenido|linebreaks }}
+                </div>
+                
+                <a href="{% url 'equipo:noticias' %}" class="btn" style="margin-top: 2rem;">Volver a Noticias</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

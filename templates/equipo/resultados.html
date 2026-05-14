@@ -1,0 +1,34 @@
+{% extends 'equipo/base.html' %}
+
+{% block title %}Resultados - Cerveceros de Tecate{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <div class="hero-content">
+        <h1>Resultados</h1>
+        <p>Resultados de los partidos finalizados</p>
+    </div>
+</div>
+
+<div class="container">
+    {% for partido in partidos %}
+    <div class="partido-card">
+        <div class="equipo">
+            <p class="equipo-nombre">{{ partido.equipo_local.nombre }}</p>
+        </div>
+        <div class="marcador">
+            {{ partido.carreras_local }} - {{ partido.carreras_visitante }}
+            <p class="fecha-partido">{{ partido.fecha|date:"d/m/Y" }}</p>
+            {% if partido.estadio %}
+            <p class="fecha-partido">{{ partido.estadio }}</p>
+            {% endif %}
+        </div>
+        <div class="equipo">
+            <p class="equipo-nombre">{{ partido.equipo_visitante.nombre }}</p>
+        </div>
+    </div>
+    {% empty %}
+    <p>No hay resultados disponibles en este momento.</p>
+    {% endfor %}
+</div>
+{% endblock %}

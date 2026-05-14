@@ -1,0 +1,322 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Cerveceros de Tecate{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="top-bar-container">
+            <div class="top-bar-left">
+                <a href="{% url 'equipo:boleteria' %}" class="top-bar-link">
+                    <span class="top-bar-icon">🎫</span> GET TICKETS
+                </a>
+                <span class="top-bar-separator">|</span>
+                <a href="{% url 'equipo:inicio' %}" class="top-bar-link">HOME</a>
+                <a href="{% url 'equipo:noticias' %}" class="top-bar-link">NOTICIAS</a>
+            </div>
+            <div class="top-bar-right">
+                <button id="langToggle" class="lang-toggle" onclick="toggleLanguage()">
+                    <span id="langIcon">&#127474;&#127485; ES | &#127482;&#127480; EN</span>
+                </button>
+                <span class="top-bar-separator">|</span>
+                <span class="top-bar-text">SÍGUENOS:</span>
+                <a href="#" class="social-link" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-link" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-link" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Navbar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <ul class="navbar-menu navbar-menu-left">
+                <li><a href="{% url 'equipo:inicio' %}" class="navbar-link">HOME</a></li>
+                <li><a href="{% url 'equipo:nuestro_equipo' %}" class="navbar-link">EQUIPO</a></li>
+                <li><a href="{% url 'equipo:calendario' %}" class="navbar-link">CALENDARIO</a></li>
+            </ul>
+            
+            <a href="{% url 'equipo:inicio' %}" class="navbar-brand">
+                <img src="{% static 'images/logo.png' %}" alt="Cerveceros de Tecate" class="navbar-logo">
+            </a>
+            
+            <ul class="navbar-menu navbar-menu-right">
+                <li><a href="{% url 'equipo:resultados' %}" class="navbar-link">RESULTADOS</a></li>
+                <li><a href="{% url 'equipo:noticias' %}" class="navbar-link">NOTICIAS</a></li>
+                <li><a href="{% url 'equipo:boleteria' %}" class="navbar-link">BOLETOS</a></li>
+            </ul>
+            
+            <button class="navbar-toggle" id="navbarToggle" aria-label="Toggle navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    {% block content %}
+    {% endblock %}
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-main">
+            <div class="container">
+                <div class="footer-grid">
+                    <!-- About Club -->
+                    <div class="footer-column">
+                        <h3 class="footer-title lang-text" data-es="ACERCA DEL CLUB" data-en="ABOUT CLUB">ACERCA DEL CLUB</h3>
+                        <p class="footer-text">
+                            Bienvenido al estadio hogar del deporte y el progreso! Este es Top Scorer, un tema deportivo premium.
+                        </p>
+                        <div class="footer-contact">
+                            <p><i class="fas fa-map-marker-alt"></i> Calle 198 Oeste 21 Nueva York, NY 10011</p>
+                            <p><i class="fas fa-envelope"></i> topscorer@godeninteractive.com</p>
+                            <p><i class="fas fa-phone"></i> +88 (0) 101 0000 000</p>
+                        </div>
+                    </div>
+
+                    <!-- Our Services -->
+                    <div class="footer-column">
+                        <h3 class="footer-title lang-text" data-es="NUESTROS SERVICIOS" data-en="OUR SERVICES">NUESTROS SERVICIOS</h3>
+                        <ul class="footer-list">
+                            <li><a href="#">Full 2021 season overview</a></li>
+                            <li><a href="#">Top ten defensive tactics</a></li>
+                            <li><a href="#">Meet this year's team captain</a></li>
+                            <li><a href="#">Monthly match analysis</a></li>
+                            <li><a href="#">Learn who's who on the pitch</a></li>
+                            <li><a href="#">It's time for coaching 101</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Latest Blog Posts -->
+                    <div class="footer-column">
+                        <h3 class="footer-title lang-text" data-es="ÚLTIMAS PUBLICACIONES" data-en="LATEST BLOG POSTS">ÚLTIMAS PUBLICACIONES</h3>
+                        <ul class="footer-blog-list">
+                            <li>
+                                <a href="#" class="footer-blog-link">Latest NFL firings</a>
+                                <span class="footer-blog-date">FEBRUARY 13, 2020</span>
+                            </li>
+                            <li>
+                                <a href="#" class="footer-blog-link">Biggest NFL veterans</a>
+                                <span class="footer-blog-date">FEBRUARY 13, 2020</span>
+                            </li>
+                            <li>
+                                <a href="#" class="footer-blog-link">Super Bowl halftime</a>
+                                <span class="footer-blog-date">FEBRUARY 13, 2020</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Follow Us on Instagram -->
+                    <div class="footer-column">
+                        <h3 class="footer-title lang-text" data-es="SÍGUENOS EN INSTAGRAM" data-en="FOLLOW US ON INSTAGRAM">SÍGUENOS EN INSTAGRAM</h3>
+                        <div class="footer-instagram">
+                            <a href="#" class="footer-ig-item"><img src="{% static 'images/ig-footer-1.jpg' %}" alt="Instagram"></a>
+                            <a href="#" class="footer-ig-item"><img src="{% static 'images/ig-footer-2.jpg' %}" alt="Instagram"></a>
+                            <a href="#" class="footer-ig-item"><img src="{% static 'images/ig-footer-3.jpg' %}" alt="Instagram"></a>
+                            <a href="#" class="footer-ig-item"><img src="{% static 'images/ig-footer-4.jpg' %}" alt="Instagram"></a>
+                            <a href="#" class="footer-ig-item"><img src="{% static 'images/ig-footer-5.jpg' %}" alt="Instagram"></a>
+                            <a href="#" class="footer-ig-item"><img src="{% static 'images/ig-footer-6.jpg' %}" alt="Instagram"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Bottom -->
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="footer-bottom-content">
+                    <div class="footer-logo">
+                        <img src="{% static 'images/logo.png' %}" alt="Cerveceros de Tecate">
+                    </div>
+                    <p class="footer-copyright">© 2026 Goden Interactive. All Rights Reserved</p>
+                    <div class="footer-social">
+                        <a href="#" class="footer-social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="footer-social-link"><i class="fab fa-vimeo-v"></i></a>
+                        <a href="#" class="footer-social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="footer-social-link"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Language Toggle
+        let currentLang = 'es';
+        
+        function toggleLanguage() {
+            currentLang = currentLang === 'es' ? 'en' : 'es';
+            updateLanguageButton();
+            
+            // Update all text elements
+            const langElements = document.querySelectorAll('.lang-text');
+            langElements.forEach(element => {
+                const text = element.getAttribute('data-' + currentLang);
+                if (text) {
+                    element.innerHTML = text;
+                }
+            });
+            
+            // Save preference
+            localStorage.setItem('preferredLang', currentLang);
+        }
+        
+        function updateLanguageButton() {
+            const langIcon = document.getElementById('langIcon');
+            if (currentLang === 'en') {
+                langIcon.innerHTML = '<span style="opacity: 0.5">&#127474;&#127485; ES</span> | <span style="font-weight: 700">&#127482;&#127480; EN</span>';
+            } else {
+                langIcon.innerHTML = '<span style="font-weight: 700">&#127474;&#127485; ES</span> | <span style="opacity: 0.5">&#127482;&#127480; EN</span>';
+            }
+        }
+        
+        // Load saved language preference
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedLang = localStorage.getItem('preferredLang');
+            if (savedLang && savedLang !== currentLang) {
+                currentLang = savedLang;
+            }
+            updateLanguageButton();
+            
+            // Update texts if language is English
+            if (currentLang === 'en') {
+                const langElements = document.querySelectorAll('.lang-text');
+                langElements.forEach(element => {
+                    const text = element.getAttribute('data-en');
+                    if (text) {
+                        element.innerHTML = text;
+                    }
+                });
+            }
+        });
+
+        // Toggle mobile menu
+        const navbarToggle = document.getElementById('navbarToggle');
+        const navbarMenus = document.querySelectorAll('.navbar-menu');
+        
+        if (navbarToggle) {
+            navbarToggle.addEventListener('click', function() {
+                this.classList.toggle('active');
+                navbarMenus.forEach(menu => menu.classList.toggle('active'));
+            });
+
+            // Close menu when clicking on a link
+            const navbarLinks = document.querySelectorAll('.navbar-link');
+            navbarLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    navbarToggle.classList.remove('active');
+                    navbarMenus.forEach(menu => menu.classList.remove('active'));
+                });
+            });
+
+            // Close menu when clicking outside
+            document.addEventListener('click', function(event) {
+                const isClickInsideNav = navbarToggle.contains(event.target) || 
+                    Array.from(navbarMenus).some(menu => menu.contains(event.target));
+                if (!isClickInsideNav && navbarToggle.classList.contains('active')) {
+                    navbarToggle.classList.remove('active');
+                    navbarMenus.forEach(menu => menu.classList.remove('active'));
+                }
+            });
+        }
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            const navbarLogo = document.querySelector('.navbar-logo');
+            
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+                if (navbarLogo) {
+                    navbarLogo.classList.add('scrolled');
+                }
+            } else {
+                navbar.classList.remove('scrolled');
+                if (navbarLogo) {
+                    navbarLogo.classList.remove('scrolled');
+                }
+            }
+        });
+
+        // Hero Slider
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.hero-slide');
+        
+        function showSlide(index) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            currentSlide = (index + slides.length) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }
+        
+        function changeSlide(direction) {
+            showSlide(currentSlide + direction);
+        }
+        
+        // Auto-advance slider every 5 seconds
+        if (slides.length > 0) {
+            setInterval(() => {
+                changeSlide(1);
+            }, 5000);
+        }
+
+        // Store Carousel
+        let storeCurrentIndex = 0;
+        const storeProductsContainer = document.getElementById('storeProducts');
+        
+        function moveStoreCarousel(direction) {
+            if (!storeProductsContainer) return;
+            
+            const products = storeProductsContainer.querySelectorAll('.store-product');
+            const productWidth = products[0].offsetWidth;
+            const gap = 32; // 2rem gap
+            const moveAmount = productWidth + gap;
+            
+            storeCurrentIndex += direction;
+            
+            // Limitar el índice
+            const maxIndex = products.length - 3; // Mostrar 3 productos a la vez
+            if (storeCurrentIndex < 0) {
+                storeCurrentIndex = 0;
+            } else if (storeCurrentIndex > maxIndex) {
+                storeCurrentIndex = maxIndex;
+            }
+            
+            const translateX = -(storeCurrentIndex * moveAmount);
+            storeProductsContainer.style.transform = `translateX(${translateX}px)`;
+        }
+
+        // Accordion functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const accordionHeaders = document.querySelectorAll('.accordion-header');
+            
+            accordionHeaders.forEach(header => {
+                header.addEventListener('click', function() {
+                    const accordionItem = this.parentElement;
+                    const isActive = accordionItem.classList.contains('active');
+                    
+                    // Cerrar todos los acordeones
+                    document.querySelectorAll('.accordion-item').forEach(item => {
+                        item.classList.remove('active');
+                        item.querySelector('.accordion-icon').textContent = '+';
+                    });
+                    
+                    // Abrir el acordeón clickeado si no estaba activo
+                    if (!isActive) {
+                        accordionItem.classList.add('active');
+                        this.querySelector('.accordion-icon').textContent = '-';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

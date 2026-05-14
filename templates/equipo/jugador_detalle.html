@@ -1,0 +1,73 @@
+{% extends 'equipo/base.html' %}
+
+{% block title %}{{ jugador.nombre }} - Cerveceros de Tecate{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <div class="hero-content">
+        <h1>#{{ jugador.numero }} {{ jugador.nombre }}</h1>
+        <p>{{ jugador.get_posicion_display }}</p>
+    </div>
+</div>
+
+<div class="container">
+    <div style="max-width: 800px; margin: 0 auto;">
+        {% if jugador.foto %}
+        <img src="{{ jugador.foto.url }}" alt="{{ jugador.nombre }}" style="width: 100%; max-width: 400px; display: block; margin: 0 auto 2rem; border-radius: 10px;">
+        {% endif %}
+        
+        <div class="card">
+            <div class="card-content">
+                <h2 class="card-title">Información del Jugador</h2>
+                <table style="width: 100%;">
+                    <tr>
+                        <td><strong>Número:</strong></td>
+                        <td>{{ jugador.numero }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Posición:</strong></td>
+                        <td>{{ jugador.get_posicion_display }}</td>
+                    </tr>
+                    {% if jugador.fecha_nacimiento %}
+                    <tr>
+                        <td><strong>Fecha de Nacimiento:</strong></td>
+                        <td>{{ jugador.fecha_nacimiento|date:"d/m/Y" }}</td>
+                    </tr>
+                    {% endif %}
+                    {% if jugador.altura %}
+                    <tr>
+                        <td><strong>Altura:</strong></td>
+                        <td>{{ jugador.altura }}</td>
+                    </tr>
+                    {% endif %}
+                    {% if jugador.peso %}
+                    <tr>
+                        <td><strong>Peso:</strong></td>
+                        <td>{{ jugador.peso }}</td>
+                    </tr>
+                    {% endif %}
+                    {% if jugador.bateo %}
+                    <tr>
+                        <td><strong>Bateo:</strong></td>
+                        <td>{{ jugador.bateo }}</td>
+                    </tr>
+                    {% endif %}
+                    {% if jugador.lanzamiento %}
+                    <tr>
+                        <td><strong>Lanzamiento:</strong></td>
+                        <td>{{ jugador.lanzamiento }}</td>
+                    </tr>
+                    {% endif %}
+                </table>
+                
+                {% if jugador.biografia %}
+                <h3 style="margin-top: 2rem;">Biografía</h3>
+                <p>{{ jugador.biografia }}</p>
+                {% endif %}
+                
+                <a href="{% url 'equipo:nuestro_equipo' %}" class="btn" style="margin-top: 2rem;">Volver al Equipo</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends 'equipo/base.html' %}
+
+{% block title %}Calendario - Cerveceros de Tecate{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <div class="hero-content">
+        <h1>Calendario de Partidos</h1>
+        <p>Todos los partidos de la temporada</p>
+    </div>
+</div>
+
+<div class="container">
+    <h2 class="section-title">Próximos Partidos</h2>
+    {% for partido in partidos_futuros %}
+    <div class="partido-card">
+        <div class="equipo">
+            <p class="equipo-nombre">{{ partido.equipo_local.nombre }}</p>
+        </div>
+        <div class="marcador">
+            <span class="estado-badge estado-{{ partido.estado }}">{{ partido.get_estado_display }}</span>
+            <p class="fecha-partido">{{ partido.fecha|date:"d/m/Y H:i" }}</p>
+            {% if partido.estadio %}
+            <p class="fecha-partido">{{ partido.estadio }}</p>
+            {% endif %}
+        </div>
+        <div class="equipo">
+            <p class="equipo-nombre">{{ partido.equipo_visitante.nombre }}</p>
+        </div>
+    </div>
+    {% empty %}
+    <p>No hay partidos programados próximamente.</p>
+    {% endfor %}
+
+    <h2 class="section-title" style="margin-top: 3rem;">Partidos Pasados</h2>
+    {% for partido in partidos_pasados %}
+    <div class="partido-card">
+        <div class="equipo">
+            <p class="equipo-nombre">{{ partido.equipo_local.nombre }}</p>
+        </div>
+        <div class="marcador">
+            {% if partido.estado == 'finalizado' %}
+            {{ partido.carreras_local }} - {{ partido.carreras_visitante }}
+            {% else %}
+            <span class="estado-badge estado-{{ partido.estado }}">{{ partido.get_estado_display }}</span>
+            {% endif %}
+            <p class="fecha-partido">{{ partido.fecha|date:"d/m/Y" }}</p>
+        </div>
+        <div class="equipo">
+            <p class="equipo-nombre">{{ partido.equipo_visitante.nombre }}</p>
+        </div>
+    </div>
+    {% empty %}
+    <p>No hay partidos pasados registrados.</p>
+    {% endfor %}
+</div>
+{% endblock %}

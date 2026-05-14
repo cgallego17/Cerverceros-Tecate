@@ -1,0 +1,55 @@
+{% extends 'equipo/base.html' %}
+
+{% block title %}Tabla de Posiciones - Cerveceros de Tecate{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <div class="hero-content">
+        <h1>Tabla de Posiciones</h1>
+        <p>Clasificación de la temporada</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Posición</th>
+                    <th>Equipo</th>
+                    <th>JJ</th>
+                    <th>G</th>
+                    <th>P</th>
+                    <th>PCT</th>
+                    <th>CF</th>
+                    <th>CC</th>
+                    <th>Racha</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for posicion in tabla %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td><strong>{{ posicion.equipo.nombre }}</strong></td>
+                    <td>{{ posicion.juegos_jugados }}</td>
+                    <td>{{ posicion.ganados }}</td>
+                    <td>{{ posicion.perdidos }}</td>
+                    <td>{{ posicion.porcentaje|floatformat:3 }}</td>
+                    <td>{{ posicion.carreras_favor }}</td>
+                    <td>{{ posicion.carreras_contra }}</td>
+                    <td>{{ posicion.racha }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="9" style="text-align: center;">No hay datos de la tabla de posiciones.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div style="margin-top: 2rem; color: #666;">
+        <p><strong>JJ:</strong> Juegos Jugados | <strong>G:</strong> Ganados | <strong>P:</strong> Perdidos | <strong>PCT:</strong> Porcentaje</p>
+        <p><strong>CF:</strong> Carreras a Favor | <strong>CC:</strong> Carreras en Contra</p>
+    </div>
+</div>
+{% endblock %}
