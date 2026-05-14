@@ -3,6 +3,7 @@ from django.utils import timezone
 from .models import (
     Jugador, Partido, Noticia, Boleto, TablaPosiciones,
     HeroSlide, Patrocinador, Producto, CategoriaProducto, ItemFaq,
+    SkillProgress, ArticuloNoticia, ImagenInstagram,
 )
 
 
@@ -30,6 +31,15 @@ def inicio(request):
     # FAQ / Acordeón
     faq_items = ItemFaq.objects.filter(activo=True).order_by('orden')
 
+    # Skills Progress
+    skills = SkillProgress.objects.filter(activo=True).order_by('orden')
+
+    # Artículos de Noticias (News Grid)
+    articulos_news = ArticuloNoticia.objects.filter(activo=True, destacado_grid=True).order_by('orden')
+
+    # Imágenes de Instagram
+    imagenes_instagram = ImagenInstagram.objects.filter(activo=True).order_by('orden')[:4]
+
     context = {
         'hero_slides': hero_slides,
         'patrocinadores': patrocinadores,
@@ -40,6 +50,9 @@ def inicio(request):
         'noticias_destacadas': noticias_destacadas,
         'productos_destacados': productos_destacados,
         'faq_items': faq_items,
+        'skills': skills,
+        'articulos_news': articulos_news,
+        'imagenes_instagram': imagenes_instagram,
     }
     return render(request, 'equipo/inicio.html', context)
 

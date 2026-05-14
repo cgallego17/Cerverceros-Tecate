@@ -275,3 +275,85 @@ class ItemFaq(models.Model):
     def __str__(self):
         return self.titulo
 
+
+# ──────────────────────────────────────────────
+#  HOME – SKILLS PROGRESS
+# ──────────────────────────────────────────────
+
+class SkillProgress(models.Model):
+    nombre = models.CharField(max_length=100, verbose_name="Nombre de la habilidad")
+    porcentaje = models.PositiveIntegerField(
+        default=0, 
+        verbose_name="Porcentaje (0-100)",
+        help_text="Valor entre 0 y 100"
+    )
+    orden = models.PositiveIntegerField(default=0, verbose_name="Orden")
+    activo = models.BooleanField(default=True, verbose_name="Activo")
+
+    class Meta:
+        verbose_name = "Barra de Progreso"
+        verbose_name_plural = "Barras de Progreso (Skills)"
+        ordering = ['orden']
+
+    def __str__(self):
+        return f"{self.nombre} - {self.porcentaje}%"
+
+
+# ──────────────────────────────────────────────
+#  HOME – ARTÍCULOS DE NOTICIAS (NEWS GRID)
+# ──────────────────────────────────────────────
+
+class ArticuloNoticia(models.Model):
+    TIPO_CHOICES = [
+        ('texto', 'Solo Texto'),
+        ('imagen', 'Con Imagen'),
+    ]
+    
+    titulo = models.CharField(max_length=200, verbose_name="Título")
+    descripcion = models.TextField(blank=True, verbose_name="Descripción")
+    tipo = models.CharField(max_length=10, choices=TIPO_CHOICES, default='texto', verbose_name="Tipo")
+    imagen = models.ImageField(upload_to='news/', blank=True, null=True, verbose_name="Imagen")
+    enlace = models.CharField(max_length=200, blank=True, verbose_name="Enlace")
+    fecha = models.DateField(auto_now_add=True, verbose_name="Fecha")
+    orden = models.PositiveIntegerField(default=0, verbose_name="Orden")
+    activo = models.BooleanField(default=True, verbose_name="Activo")
+    destacado_grid = models.BooleanField(
+        default=False,
+        verbose_name="Mostrar en News Grid",
+        help_text="Mostrar en la sección de noticias del inicio"
+    )
+
+    class Meta:
+        verbose_name = "Artículo de Noticia"
+        verbose_name_plural = "Artículos de Noticias (News Grid)"
+        ordering = ['orden']
+
+    def __str__(self):
+        return self.titulo
+
+
+# ──────────────────────────────────────────────
+#  HOME – IMÁGENES DE INSTAGRAM
+# ──────────────────────────────────────────────
+
+class ImagenInstagram(models.Model):
+    imagen = models.ImageField(upload_to='instagram/', blank=True, null=True, verbose_name="Imagen")
+    imagen_url = models.URLField(blank=True, verbose_name="URL de imagen", help_text="URL externa si no subes imagen")
+    enlace = models.URLField(blank=True, verbose_name="Enlace a Instagram")
+    orden = models.PositiveIntegerField(default=0, verbose_name="Orden")
+    activo = models.BooleanField(default=True, verbose_name="Activo")
+
+    class Meta:
+        verbose_name = "Imagen de Instagram"
+        verbose_name_plural = "Imágenes de Instagram"
+        ordering = ['orden']
+
+    def __str__(self):
+        return f"Instagram #{self.orden}"
+    
+    @property
+    def imagen_src(self):
+        if self.imagen:
+            return self.imagen.url
+        return self.imagen_url or ''
+
