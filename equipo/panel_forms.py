@@ -145,7 +145,8 @@ class UsuarioCrearForm(forms.ModelForm):
         p2 = self.cleaned_data.get('password2', '')
         if p1 != p2:
             raise forms.ValidationError('Las contraseñas no coinciden.')
-        validate_password(p1)
+        if p1:
+            validate_password(p1)
         return p2
 
     def save(self, commit=True):
