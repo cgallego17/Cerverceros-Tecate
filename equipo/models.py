@@ -146,10 +146,10 @@ class TablaPosiciones(models.Model):
 # ──────────────────────────────────────────────
 
 class HeroSlide(models.Model):
-    subtitulo = models.CharField(max_length=200, verbose_name="Subtítulo")
-    titulo_linea1 = models.CharField(max_length=200, verbose_name="Título línea 1")
+    subtitulo = models.CharField(max_length=200, blank=True, verbose_name="Subtítulo")
+    titulo_linea1 = models.CharField(max_length=200, blank=True, verbose_name="Título línea 1")
     titulo_linea2 = models.CharField(max_length=200, blank=True, verbose_name="Título línea 2")
-    imagen = models.ImageField(upload_to='hero/', blank=True, null=True, verbose_name="Imagen (sube aquí)")
+    imagen = models.ImageField(upload_to='hero/', verbose_name="Imagen (sube aquí)")
     imagen_url = models.URLField(blank=True, verbose_name="URL de imagen externa", help_text="Se usa si no subes imagen")
     btn1_texto = models.CharField(max_length=100, blank=True, verbose_name="Botón 1 texto")
     btn1_url = models.CharField(max_length=200, blank=True, verbose_name="Botón 1 enlace")
