@@ -71,6 +71,18 @@
                 <span class="panel-nav-icon"><i class="fas fa-users"></i></span> Jugadores
             </a>
 
+            <div class="panel-nav-section">PARTIDOS</div>
+
+            <a href="{% url 'panel:equipos_lista' %}"
+               class="panel-nav-link {% if 'equipo' in request.resolver_match.url_name %}active{% endif %}">
+                <span class="panel-nav-icon"><i class="fas fa-shield-halved"></i></span> Equipos
+            </a>
+
+            <a href="{% url 'panel:partidos_lista' %}"
+               class="panel-nav-link {% if 'partido' in request.resolver_match.url_name %}active{% endif %}">
+                <span class="panel-nav-icon"><i class="fas fa-baseball"></i></span> Partidos
+            </a>
+
             <div class="panel-nav-section">ADMINISTRACIÓN</div>
 
             {% if request.user.is_superuser %}

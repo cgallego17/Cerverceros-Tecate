@@ -1,0 +1,59 @@
+{% extends 'panel/base.html' %}
+
+{% block page_title %}Equipos{% endblock %}
+
+{% block content %}
+<div class="panel-page-header">
+    <div class="panel-page-title">
+        Equipos
+        <small>Administra los equipos de béisbol</small>
+    </div>
+    <a href="{% url 'panel:equipo_nuevo' %}" class="panel-btn panel-btn-primary">+ Nuevo Equipo</a>
+</div>
+
+{% if equipos %}
+<div class="panel-card">
+    <table class="panel-table">
+        <thead>
+            <tr>
+                <th>Logo</th>
+                <th>Nombre</th>
+                <th>Ciudad</th>
+                <th class="text-right">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for equipo in equipos %}
+            <tr>
+                <td>
+                    {% if equipo.logo %}
+                    <img src="{{ equipo.logo.url }}" alt="{{ equipo.nombre }}" style="max-height: 40px; max-width: 60px; object-fit: contain;">
+                    {% else %}
+                    <div style="width: 40px; height: 40px; background: #e5e7eb; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #6b7280;">
+                        {{ equipo.nombre|first }}
+                    </div>
+                    {% endif %}
+                </td>
+                <td><strong>{{ equipo.nombre }}</strong></td>
+                <td>{{ equipo.ciudad }}</td>
+                <td class="text-right">
+                    <a href="{% url 'panel:equipo_editar' equipo.pk %}" class="panel-btn-icon" title="Editar">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <a href="{% url 'panel:equipo_eliminar' equipo.pk %}" class="panel-btn-icon panel-btn-danger" title="Eliminar">
+                        <i class="fas fa-trash"></i>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="panel-empty-state">
+    <i class="fas fa-users"></i>
+    <p>No hay equipos registrados</p>
+    <a href="{% url 'panel:equipo_nuevo' %}" class="panel-btn panel-btn-primary">Crear primer equipo</a>
+</div>
+{% endif %}
+{% endblock %}

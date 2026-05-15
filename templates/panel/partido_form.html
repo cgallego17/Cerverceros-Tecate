@@ -1,0 +1,100 @@
+{% extends 'panel/base.html' %}
+
+{% block page_title %}{% if objeto %}Editar Partido{% else %}Nuevo Partido{% endif %}{% endblock %}
+
+{% block content %}
+<div class="panel-page-header">
+    <div class="panel-page-title">
+        {% if objeto %}Editar Partido{% else %}Nuevo Partido{% endif %}
+        <small>{% if objeto %}Modifica los datos del partido{% else %}Registra un nuevo partido{% endif %}</small>
+    </div>
+    <a href="{% url 'panel:partidos_lista' %}" class="panel-btn panel-btn-secondary">← Volver a partidos</a>
+</div>
+
+<form method="post" novalidate>
+    {% csrf_token %}
+    <div class="panel-card">
+        <div class="panel-form-grid">
+            <div class="panel-form-group">
+                <label class="panel-form-label" for="{{ form.fecha.id_for_label }}">Fecha y hora *</label>
+                {{ form.fecha }}
+                {% for error in form.fecha.errors %}
+                <span class="panel-field-error"><i class="fas fa-triangle-exclamation"></i> {{ error }}</span>
+                {% endfor %}
+                <span class="panel-form-help">Formato: YYYY-MM-DD HH:MM</span>
+            </div>
+
+            <div class="panel-form-group">
+                <label class="panel-form-label" for="{{ form.temporada.id_for_label }}">Temporada *</label>
+                {{ form.temporada }}
+                {% for error in form.temporada.errors %}
+                <span class="panel-field-error"><i class="fas fa-triangle-exclamation"></i> {{ error }}</span>
+                {% endfor %}
+            </div>
+
+            <div class="panel-form-group">
+                <label class="panel-form-label" for="{{ form.equipo_local.id_for_label }}">Equipo Local *</label>
+                {{ form.equipo_local }}
+                {% for error in form.equipo_local.errors %}
+                <span class="panel-field-error"><i class="fas fa-triangle-exclamation"></i> {{ error }}</span>
+                {% endfor %}
+            </div>
+
+            <div class="panel-form-group">
+                <label class="panel-form-label" for="{{ form.equipo_visitante.id_for_label }}">Equipo Visitante *</label>
+                {{ form.equipo_visitante }}
+                {% for error in form.equipo_visitante.errors %}
+                <span class="panel-field-error"><i class="fas fa-triangle-exclamation"></i> {{ error }}</span>
+                {% endfor %}
+            </div>
+
+            <div class="panel-form-group">
+                <label class="panel-form-label" for="{{ form.carreras_local.id_for_label }}">Carreras Local</label>
+                {{ form.carreras_local }}
+                {% for error in form.carreras_local.errors %}
+                <span class="panel-field-error"><i class="fas fa-triangle-exclamation"></i> {{ error }}</span>
+                {% endfor %}
+            </div>
+
+            <div class="panel-form-group">
+                <label class="panel-form-label" for="{{ form.carreras_visitante.id_for_label }}">Carreras Visitante</label>
+                {{ form.carreras_visitante }}
+                {% for error in form.carreras_visitante.errors %}
+                <span class="panel-field-error"><i class="fas fa-triangle-exclamation"></i> {{ error }}</span>
+                {% endfor %}
+            </div>
+
+            <div class="panel-form-group">
+                <label class="panel-form-label" for="{{ form.estado.id_for_label }}">Estado *</label>
+                {{ form.estado }}
+                {% for error in form.estado.errors %}
+                <span class="panel-field-error"><i class="fas fa-triangle-exclamation"></i> {{ error }}</span>
+                {% endfor %}
+            </div>
+
+            <div class="panel-form-group">
+                <label class="panel-form-label" for="{{ form.estadio.id_for_label }}">Estadio</label>
+                {{ form.estadio }}
+                {% for error in form.estadio.errors %}
+                <span class="panel-field-error"><i class="fas fa-triangle-exclamation"></i> {{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+
+        {% if form.non_field_errors %}
+        <div class="panel-message panel-message-error">
+            <i class="fas fa-triangle-exclamation"></i>
+            {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="panel-form-actions">
+            <button type="submit" class="panel-btn panel-btn-primary panel-btn-lg">
+                <i class="fas fa-floppy-disk"></i>
+                {% if objeto %}Guardar cambios{% else %}Crear partido{% endif %}
+            </button>
+            <a href="{% url 'panel:partidos_lista' %}" class="panel-btn panel-btn-secondary panel-btn-lg">Cancelar</a>
+        </div>
+    </div>
+</form>
+{% endblock %}

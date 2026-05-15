@@ -68,4 +68,16 @@ urlpatterns = [
     path('caja/nueva/', panel_views.transaccion_crear, name='transaccion_nueva'),
     path('caja/<int:pk>/editar/', panel_views.transaccion_editar, name='transaccion_editar'),
     path('caja/<int:pk>/eliminar/', panel_views.transaccion_eliminar, name='transaccion_eliminar'),
+
+    # Equipos
+    path('equipos/', panel_views.equipos_lista, name='equipos_lista'),
+    path('equipos/nuevo/', panel_views.equipo_form, name='equipo_nuevo'),
+    path('equipos/<int:pk>/editar/', panel_views.equipo_form, name='equipo_editar'),
+    path('equipos/<int:pk>/eliminar/', panel_views.equipo_eliminar, name='equipo_eliminar'),
+
+    # Partidos
+    path('partidos/', panel_views.partidos_lista, name='partidos_lista'),
+    path('partidos/nuevo/', panel_views.partido_form, name='partido_nuevo'),
+    path('partidos/<int:pk>/editar/', panel_views.partido_form, name='partido_editar'),
+    path('partidos/<int:pk>/eliminar/', panel_views.partido_eliminar, name='partido_eliminar'),
 ]

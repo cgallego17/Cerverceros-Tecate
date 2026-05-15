@@ -501,3 +501,81 @@ def transaccion_eliminar(request, pk):
         'back_url': 'panel:caja_lista',
         'titulo':   'Transacción',
     })
+
+
+# ── EQUIPOS ───────────────────────────────────────
+
+@login_required(login_url=_LOGIN)
+def equipos_lista(request):
+    if not request.user.is_staff:
+        return redirect('panel:dashboard')
+    equipos = Equipo.objects.all().order_by('nombre')
+    return render(request, 'panel/equipos_lista.html', {'equipos': equipos})
+
+
+@login_required(login_url=_LOGIN)
+def equipo_form(request, pk=None):
+    if not request.user.is_staff:
+        return redirect('panel:dashboard')
+    equipo = get_object_or_404(Equipo, pk=pk) if pk else None
+    form = EquipoForm(request.POST or None, request.FILES or None, instance=equipo)
+    if form.is_valid():
+        obj = form.save()
+        messages.success(request, f'Equipo "{obj.nombre}" guardado correctamente.')
+        return redirect('panel:equipos_lista')
+    return render(request, 'panel/equipo_form.html', {'form': form, 'objeto': equipo})
+
+
+@login_required(login_url=_LOGIN)
+def equipo_eliminar(request, pk):
+    if not request.user.is_staff:
+        return redirect('panel:dashboard')
+    equipo = get_object_or_404(Equipo, pk=pk)
+    if request.method == 'POST':
+        equipo.delete()
+        messages.success(request, 'Equipo eliminado correctamente.')
+        return redirect('panel:equipos_lista')
+    return render(request, 'panel/confirmar_eliminar.html', {
+        'objeto': equipo,
+        'back_url': 'panel:equipos_lista',
+        'titulo': 'Equipo',
+    })
+
+
+# ── PARTIDOS ──────────────────────────────────────
+
+@login_required(login_url=_LOGIN)
+def partidos_lista(request):
+    if not request.user.is_staff:
+        return redirect('panel:dashboard')
+    partidos = Partido.objects.all().order_by('-fecha')
+    return render(request, 'panel/partidos_lista.html', {'partidos': partidos})
+
+
+@login_required(login_url=_LOGIN)
+def partido_form(request, pk=None):
+    if not request.user.is_staff:
+        return redirect('panel:dashboard')
+    partido = get_object_or_404(Partido, pk=pk) if pk else None
+    form = PartidoForm(request.POST or None, instance=partido)
+    if form.is_valid():
+        obj = form.save()
+        messages.success(request, f'Partido guardado correctamente.')
+        return redirect('panel:partidos_lista')
+    return render(request, 'panel/partido_form.html', {'form': form, 'objeto': partido})
+
+
+@login_required(login_url=_LOGIN)
+def partido_eliminar(request, pk):
+    if not request.user.is_staff:
+        return redirect('panel:dashboard')
+    partido = get_object_or_404(Partido, pk=pk)
+    if request.method == 'POST':
+        partido.delete()
+        messages.success(request, 'Partido eliminado correctamente.')
+        return redirect('panel:partidos_lista')
+    return render(request, 'panel/confirmar_eliminar.html', {
+        'objeto': partido,
+        'back_url': 'panel:partidos_lista',
+        'titulo': 'Partido',
+    })
