@@ -932,8 +932,8 @@ tbody tr:hover {
 }
 
 .team-logo-real img {
-    width: 200%;
-    height: 100%;
+    width: 160%;
+    height: 160%;
     object-fit: contain;
     filter: drop-shadow(0 4px 12px rgba(227, 30, 36, 0.3));
 }
@@ -2348,10 +2348,49 @@ tbody tr:hover {
     
     .hero-sponsors {
         gap: 2rem;
+        flex-wrap: wrap;
     }
     
     .sponsor-logo {
         height: 45px;
+    }
+
+    /* Score card — switch to 2-col on tablets */
+    .score-card {
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+    }
+
+    .score-info {
+        padding-left: 0;
+    }
+
+    /* News grid — 2 columns on tablets */
+    .news-grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto;
+    }
+
+    .news-item-dark,
+    .news-item-image {
+        min-height: 300px;
+    }
+
+    /* Featured player — stack on tablets */
+    .featured-player-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    /* Accordion — stack on tablets */
+    .accordion-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+
+    /* Instagram — 2 columns on tablets */
+    .instagram-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
@@ -2488,6 +2527,71 @@ tbody tr:hover {
     .team-initial {
         font-size: 2rem;
     }
+
+    /* Score card — reset desktop padding/alignment */
+    .score-info {
+        padding-left: 0;
+        text-align: center;
+    }
+
+    .score-actions {
+        align-items: center;
+    }
+
+    /* Featured player — stack vertically */
+    .featured-player-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    /* News grid — 2 columns, auto rows */
+    .news-grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto;
+    }
+
+    .news-item-dark,
+    .news-item-image {
+        min-height: 280px;
+    }
+
+    /* Accordion — stack vertically */
+    .accordion-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+
+    /* Instagram — 2 columns */
+    .instagram-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Disable parallax (broken on iOS) */
+    .next-match-section,
+    .features-banner-section {
+        background-attachment: scroll;
+    }
+
+    /* Hero sponsors — wrap on small screens */
+    .hero-sponsors {
+        flex-wrap: wrap;
+        gap: 1.5rem;
+    }
+
+    /* Countdown — tighter gap */
+    .countdown-timer {
+        gap: 1rem;
+    }
+
+    /* Store carousel — smaller min-width */
+    .store-product {
+        min-width: 260px;
+    }
+
+    /* Official store — reduce vertical padding */
+    .official-store-section {
+        padding: 5rem 0;
+    }
 }
 
 @media (max-width: 480px) {
@@ -2501,6 +2605,38 @@ tbody tr:hover {
     
     .feature-grid {
         grid-template-columns: 1fr;
+    }
+
+    /* News grid — single column on very small screens */
+    .news-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .news-item-dark,
+    .news-item-image {
+        min-height: 240px;
+    }
+
+    /* Hero sponsors — compact */
+    .hero-sponsors {
+        gap: 1rem;
+        bottom: 1rem;
+    }
+
+    /* Store product — fit small screens */
+    .store-product {
+        min-width: calc(100vw - 5rem);
+    }
+
+    /* Accordion image — hide on tiny screens */
+    .accordion-image {
+        display: none;
+    }
+
+    /* Featured player image — shorter */
+    .featured-player-image img {
+        max-height: 320px;
+        object-fit: cover;
     }
 }
 

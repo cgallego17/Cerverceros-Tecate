@@ -1,12 +1,16 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User, Group, Permission
 from django.contrib import messages
+from itertools import groupby
+from operator import attrgetter
 
 from .models import HeroSlide, Patrocinador, CategoriaProducto, Producto, ItemFaq, Noticia, Jugador
 from .panel_forms import (
     HeroSlideForm, PatrocinadorForm, CategoriaProductoForm,
     ProductoForm, ItemFaqForm, NoticiaForm, JugadorForm,
+    UsuarioCrearForm, UsuarioEditarForm, RolForm,
 )
 
 _LOGIN = '/panel/login/'
@@ -47,6 +51,8 @@ def dashboard(request):
         'total_categorias': CategoriaProducto.objects.count(),
         'total_noticias': Noticia.objects.count(),
         'total_jugadores': Jugador.objects.count(),
+        'total_usuarios': User.objects.count(),
+        'total_roles': Group.objects.count(),
     }
     return render(request, 'panel/dashboard.html', context)
 
@@ -236,3 +242,146 @@ def jugador_form(request, pk=None):
 @login_required(login_url=_LOGIN)
 def jugador_eliminar(request, pk):
     return _crud_delete(request, Jugador, 'panel:jugadores_lista', pk, 'Jugador', 'Jugador eliminado.')
+
+
+# ── USUARIOS ──────────────────────────────────────
+
+def _superuser_check(request):
+    """Returns True if the user is a superuser, otherwise redirects with error."""
+    if not request.user.is_superuser:
+        messages.error(request, 'Acceso denegado. Solo superusuarios pueden gestionar usuarios.')
+        return False
+    return True
+
+
+@login_required(login_url=_LOGIN)
+def usuarios_lista(request):
+    if not _superuser_check(request):
+        return redirect('panel:dashboard')
+    usuarios = User.objects.all().order_by('-is_superuser', '-is_staff', 'username')
+    return render(request, 'panel/usuarios_lista.html', {'usuarios': usuarios})
+
+
+@login_required(login_url=_LOGIN)
+def usuario_crear(request):
+    if not _superuser_check(request):
+        return redirect('panel:dashboard')
+    form = UsuarioCrearForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+        messages.success(request, f'Usuario "{form.cleaned_data["username"]}" creado correctamente.')
+        return redirect('panel:usuarios_lista')
+    return render(request, 'panel/usuario_form.html', {'form': form})
+
+
+@login_required(login_url=_LOGIN)
+def usuario_editar(request, pk):
+    if not _superuser_check(request):
+        return redirect('panel:dashboard')
+    usuario = get_object_or_404(User, pk=pk)
+    form = UsuarioEditarForm(request.POST or None, instance=usuario)
+    if form.is_valid():
+        user = form.save()
+        # Keep current session valid if editing self
+        if user == request.user:
+            update_session_auth_hash(request, user)
+        messages.success(request, f'Usuario "{user.username}" actualizado correctamente.')
+        return redirect('panel:usuarios_lista')
+    return render(request, 'panel/usuario_form.html', {'form': form, 'objeto': usuario})
+
+
+@login_required(login_url=_LOGIN)
+def usuario_eliminar(request, pk):
+    if not _superuser_check(request):
+        return redirect('panel:dashboard')
+    usuario = get_object_or_404(User, pk=pk)
+    if usuario == request.user:
+        messages.error(request, 'No puedes eliminar tu propia cuenta.')
+        return redirect('panel:usuarios_lista')
+    if usuario.is_superuser:
+        messages.error(request, 'No se puede eliminar una cuenta de superusuario.')
+        return redirect('panel:usuarios_lista')
+    if request.method == 'POST':
+        nombre = usuario.username
+        usuario.delete()
+        messages.success(request, f'Usuario "{nombre}" eliminado correctamente.')
+        return redirect('panel:usuarios_lista')
+    return render(request, 'panel/confirmar_eliminar.html', {
+        'objeto': usuario,
+        'back_url': 'panel:usuarios_lista',
+        'titulo': 'Usuario',
+    })
+
+
+# ── ROLES (Groups) ────────────────────────────────
+
+def _permisos_agrupados():
+    """Returns permissions for the equipo app grouped by content-type model."""
+    perms = (
+        Permission.objects
+        .select_related('content_type')
+        .filter(content_type__app_label='equipo')
+        .order_by('content_type__model', 'codename')
+    )
+    groups = {}
+    for perm in perms:
+        label = perm.content_type.model.capitalize()
+        groups.setdefault(label, []).append(perm)
+    return groups
+
+
+@login_required(login_url=_LOGIN)
+def roles_lista(request):
+    if not _superuser_check(request):
+        return redirect('panel:dashboard')
+    roles = Group.objects.prefetch_related('permissions', 'user_set').all().order_by('name')
+    return render(request, 'panel/roles_lista.html', {'roles': roles})
+
+
+@login_required(login_url=_LOGIN)
+def rol_crear(request):
+    if not _superuser_check(request):
+        return redirect('panel:dashboard')
+    form = RolForm(request.POST or None)
+    if form.is_valid():
+        rol = form.save()
+        messages.success(request, f'Rol "{rol.name}" creado correctamente.')
+        return redirect('panel:roles_lista')
+    return render(request, 'panel/rol_form.html', {
+        'form': form,
+        'permisos_agrupados': _permisos_agrupados(),
+    })
+
+
+@login_required(login_url=_LOGIN)
+def rol_editar(request, pk):
+    if not _superuser_check(request):
+        return redirect('panel:dashboard')
+    rol = get_object_or_404(Group, pk=pk)
+    form = RolForm(request.POST or None, instance=rol)
+    if form.is_valid():
+        form.save()
+        messages.success(request, f'Rol "{rol.name}" actualizado correctamente.')
+        return redirect('panel:roles_lista')
+    return render(request, 'panel/rol_form.html', {
+        'form': form,
+        'objeto': rol,
+        'permisos_agrupados': _permisos_agrupados(),
+    })
+
+
+@login_required(login_url=_LOGIN)
+def rol_eliminar(request, pk):
+    if not _superuser_check(request):
+        return redirect('panel:dashboard')
+    rol = get_object_or_404(Group, pk=pk)
+    if request.method == 'POST':
+        nombre = rol.name
+        rol.delete()
+        messages.success(request, f'Rol "{nombre}" eliminado correctamente.')
+        return redirect('panel:roles_lista')
+    return render(request, 'panel/confirmar_eliminar.html', {
+        'objeto': rol,
+        'back_url': 'panel:roles_lista',
+        'titulo': 'Rol',
+    })

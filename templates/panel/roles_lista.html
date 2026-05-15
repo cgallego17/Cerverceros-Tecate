@@ -1,0 +1,194 @@
+{% extends 'panel/base.html' %}
+
+{% block page_title %}Roles{% endblock %}
+
+{% block content %}
+<div class="panel-page-header">
+    <div class="panel-page-title">Roles <small>Grupos de permisos reutilizables</small></div>
+    <a href="{% url 'panel:rol_nuevo' %}" class="panel-btn panel-btn-primary">+ Nuevo rol</a>
+</div>
+
+{% if roles %}
+<div class="roles-grid">
+    {% for rol in roles %}
+    <div class="rol-card">
+        <div class="rol-card-header">
+            <div class="rol-icon"><i class="fas fa-shield-halved"></i></div>
+            <div class="rol-meta">
+                <div class="rol-name">{{ rol.name }}</div>
+                <div class="rol-counts">
+                    <span><i class="fas fa-users"></i> {{ rol.user_set.count }} usuario{{ rol.user_set.count|pluralize }}</span>
+                    <span><i class="fas fa-key"></i> {{ rol.permissions.count }} permiso{{ rol.permissions.count|pluralize }}</span>
+                </div>
+            </div>
+        </div>
+
+        {% if rol.permissions.exists %}
+        <div class="rol-perms">
+            {% for perm in rol.permissions.all|slice:":8" %}
+            <span class="rol-perm-tag">{{ perm.codename }}</span>
+            {% endfor %}
+            {% if rol.permissions.count > 8 %}
+            <span class="rol-perm-tag rol-perm-more">+{{ rol.permissions.count|add:"-8" }} más</span>
+            {% endif %}
+        </div>
+        {% else %}
+        <p class="rol-no-perms">Sin permisos asignados</p>
+        {% endif %}
+
+        {% if rol.user_set.exists %}
+        <div class="rol-users">
+            {% for u in rol.user_set.all|slice:":5" %}
+            <span class="rol-user-chip" title="{{ u.username }}">{{ u.username|first|upper }}</span>
+            {% endfor %}
+            {% if rol.user_set.count > 5 %}
+            <span class="rol-user-chip rol-user-more">+{{ rol.user_set.count|add:"-5" }}</span>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <div class="rol-card-footer">
+            <a href="{% url 'panel:rol_editar' rol.pk %}" class="panel-btn panel-btn-secondary panel-btn-sm">
+                <i class="fas fa-pen"></i> Editar
+            </a>
+            <a href="{% url 'panel:rol_eliminar' rol.pk %}" class="panel-btn panel-btn-danger panel-btn-sm">
+                <i class="fas fa-trash"></i>
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="panel-card" style="padding:3rem; text-align:center; color:#9ca3af;">
+    <i class="fas fa-shield-halved" style="font-size:3rem; display:block; margin-bottom:1rem;"></i>
+    <p style="margin-bottom:1.5rem;">No hay roles creados aún.</p>
+    <a href="{% url 'panel:rol_nuevo' %}" class="panel-btn panel-btn-primary">Crear primer rol</a>
+</div>
+{% endif %}
+
+<style>
+.roles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.25rem;
+}
+
+.rol-card {
+    background: #fff;
+    border: 1px solid var(--p-border);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: box-shadow .2s, transform .2s;
+}
+
+.rol-card:hover {
+    box-shadow: 0 4px 20px rgba(0,0,0,.08);
+    transform: translateY(-2px);
+}
+
+.rol-card-header {
+    display: flex;
+    align-items: center;
+    gap: .875rem;
+    padding: 1.25rem 1.25rem .75rem;
+}
+
+.rol-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 8px;
+    background: rgba(227,30,36,.1);
+    color: var(--p-accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.rol-name {
+    font-weight: 700;
+    font-size: .9375rem;
+    color: var(--p-text);
+}
+
+.rol-counts {
+    display: flex;
+    gap: .75rem;
+    margin-top: .2rem;
+    font-size: .7rem;
+    color: var(--p-text-muted);
+}
+
+.rol-counts i { margin-right: .25rem; }
+
+.rol-perms {
+    padding: .5rem 1.25rem .75rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .35rem;
+}
+
+.rol-perm-tag {
+    font-size: .65rem;
+    font-weight: 600;
+    letter-spacing: .3px;
+    padding: .25rem .5rem;
+    border-radius: 4px;
+    background: #f0f9ff;
+    color: #0369a1;
+    border: 1px solid #bae6fd;
+}
+
+.rol-perm-more {
+    background: #f3f4f6;
+    color: #6b7280;
+    border-color: #e5e7eb;
+}
+
+.rol-no-perms {
+    padding: .25rem 1.25rem .75rem;
+    font-size: .75rem;
+    color: #9ca3af;
+    font-style: italic;
+}
+
+.rol-users {
+    padding: .25rem 1.25rem .75rem;
+    display: flex;
+    gap: .35rem;
+    flex-wrap: wrap;
+}
+
+.rol-user-chip {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--p-accent);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .7rem;
+    font-weight: 700;
+    font-family: 'Bebas Neue', cursive;
+    letter-spacing: .5px;
+}
+
+.rol-user-more {
+    background: #e5e7eb;
+    color: #6b7280;
+    font-family: 'Roboto', sans-serif;
+    font-size: .6rem;
+    font-weight: 700;
+}
+
+.rol-card-footer {
+    border-top: 1px solid var(--p-border);
+    padding: .75rem 1.25rem;
+    display: flex;
+    gap: .5rem;
+    background: #fafafa;
+}
+</style>
+{% endblock %}

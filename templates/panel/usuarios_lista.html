@@ -1,0 +1,92 @@
+{% extends 'panel/base.html' %}
+
+{% block page_title %}Usuarios{% endblock %}
+
+{% block content %}
+<div class="panel-page-header">
+    <div class="panel-page-title">Usuarios <small>Cuentas de acceso al panel</small></div>
+    <a href="{% url 'panel:usuario_nuevo' %}" class="panel-btn panel-btn-primary">+ Nuevo usuario</a>
+</div>
+
+<div class="panel-card">
+    {% if usuarios %}
+    <div class="panel-table-wrap">
+        <table class="panel-table">
+            <thead>
+                <tr>
+                    <th>Usuario</th>
+                    <th>Nombre</th>
+                    <th>Correo</th>
+                    <th>Tipo</th>
+                    <th>Roles</th>
+                    <th>Estado</th>
+                    <th>Último acceso</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in usuarios %}
+                <tr>
+                    <td>
+                        <strong>{{ u.username }}</strong>
+                        {% if u == request.user %}
+                            <span class="panel-badge panel-badge-blue" style="margin-left:.4rem;">Tú</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ u.get_full_name|default:"—" }}</td>
+                    <td>{{ u.email|default:"—" }}</td>
+                    <td>
+                        {% if u.is_superuser %}
+                            <span class="panel-badge panel-badge-yellow"><i class="fas fa-crown"></i> Superusuario</span>
+                        {% elif u.is_staff %}
+                            <span class="panel-badge panel-badge-blue"><i class="fas fa-shield-halved"></i> Staff</span>
+                        {% else %}
+                            <span class="panel-badge panel-badge-gray">Usuario</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% for g in u.groups.all %}
+                        <span class="panel-badge panel-badge-gray" style="margin:.1rem .15rem;">{{ g.name }}</span>
+                        {% empty %}
+                        <span style="color:#9ca3af; font-size:.75rem;">—</span>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% if u.is_active %}
+                            <span class="panel-badge panel-badge-green">Activo</span>
+                        {% else %}
+                            <span class="panel-badge panel-badge-red">Inactivo</span>
+                        {% endif %}
+                    </td>
+                    <td style="font-size:.8rem; color:#6b7280;">
+                        {% if u.last_login %}
+                            {{ u.last_login|date:"d/m/Y H:i" }}
+                        {% else %}
+                            Nunca
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="panel-table-actions">
+                            <a href="{% url 'panel:usuario_editar' u.pk %}" class="panel-btn panel-btn-secondary panel-btn-sm">
+                                <i class="fas fa-pen"></i> Editar
+                            </a>
+                            {% if u != request.user and not u.is_superuser %}
+                            <a href="{% url 'panel:usuario_eliminar' u.pk %}" class="panel-btn panel-btn-danger panel-btn-sm">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div style="padding:3rem; text-align:center; color:#9ca3af;">
+        <i class="fas fa-users" style="font-size:3rem; display:block; margin-bottom:1rem;"></i>
+        No hay usuarios registrados.
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

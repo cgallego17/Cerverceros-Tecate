@@ -1,0 +1,541 @@
+{% extends 'panel/base.html' %}
+
+{% block page_title %}{% if objeto %}Editar Usuario{% else %}Nuevo Usuario{% endblock %}
+
+{% block content %}
+<div class="panel-page-header">
+    <div class="panel-page-title">
+        {% if objeto %}Editar Usuario{% else %}Nuevo Usuario{% endif %}
+        <small>{% if objeto %}Modifica los datos de la cuenta{% else %}Crea una nueva cuenta de acceso al panel{% endif %}</small>
+    </div>
+    <a href="{% url 'panel:usuarios_lista' %}" class="panel-btn panel-btn-secondary">← Volver a usuarios</a>
+</div>
+
+<form method="post" novalidate id="usuarioForm">
+    {% csrf_token %}
+
+    <div class="uf-layout">
+
+        {# ── Columna izquierda: avatar + permisos ── #}
+        <div class="uf-sidebar">
+
+            {# Avatar #}
+            <div class="panel-card uf-avatar-card">
+                <div class="uf-avatar" id="avatarDisplay">
+                    <span id="avatarInitial">{% if objeto %}{{ objeto.username|first|upper }}{% else %}?{% endif %}</span>
+                </div>
+                <div class="uf-avatar-name" id="avatarName">
+                    {% if objeto %}{{ objeto.username }}{% else %}Nuevo usuario{% endif %}
+                </div>
+                {% if objeto %}
+                <div style="font-size:.75rem; color:var(--p-text-muted); margin-top:.25rem;">
+                    Miembro desde {{ objeto.date_joined|date:"d/m/Y" }}
+                </div>
+                {% endif %}
+            </div>
+
+            {# Permisos #}
+            <div class="panel-card">
+                <div class="uf-section-title"><i class="fas fa-shield-halved"></i> Permisos</div>
+                <div class="uf-perm-list">
+                    <label class="uf-perm-item">
+                        <div class="uf-perm-info">
+                            <span class="uf-perm-label">Staff</span>
+                            <span class="uf-perm-desc">Acceso al panel de control</span>
+                        </div>
+                        {{ form.is_staff }}
+                    </label>
+                    <label class="uf-perm-item">
+                        <div class="uf-perm-info">
+                            <span class="uf-perm-label">Activo</span>
+                            <span class="uf-perm-desc">La cuenta puede iniciar sesión</span>
+                        </div>
+                        {{ form.is_active }}
+                    </label>
+                </div>
+                {% for field in form %}
+                    {% if field.name == 'is_staff' or field.name == 'is_active' %}
+                        {% for error in field.errors %}
+                        <span class="panel-field-error"><i class="fas fa-triangle-exclamation"></i> {{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            {# Roles asignados #}
+            {% if form.groups.field.queryset.exists %}
+            <div class="panel-card">
+                <div class="uf-section-title"><i class="fas fa-layer-group"></i> Roles asignados</div>
+                <div class="uf-groups-list">
+                    {% for choice in form.groups %}
+                    <label class="uf-group-item">
+                        {{ choice.tag }}
+                        <span class="uf-group-name">{{ choice.choice_label }}</span>
+                    </label>
+                    {% endfor %}
+                </div>
+                {% if form.groups.errors %}
+                <span class="panel-field-error"><i class="fas fa-triangle-exclamation"></i> {{ form.groups.errors.0 }}</span>
+                {% endif %}
+            </div>
+            {% endif %}
+
+        </div>
+
+        {# ── Columna derecha: datos + contraseña ── #}
+        <div class="uf-main">
+
+            {# Datos básicos #}
+            <div class="panel-card">
+                <div class="uf-section-title"><i class="fas fa-user"></i> Datos de la cuenta</div>
+                <div class="uf-fields-grid">
+
+                    <div class="panel-form-group span-2">
+                        <label class="panel-form-label" for="{{ form.username.id_for_label }}">
+                            Nombre de usuario <span class="uf-required">*</span>
+                        </label>
+                        {{ form.username }}
+                        {% for error in form.username.errors %}
+                        <span class="panel-field-error"><i class="fas fa-triangle-exclamation"></i> {{ error }}</span>
+                        {% endfor %}
+                        <span class="panel-form-help">Solo letras, números y @/./+/-/_</span>
+                    </div>
+
+                    <div class="panel-form-group">
+                        <label class="panel-form-label" for="{{ form.first_name.id_for_label }}">Nombre</label>
+                        {{ form.first_name }}
+                        {% for error in form.first_name.errors %}
+                        <span class="panel-field-error"><i class="fas fa-triangle-exclamation"></i> {{ error }}</span>
+                        {% endfor %}
+                    </div>
+
+                    <div class="panel-form-group">
+                        <label class="panel-form-label" for="{{ form.last_name.id_for_label }}">Apellido</label>
+                        {{ form.last_name }}
+                        {% for error in form.last_name.errors %}
+                        <span class="panel-field-error"><i class="fas fa-triangle-exclamation"></i> {{ error }}</span>
+                        {% endfor %}
+                    </div>
+
+                    <div class="panel-form-group span-2">
+                        <label class="panel-form-label" for="{{ form.email.id_for_label }}">Correo electrónico</label>
+                        {{ form.email }}
+                        {% for error in form.email.errors %}
+                        <span class="panel-field-error"><i class="fas fa-triangle-exclamation"></i> {{ error }}</span>
+                        {% endfor %}
+                    </div>
+
+                </div>
+            </div>
+
+            {# Contraseña #}
+            <div class="panel-card">
+                {% if objeto %}
+                <div class="uf-section-title"><i class="fas fa-key"></i> Cambiar contraseña <span style="font-size:.75rem; font-weight:400; color:var(--p-text-muted);">(dejar vacío para no cambiar)</span></div>
+                {% else %}
+                <div class="uf-section-title"><i class="fas fa-key"></i> Contraseña <span class="uf-required">*</span></div>
+                {% endif %}
+
+                <div class="uf-fields-grid">
+                    <div class="panel-form-group">
+                        <label class="panel-form-label" for="{{ form.password1.id_for_label }}">
+                            {% if objeto %}Nueva contraseña{% else %}Contraseña{% endif %}
+                        </label>
+                        <div class="uf-input-eye">
+                            {{ form.password1 }}
+                            <button type="button" class="uf-eye-btn" data-target="{{ form.password1.id_for_label }}" aria-label="Mostrar contraseña">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        {% for error in form.password1.errors %}
+                        <span class="panel-field-error"><i class="fas fa-triangle-exclamation"></i> {{ error }}</span>
+                        {% endfor %}
+                        {# Strength meter #}
+                        <div class="uf-strength" id="strengthMeter" style="display:none;">
+                            <div class="uf-strength-bar">
+                                <div class="uf-strength-fill" id="strengthFill"></div>
+                            </div>
+                            <span class="uf-strength-label" id="strengthLabel"></span>
+                        </div>
+                    </div>
+
+                    <div class="panel-form-group">
+                        <label class="panel-form-label" for="{{ form.password2.id_for_label }}">Confirmar contraseña</label>
+                        <div class="uf-input-eye">
+                            {{ form.password2 }}
+                            <button type="button" class="uf-eye-btn" data-target="{{ form.password2.id_for_label }}" aria-label="Mostrar contraseña">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        {% for error in form.password2.errors %}
+                        <span class="panel-field-error"><i class="fas fa-triangle-exclamation"></i> {{ error }}</span>
+                        {% endfor %}
+                        <div class="uf-match-msg" id="matchMsg" style="display:none;"></div>
+                    </div>
+                </div>
+
+                {% if not objeto %}
+                <ul class="uf-pwd-rules">
+                    <li><i class="fas fa-circle-dot"></i> Mínimo 8 caracteres</li>
+                    <li><i class="fas fa-circle-dot"></i> No puede ser solo numérica</li>
+                    <li><i class="fas fa-circle-dot"></i> No puede ser demasiado común</li>
+                </ul>
+                {% endif %}
+            </div>
+
+            {# Non-field errors #}
+            {% if form.non_field_errors %}
+            <div class="panel-message panel-message-error">
+                <i class="fas fa-triangle-exclamation"></i>
+                {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="panel-form-actions">
+                <button type="submit" class="panel-btn panel-btn-primary panel-btn-lg">
+                    <i class="fas fa-floppy-disk"></i>
+                    {% if objeto %}Guardar cambios{% else %}Crear usuario{% endif %}
+                </button>
+                <a href="{% url 'panel:usuarios_lista' %}" class="panel-btn panel-btn-secondary panel-btn-lg">Cancelar</a>
+            </div>
+
+        </div>{# /uf-main #}
+    </div>{# /uf-layout #}
+</form>
+
+<style>
+/* ── Usuario Form Layout ─────────────────────── */
+.uf-layout {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 1.25rem;
+    align-items: start;
+}
+
+@media (max-width: 700px) {
+    .uf-layout { grid-template-columns: 1fr; }
+}
+
+.uf-main { display: flex; flex-direction: column; gap: 1.25rem; }
+
+/* Avatar card */
+.uf-avatar-card {
+    text-align: center;
+    padding: 1.75rem 1.25rem;
+}
+
+.uf-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--p-accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 0.75rem;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 2.2rem;
+    color: #fff;
+    letter-spacing: 1px;
+    flex-shrink: 0;
+    transition: background 0.2s;
+}
+
+.uf-avatar-name {
+    font-weight: 600;
+    font-size: .9rem;
+    color: var(--p-text);
+    word-break: break-all;
+}
+
+/* Section title */
+.uf-section-title {
+    font-weight: 700;
+    font-size: .8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--p-text-muted);
+    padding: 1.25rem 1.5rem .75rem;
+    border-bottom: 1px solid var(--p-border);
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+
+.uf-required { color: var(--p-accent); }
+
+/* Fields grid inside card */
+.uf-fields-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .875rem 1.25rem;
+    padding: 0 1.5rem 1.5rem;
+}
+
+@media (max-width: 600px) {
+    .uf-fields-grid { grid-template-columns: 1fr; }
+}
+
+/* Permisos toggle list */
+.uf-perm-list { padding: .25rem 1.25rem 1.25rem; display: flex; flex-direction: column; gap: .5rem; }
+
+.uf-perm-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: .75rem .875rem;
+    border: 1px solid var(--p-border);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.15s;
+    gap: .75rem;
+}
+
+.uf-perm-item:hover { background: #f9fafb; }
+
+.uf-perm-info { flex: 1; }
+
+.uf-perm-label {
+    display: block;
+    font-weight: 600;
+    font-size: .8125rem;
+    color: var(--p-text);
+}
+
+.uf-perm-desc {
+    display: block;
+    font-size: .7rem;
+    color: var(--p-text-muted);
+    margin-top: 2px;
+}
+
+/* Style the checkboxes as toggles */
+.uf-perm-item input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 36px;
+    height: 20px;
+    border-radius: 10px;
+    background: #d1d5db;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    flex-shrink: 0;
+    transition: background 0.2s;
+}
+
+.uf-perm-item input[type="checkbox"]::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,.2);
+    transition: left 0.2s;
+}
+
+.uf-perm-item input[type="checkbox"]:checked {
+    background: var(--p-accent);
+}
+
+.uf-perm-item input[type="checkbox"]:checked::after {
+    left: 19px;
+}
+
+/* Group checkboxes (roles) */
+.uf-groups-list {
+    display: flex;
+    flex-direction: column;
+    gap: .25rem;
+}
+
+.uf-group-item {
+    display: flex;
+    align-items: center;
+    gap: .625rem;
+    padding: .5rem .625rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background .15s;
+    border: 1px solid transparent;
+}
+
+.uf-group-item:hover { background: #f9fafb; border-color: var(--p-border); }
+
+.uf-group-item:has(input:checked) {
+    background: #fff7f7;
+    border-color: rgba(227,30,36,.3);
+}
+
+.uf-group-item input[type="checkbox"] {
+    accent-color: var(--p-accent);
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+    cursor: pointer;
+}
+
+.uf-group-name {
+    font-size: .8125rem;
+    font-weight: 600;
+    color: #374151;
+}
+
+/* Password eye toggle */
+.uf-input-eye { position: relative; }
+
+.uf-input-eye .panel-input { padding-right: 2.5rem; width: 100%; }
+
+.uf-eye-btn {
+    position: absolute;
+    right: .625rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--p-text-muted);
+    font-size: .875rem;
+    padding: 0;
+    line-height: 1;
+    transition: color 0.15s;
+}
+
+.uf-eye-btn:hover { color: var(--p-text); }
+
+/* Password strength */
+.uf-strength { margin-top: .5rem; }
+
+.uf-strength-bar {
+    height: 4px;
+    background: var(--p-border);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: .3rem;
+}
+
+.uf-strength-fill {
+    height: 100%;
+    width: 0;
+    border-radius: 2px;
+    transition: width .3s ease, background .3s ease;
+}
+
+.uf-strength-label { font-size: .7rem; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; }
+
+/* Match message */
+.uf-match-msg { margin-top: .4rem; font-size: .75rem; font-weight: 600; }
+.uf-match-ok  { color: #059669; }
+.uf-match-err { color: #dc2626; }
+
+/* Password rules */
+.uf-pwd-rules {
+    list-style: none;
+    padding: 0 1.5rem 1.25rem;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
+}
+
+.uf-pwd-rules li {
+    font-size: .75rem;
+    color: var(--p-text-muted);
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+}
+
+.uf-pwd-rules li i { color: var(--p-accent); font-size: .5rem; }
+</style>
+
+<script>
+(function () {
+    // Live avatar update from username field
+    const usernameInput = document.getElementById('{{ form.username.id_for_label }}');
+    const avatarInitial = document.getElementById('avatarInitial');
+    const avatarName    = document.getElementById('avatarName');
+
+    if (usernameInput) {
+        usernameInput.addEventListener('input', function () {
+            const val = this.value.trim();
+            avatarInitial.textContent = val ? val[0].toUpperCase() : '?';
+            avatarName.textContent    = val || 'Nuevo usuario';
+        });
+    }
+
+    // Eye toggle buttons
+    document.querySelectorAll('.uf-eye-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            const target = document.getElementById(this.dataset.target);
+            if (!target) return;
+            const isText = target.type === 'text';
+            target.type = isText ? 'password' : 'text';
+            this.querySelector('i').className = isText ? 'fas fa-eye' : 'fas fa-eye-slash';
+        });
+    });
+
+    // Password strength meter
+    const pwd1Id = '{{ form.password1.id_for_label }}';
+    const pwd2Id = '{{ form.password2.id_for_label }}';
+    const pwd1   = document.getElementById(pwd1Id);
+    const pwd2   = document.getElementById(pwd2Id);
+    const meter  = document.getElementById('strengthMeter');
+    const fill   = document.getElementById('strengthFill');
+    const label  = document.getElementById('strengthLabel');
+    const matchMsg = document.getElementById('matchMsg');
+
+    function getStrength(p) {
+        let score = 0;
+        if (p.length >= 8)  score++;
+        if (p.length >= 12) score++;
+        if (/[A-Z]/.test(p)) score++;
+        if (/[0-9]/.test(p)) score++;
+        if (/[^A-Za-z0-9]/.test(p)) score++;
+        return score;
+    }
+
+    const levels = [
+        { pct: '20%', color: '#ef4444', text: 'Muy débil' },
+        { pct: '40%', color: '#f97316', text: 'Débil'     },
+        { pct: '60%', color: '#eab308', text: 'Regular'   },
+        { pct: '80%', color: '#22c55e', text: 'Fuerte'    },
+        { pct: '100%',color: '#16a34a', text: 'Muy fuerte'},
+    ];
+
+    if (pwd1) {
+        pwd1.addEventListener('input', function () {
+            const val = this.value;
+            if (!val) { meter.style.display = 'none'; return; }
+            meter.style.display = 'block';
+            const s = Math.min(getStrength(val), 4);
+            fill.style.width      = levels[s].pct;
+            fill.style.background = levels[s].color;
+            label.textContent     = levels[s].text;
+            label.style.color     = levels[s].color;
+            checkMatch();
+        });
+    }
+
+    function checkMatch() {
+        if (!pwd2 || !matchMsg) return;
+        const v2 = pwd2.value;
+        if (!v2) { matchMsg.style.display = 'none'; return; }
+        matchMsg.style.display = 'block';
+        if (v2 === pwd1.value) {
+            matchMsg.textContent  = '✓ Las contraseñas coinciden';
+            matchMsg.className    = 'uf-match-msg uf-match-ok';
+        } else {
+            matchMsg.textContent  = '✗ Las contraseñas no coinciden';
+            matchMsg.className    = 'uf-match-msg uf-match-err';
+        }
+    }
+
+    if (pwd2) { pwd2.addEventListener('input', checkMatch); }
+})();
+</script>
+{% endblock %}

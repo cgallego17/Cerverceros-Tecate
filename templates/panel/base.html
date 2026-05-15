@@ -71,6 +71,19 @@
                 <span class="panel-nav-icon"><i class="fas fa-users"></i></span> Jugadores
             </a>
 
+            <div class="panel-nav-section">ADMINISTRACIÓN</div>
+
+            {% if request.user.is_superuser %}
+            <a href="{% url 'panel:usuarios_lista' %}"
+               class="panel-nav-link {% if 'usuario' in request.resolver_match.url_name %}active{% endif %}">
+                <span class="panel-nav-icon"><i class="fas fa-user-shield"></i></span> Usuarios
+            </a>
+            <a href="{% url 'panel:roles_lista' %}"
+               class="panel-nav-link {% if 'rol' in request.resolver_match.url_name %}active{% endif %}">
+                <span class="panel-nav-icon"><i class="fas fa-layer-group"></i></span> Roles
+            </a>
+            {% endif %}
+
             <div class="panel-nav-section">SITIO</div>
 
             <a href="{% url 'equipo:inicio' %}" class="panel-nav-link" target="_blank" rel="noopener">

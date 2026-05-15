@@ -1,4 +1,6 @@
 from django import forms
+from django.contrib.auth.models import User, Group, Permission
+from django.contrib.auth.password_validation import validate_password
 from .models import HeroSlide, Patrocinador, CategoriaProducto, Producto, ItemFaq, Noticia, Jugador
 
 _i = {'class': 'panel-input'}
@@ -106,3 +108,118 @@ class JugadorForm(forms.ModelForm):
             'bateo': forms.TextInput(attrs=_i),
             'lanzamiento': forms.TextInput(attrs=_i),
         }
+
+
+# ── USUARIOS ──────────────────────────────────────
+
+class UsuarioCrearForm(forms.ModelForm):
+    password1 = forms.CharField(
+        label='Contraseña',
+        widget=forms.PasswordInput(attrs=_i),
+    )
+    password2 = forms.CharField(
+        label='Confirmar contraseña',
+        widget=forms.PasswordInput(attrs=_i),
+    )
+
+    groups = forms.ModelMultipleChoiceField(
+        queryset=Group.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        required=False,
+        label='Roles asignados',
+    )
+
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email', 'is_staff', 'is_active', 'groups']
+        widgets = {
+            'username':   forms.TextInput(attrs=_i),
+            'first_name': forms.TextInput(attrs=_i),
+            'last_name':  forms.TextInput(attrs=_i),
+            'email':      forms.EmailInput(attrs=_i),
+        }
+
+    def clean_password2(self):
+        p1 = self.cleaned_data.get('password1', '')
+        p2 = self.cleaned_data.get('password2', '')
+        if p1 != p2:
+            raise forms.ValidationError('Las contraseñas no coinciden.')
+        validate_password(p1)
+        return p2
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data['password1'])
+        if commit:
+            user.save()
+        return user
+
+
+class UsuarioEditarForm(forms.ModelForm):
+    password1 = forms.CharField(
+        label='Nueva contraseña (dejar vacío para no cambiar)',
+        widget=forms.PasswordInput(attrs=_i),
+        required=False,
+    )
+    password2 = forms.CharField(
+        label='Confirmar nueva contraseña',
+        widget=forms.PasswordInput(attrs=_i),
+        required=False,
+    )
+    groups = forms.ModelMultipleChoiceField(
+        queryset=Group.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        required=False,
+        label='Roles asignados',
+    )
+
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email', 'is_staff', 'is_active', 'groups']
+        widgets = {
+            'username':   forms.TextInput(attrs=_i),
+            'first_name': forms.TextInput(attrs=_i),
+            'last_name':  forms.TextInput(attrs=_i),
+            'email':      forms.EmailInput(attrs=_i),
+        }
+
+    def clean(self):
+        cleaned = super().clean()
+        p1 = cleaned.get('password1', '')
+        p2 = cleaned.get('password2', '')
+        if p1 or p2:
+            if p1 != p2:
+                raise forms.ValidationError('Las contraseñas no coinciden.')
+            validate_password(p1)
+        return cleaned
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        p = self.cleaned_data.get('password1')
+        if p:
+            user.set_password(p)
+        if commit:
+            user.save()
+            self.save_m2m()
+        return user
+
+
+# ── ROLES (Groups) ────────────────────────────────
+
+class RolForm(forms.ModelForm):
+    permissions = forms.ModelMultipleChoiceField(
+        queryset=Permission.objects.select_related('content_type').filter(
+            content_type__app_label='equipo'
+        ).order_by('content_type__model', 'codename'),
+        widget=forms.CheckboxSelectMultiple,
+        required=False,
+        label='Permisos',
+    )
+
+    class Meta:
+        model = Group
+        fields = ['name', 'permissions']
+        widgets = {
+            'name': forms.TextInput(attrs=_i),
+        }
+
