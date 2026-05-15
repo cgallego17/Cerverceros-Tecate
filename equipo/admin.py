@@ -3,6 +3,7 @@ from django.utils.html import format_html
 from .models import (
     Jugador, Equipo, Partido, Noticia, Boleto, TablaPosiciones,
     HeroSlide, Patrocinador, Producto, CategoriaProducto, ItemFaq,
+    SkillProgress, ArticuloNoticia, ImagenInstagram,
 )
 
 # ── Personalización del panel ──────────────────────────────────────────────────
@@ -15,16 +16,47 @@ admin.site.index_title = "Administración del Sitio"
 
 @admin.register(Jugador)
 class JugadorAdmin(admin.ModelAdmin):
-    list_display = ['numero', 'nombre', 'posicion', 'activo', 'destacado_inicio']
+    list_display = ['numero', 'nombre', 'posicion', 'preview_foto', 'activo', 'destacado_inicio']
     list_editable = ['activo', 'destacado_inicio']
     list_filter = ['posicion', 'activo', 'destacado_inicio']
     search_fields = ['nombre', 'numero']
+    fieldsets = (
+        ('Información Básica', {
+            'fields': ('nombre', 'numero', 'posicion', 'foto')
+        }),
+        ('Estadísticas', {
+            'fields': ('altura', 'peso', 'bateo', 'lanzamiento', 'fecha_nacimiento')
+        }),
+        ('Biografía', {
+            'fields': ('biografia',)
+        }),
+        ('Configuración', {
+            'fields': ('activo', 'destacado_inicio'),
+        }),
+    )
+
+    @admin.display(description='Foto')
+    def preview_foto(self, obj):
+        if obj.foto:
+            return format_html('<img src="{}" style="height:50px;border-radius:4px;">', obj.foto.url)
+        return '—'
 
 
 @admin.register(Equipo)
 class EquipoAdmin(admin.ModelAdmin):
-    list_display = ['nombre', 'ciudad']
+    list_display = ['nombre', 'ciudad', 'preview_logo']
     search_fields = ['nombre', 'ciudad']
+    fieldsets = (
+        ('Información del Equipo', {
+            'fields': ('nombre', 'ciudad', 'logo')
+        }),
+    )
+
+    @admin.display(description='Logo')
+    def preview_logo(self, obj):
+        if obj.logo:
+            return format_html('<img src="{}" style="height:40px;border-radius:4px;">', obj.logo.url)
+        return '—'
 
 
 @admin.register(Partido)
@@ -38,11 +70,25 @@ class PartidoAdmin(admin.ModelAdmin):
 
 @admin.register(Noticia)
 class NoticiaAdmin(admin.ModelAdmin):
-    list_display = ['titulo', 'fecha_publicacion', 'autor', 'destacada']
+    list_display = ['titulo', 'preview_imagen', 'fecha_publicacion', 'autor', 'destacada']
     list_editable = ['destacada']
     list_filter = ['destacada', 'fecha_publicacion']
     search_fields = ['titulo', 'contenido']
     date_hierarchy = 'fecha_publicacion'
+    fieldsets = (
+        ('Contenido', {
+            'fields': ('titulo', 'contenido', 'imagen')
+        }),
+        ('Información', {
+            'fields': ('autor', 'fecha_publicacion', 'destacada')
+        }),
+    )
+
+    @admin.display(description='Imagen')
+    def preview_imagen(self, obj):
+        if obj.imagen:
+            return format_html('<img src="{}" style="height:40px;border-radius:4px;">', obj.imagen.url)
+        return '—'
 
 
 @admin.register(Boleto)
@@ -153,4 +199,66 @@ class ItemFaqAdmin(admin.ModelAdmin):
     list_editable = ['orden', 'activo']
     list_display_links = ['titulo']
     ordering = ['orden']
+
+
+# ── Home – Skills Progress ─────────────────────────────────────────────────────
+
+@admin.register(SkillProgress)
+class SkillProgressAdmin(admin.ModelAdmin):
+    list_display = ['orden', 'nombre', 'porcentaje', 'activo']
+    list_editable = ['orden', 'porcentaje', 'activo']
+    list_display_links = ['nombre']
+    ordering = ['orden']
+
+
+# ── Home – News Grid ───────────────────────────────────────────────────────────
+
+@admin.register(ArticuloNoticia)
+class ArticuloNoticiaAdmin(admin.ModelAdmin):
+    list_display = ['orden', 'titulo', 'tipo', 'preview_imagen', 'destacado_grid', 'activo']
+    list_editable = ['orden', 'tipo', 'destacado_grid', 'activo']
+    list_display_links = ['titulo']
+    list_filter = ['tipo', 'destacado_grid', 'activo']
+    search_fields = ['titulo', 'descripcion']
+    ordering = ['orden']
+    fieldsets = (
+        ('Contenido', {
+            'fields': ('titulo', 'descripcion', 'tipo', 'imagen', 'enlace')
+        }),
+        ('Configuración', {
+            'fields': ('orden', 'destacado_grid', 'activo')
+        }),
+    )
+
+    @admin.display(description='Imagen')
+    def preview_imagen(self, obj):
+        if obj.imagen:
+            return format_html('<img src="{}" style="height:40px;border-radius:4px;">', obj.imagen.url)
+        return '—'
+
+
+# ── Home – Instagram Gallery ───────────────────────────────────────────────────
+
+@admin.register(ImagenInstagram)
+class ImagenInstagramAdmin(admin.ModelAdmin):
+    list_display = ['orden', 'preview_imagen', 'activo']
+    list_editable = ['activo']
+    list_display_links = ['orden', 'preview_imagen']
+    ordering = ['orden']
+    fieldsets = (
+        ('Imagen', {
+            'fields': ('imagen', 'imagen_url'),
+            'description': 'Sube una imagen o proporciona una URL externa.'
+        }),
+        ('Configuración', {
+            'fields': ('enlace', 'orden', 'activo')
+        }),
+    )
+
+    @admin.display(description='Vista previa')
+    def preview_imagen(self, obj):
+        src = obj.imagen_src
+        if src:
+            return format_html('<img src="{}" style="height:60px;border-radius:4px;">', src)
+        return '—'
 

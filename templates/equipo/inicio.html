@@ -224,9 +224,9 @@
         <div class="featured-player-content">
             <div class="featured-player-image">
                 {% if jugador_destacado.foto %}
-                    <img src="{{ jugador_destacado.foto.url }}" alt="{{ jugador_destacado.nombre }}">
+                <img src="{{ jugador_destacado.foto.url }}" alt="{{ jugador_destacado.nombre }}">
                 {% else %}
-                    <img src="{% static 'images/player-featured.jpg' %}" alt="{{ jugador_destacado.nombre }}">
+                <img src="https://placehold.co/500x600/1a1a1a/e31e24?text=Jugador+Destacado+(500x600)" alt="{{ jugador_destacado.nombre }}">
                 {% endif %}
             </div>
             <div class="featured-player-info">
@@ -278,19 +278,21 @@
 {# ─── NOTICIAS GRID ──────────────────────────────────────── #}
 <section class="news-grid-section">
     <div class="news-grid">
-        {% for noticia in noticias_inicio %}
-            {% if forloop.counter == 2 or forloop.counter == 4 or forloop.counter == 5 or forloop.counter == 7 %}
+        {% for articulo in articulos_news %}
+            {% if articulo.tipo == 'imagen' %}
             <article class="news-item news-item-image">
-                {% if noticia.imagen %}<img src="{{ noticia.imagen.url }}" alt="{{ noticia.titulo }}">
-                {% else %}<img src="{% static 'images/news-glove.jpg' %}" alt="{{ noticia.titulo }}">{% endif %}
+                {% if articulo.imagen %}<img src="{{ articulo.imagen.url }}" alt="{{ articulo.titulo }}">
+                {% else %}<img src="https://placehold.co/600x400/{{ forloop.counter|divisibleby:2|yesno:'2a2a2a,1a1a1a' }}/e31e24?text=Noticia+{{ forloop.counter }}+(600x400)" alt="{{ articulo.titulo }}">{% endif %}
             </article>
             {% else %}
             <article class="news-item news-item-dark">
                 <div class="news-content">
                     <p class="news-category">{% trans "TEMPORADA" %}</p>
-                    <h3 class="news-title">{{ noticia.titulo|upper|truncatechars:40 }}</h3>
-                    <p class="news-excerpt">{{ noticia.contenido|striptags|truncatewords:15 }}</p>
-                    <a href="{% url 'equipo:noticia_detalle' noticia.pk %}" class="news-link">{% trans "LEER MÁS" %}</a>
+                    <h3 class="news-title">{{ articulo.titulo|upper|truncatechars:40 }}</h3>
+                    <p class="news-excerpt">{{ articulo.descripcion|truncatewords:15 }}</p>
+                    {% if articulo.enlace %}
+                    <a href="{{ articulo.enlace }}" class="news-link">{% trans "LEER MÁS" %}</a>
+                    {% endif %}
                 </div>
             </article>
             {% endif %}
@@ -356,7 +358,7 @@
                     {% endif %}
                     <div class="product-image">
                         {% if producto.imagen %}<img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
-                        {% else %}<img src="{% static 'images/product-bat.jpg' %}" alt="{{ producto.nombre }}">{% endif %}
+                        {% else %}<img src="https://placehold.co/400x400/{{ forloop.counter|divisibleby:2|yesno:'2a2a2a,1a1a1a' }}/e31e24?text=Producto+{{ forloop.counter }}+(400x400)" alt="{{ producto.nombre }}">{% endif %}
                     </div>
                     <div class="product-info">
                         {% if producto.categoria %}<p class="product-category">{{ producto.categoria.nombre|upper }}</p>{% endif %}
@@ -424,6 +426,12 @@
 {# ─── INSTAGRAM GALLERY ──────────────────────────────────── #}
 <section class="instagram-gallery-section">
     <div class="instagram-grid">
+        {% for img in imagenes_instagram %}
+        <a href="{% if img.enlace %}{{ img.enlace }}{% else %}#{% endif %}" class="instagram-item" target="_blank">
+            <img src="{{ img.imagen_src }}" alt="Instagram {{ forloop.counter }}">
+            <div class="instagram-overlay"><i class="fab fa-instagram"></i></div>
+        </a>
+        {% empty %}
         <div class="instagram-item">
             <img src="{% static 'images/ig-baseball-1.jpg' %}" alt="Baseball on field">
             <div class="instagram-overlay"><i class="fab fa-instagram"></i></div>
@@ -440,6 +448,7 @@
             <img src="{% static 'images/ig-balls-1.jpg' %}" alt="Baseballs">
             <div class="instagram-overlay"><i class="fab fa-instagram"></i></div>
         </div>
+        {% endfor %}
     </div>
 </section>
 
