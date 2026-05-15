@@ -10,7 +10,7 @@
     {% if hero_slides %}
         {% for slide in hero_slides %}
         <div class="hero-slide {% if forloop.first %}active{% endif %}"
-             style="background-image: linear-gradient(to right, rgba(0,0,0,0.7), rgba(0,0,0,0.3)), url('{{ slide.imagen_bg }}');">
+             style="background-image: linear-gradient(to right, rgba(0,0,0,0%), rgba(0,0,0,0%)), url('{{ slide.imagen_bg }}');">
             <div class="hero-content">
                 <p class="hero-subtitle">{{ slide.subtitulo }}</p>
                 <h1>{{ slide.titulo_linea1 }}{% if slide.titulo_linea2 %}<br>{{ slide.titulo_linea2 }}{% endif %}</h1>
@@ -22,7 +22,7 @@
         </div>
         {% endfor %}
     {% else %}
-    <div class="hero-slide active" style="background-image: linear-gradient(to right, rgba(0,0,0,0.7), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1566577739112-5180d4bf9390?w=1920');">
+    <div class="hero-slide active" style="background-image: linear-gradient(to right, rgba(0,0,0,0%), rgba(0,0,0,0%)), url('https://images.unsplash.com/photo-1566577739112-5180d4bf9390?w=1920');">
         <div class="hero-content">
             <p class="hero-subtitle">{% trans "CERVECEROS DE TECATE 2026" %}</p>
             <h1>{% trans "LA TRADICIÓN" %}<br>{% trans "SE VIVE EN EL DIAMANTE" %}</h1>
@@ -32,7 +32,7 @@
             </div>
         </div>
     </div>
-    <div class="hero-slide" style="background-image: linear-gradient(to right, rgba(0,0,0,0.7), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=1920');">
+    <div class="hero-slide" style="background-image: linear-gradient(to right, rgba(0,0,0,0%), rgba(0,0,0,0%)), url('https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=1920');">
         <div class="hero-content">
             <p class="hero-subtitle">{% trans "ORGULLO DE BAJA CALIFORNIA" %}</p>
             <h1>{% trans "MÁS QUE UN EQUIPO" %}<br>{% trans "UNA FAMILIA CERVECERA" %}</h1>
@@ -42,7 +42,7 @@
             </div>
         </div>
     </div>
-    <div class="hero-slide" style="background-image: linear-gradient(to right, rgba(0,0,0,0.7), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=1920');">
+    <div class="hero-slide" style="background-image: linear-gradient(to right, rgba(0,0,0,0%), rgba(0,0,0,0%)), url('https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=1920');">
         <div class="hero-content">
             <p class="hero-subtitle">{% trans "TEMPORADA 2026 EN MARCHA" %}</p>
             <h1>{% trans "VIVE LA EMOCIÓN" %}<br>{% trans "DEL BÉISBOL PROFESIONAL" %}</h1>
