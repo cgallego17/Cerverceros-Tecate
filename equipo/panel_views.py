@@ -8,12 +8,12 @@ from django.utils import timezone
 from itertools import groupby
 from operator import attrgetter
 
-from .models import HeroSlide, Patrocinador, CategoriaProducto, Producto, ItemFaq, Noticia, Jugador, Transaccion, Equipo, Partido
+from .models import HeroSlide, Patrocinador, CategoriaProducto, Producto, ItemFaq, Noticia, Jugador, Transaccion, Equipo, Partido, Pais, Estado, Ciudad
 from .panel_forms import (
     HeroSlideForm, PatrocinadorForm, CategoriaProductoForm,
     ProductoForm, ItemFaqForm, NoticiaForm, JugadorForm,
     UsuarioCrearForm, UsuarioEditarForm, RolForm, TransaccionForm,
-    EquipoForm, PartidoForm,
+    EquipoForm, PartidoForm, PaisForm, EstadoForm, CiudadForm,
 )
 
 _LOGIN = '/panel/login/'
@@ -578,4 +578,121 @@ def partido_eliminar(request, pk):
         'objeto': partido,
         'back_url': 'panel:partidos_lista',
         'titulo': 'Partido',
+    })
+
+
+# ── LOCALIZACIONES - PAÍSES ──────────────────────
+
+@login_required(login_url=_LOGIN)
+def paises_lista(request):
+    if not request.user.is_staff:
+        return redirect('panel:dashboard')
+    paises = Pais.objects.all().order_by('nombre')
+    return render(request, 'panel/paises_lista.html', {'paises': paises})
+
+
+@login_required(login_url=_LOGIN)
+def pais_form(request, pk=None):
+    if not request.user.is_staff:
+        return redirect('panel:dashboard')
+    pais = get_object_or_404(Pais, pk=pk) if pk else None
+    form = PaisForm(request.POST or None, instance=pais)
+    if form.is_valid():
+        obj = form.save()
+        messages.success(request, f'País "{obj.nombre}" guardado correctamente.')
+        return redirect('panel:paises_lista')
+    return render(request, 'panel/pais_form.html', {'form': form, 'objeto': pais})
+
+
+@login_required(login_url=_LOGIN)
+def pais_eliminar(request, pk):
+    if not request.user.is_staff:
+        return redirect('panel:dashboard')
+    pais = get_object_or_404(Pais, pk=pk)
+    if request.method == 'POST':
+        pais.delete()
+        messages.success(request, 'País eliminado correctamente.')
+        return redirect('panel:paises_lista')
+    return render(request, 'panel/confirmar_eliminar.html', {
+        'objeto': pais,
+        'back_url': 'panel:paises_lista',
+        'titulo': 'País',
+    })
+
+
+# ── LOCALIZACIONES - ESTADOS ─────────────────────
+
+@login_required(login_url=_LOGIN)
+def estados_lista(request):
+    if not request.user.is_staff:
+        return redirect('panel:dashboard')
+    estados = Estado.objects.all().select_related('pais').order_by('pais__nombre', 'nombre')
+    return render(request, 'panel/estados_lista.html', {'estados': estados})
+
+
+@login_required(login_url=_LOGIN)
+def estado_form(request, pk=None):
+    if not request.user.is_staff:
+        return redirect('panel:dashboard')
+    estado = get_object_or_404(Estado, pk=pk) if pk else None
+    form = EstadoForm(request.POST or None, instance=estado)
+    if form.is_valid():
+        obj = form.save()
+        messages.success(request, f'Estado "{obj.nombre}" guardado correctamente.')
+        return redirect('panel:estados_lista')
+    return render(request, 'panel/estado_form.html', {'form': form, 'objeto': estado})
+
+
+@login_required(login_url=_LOGIN)
+def estado_eliminar(request, pk):
+    if not request.user.is_staff:
+        return redirect('panel:dashboard')
+    estado = get_object_or_404(Estado, pk=pk)
+    if request.method == 'POST':
+        estado.delete()
+        messages.success(request, 'Estado eliminado correctamente.')
+        return redirect('panel:estados_lista')
+    return render(request, 'panel/confirmar_eliminar.html', {
+        'objeto': estado,
+        'back_url': 'panel:estados_lista',
+        'titulo': 'Estado',
+    })
+
+
+# ── LOCALIZACIONES - CIUDADES ────────────────────
+
+@login_required(login_url=_LOGIN)
+def ciudades_lista(request):
+    if not request.user.is_staff:
+        return redirect('panel:dashboard')
+    ciudades = Ciudad.objects.all().select_related('estado__pais').order_by('estado__pais__nombre', 'estado__nombre', 'nombre')
+    return render(request, 'panel/ciudades_lista.html', {'ciudades': ciudades})
+
+
+@login_required(login_url=_LOGIN)
+def ciudad_form(request, pk=None):
+    if not request.user.is_staff:
+        return redirect('panel:dashboard')
+    ciudad = get_object_or_404(Ciudad, pk=pk) if pk else None
+    form = CiudadForm(request.POST or None, instance=ciudad)
+    if form.is_valid():
+        obj = form.save()
+        messages.success(request, f'Ciudad "{obj.nombre}" guardada correctamente.')
+        return redirect('panel:ciudades_lista')
+    return render(request, 'panel/ciudad_form.html', {'form': form, 'objeto': ciudad})
+
+
+@login_required(login_url=_LOGIN)
+def ciudad_eliminar(request, pk):
+    if not request.user.is_staff:
+        return redirect('panel:dashboard')
+    ciudad = get_object_or_404(Ciudad, pk=pk)
+    if request.method == 'POST':
+        ciudad.delete()
+        messages.success(request, 'Ciudad eliminada correctamente.')
+        return redirect('panel:ciudades_lista')
+    return render(request, 'panel/confirmar_eliminar.html', {
+        'objeto': ciudad,
+        'back_url': 'panel:ciudades_lista',
+        'titulo': 'Ciudad',
     })

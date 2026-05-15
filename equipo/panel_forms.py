@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.models import User, Group, Permission
 from django.contrib.auth.password_validation import validate_password
 from django.utils import timezone
-from .models import HeroSlide, Patrocinador, CategoriaProducto, Producto, ItemFaq, Noticia, Jugador, Transaccion, Equipo, Partido
+from .models import HeroSlide, Patrocinador, CategoriaProducto, Producto, ItemFaq, Noticia, Jugador, Transaccion, Equipo, Partido, Pais, Estado, Ciudad
 
 _i = {'class': 'panel-input'}
 _ta = {'class': 'panel-textarea', 'rows': 5}
@@ -356,4 +356,35 @@ class PartidoForm(forms.ModelForm):
             'estado': forms.Select(attrs=_sel),
             'estadio': forms.TextInput(attrs=_i),
             'temporada': forms.TextInput(attrs=_i),
+        }
+
+
+class PaisForm(forms.ModelForm):
+    class Meta:
+        model = Pais
+        fields = ['nombre', 'codigo', 'activo']
+        widgets = {
+            'nombre': forms.TextInput(attrs=_i),
+            'codigo': forms.TextInput(attrs={**_i, 'placeholder': 'Ej: MEX, USA'}),
+        }
+
+
+class EstadoForm(forms.ModelForm):
+    class Meta:
+        model = Estado
+        fields = ['pais', 'nombre', 'codigo', 'activo']
+        widgets = {
+            'pais': forms.Select(attrs=_sel),
+            'nombre': forms.TextInput(attrs=_i),
+            'codigo': forms.TextInput(attrs={**_i, 'placeholder': 'Ej: BC, NL'}),
+        }
+
+
+class CiudadForm(forms.ModelForm):
+    class Meta:
+        model = Ciudad
+        fields = ['estado', 'nombre', 'activo']
+        widgets = {
+            'estado': forms.Select(attrs=_sel),
+            'nombre': forms.TextInput(attrs=_i),
         }

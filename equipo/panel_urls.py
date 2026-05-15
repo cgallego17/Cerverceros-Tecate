@@ -80,4 +80,22 @@ urlpatterns = [
     path('partidos/nuevo/', panel_views.partido_form, name='partido_nuevo'),
     path('partidos/<int:pk>/editar/', panel_views.partido_form, name='partido_editar'),
     path('partidos/<int:pk>/eliminar/', panel_views.partido_eliminar, name='partido_eliminar'),
+
+    # Localizaciones - Países
+    path('paises/', panel_views.paises_lista, name='paises_lista'),
+    path('paises/nuevo/', panel_views.pais_form, name='pais_nuevo'),
+    path('paises/<int:pk>/editar/', panel_views.pais_form, name='pais_editar'),
+    path('paises/<int:pk>/eliminar/', panel_views.pais_eliminar, name='pais_eliminar'),
+
+    # Localizaciones - Estados
+    path('estados/', panel_views.estados_lista, name='estados_lista'),
+    path('estados/nuevo/', panel_views.estado_form, name='estado_nuevo'),
+    path('estados/<int:pk>/editar/', panel_views.estado_form, name='estado_editar'),
+    path('estados/<int:pk>/eliminar/', panel_views.estado_eliminar, name='estado_eliminar'),
+
+    # Localizaciones - Ciudades
+    path('ciudades/', panel_views.ciudades_lista, name='ciudades_lista'),
+    path('ciudades/nueva/', panel_views.ciudad_form, name='ciudad_nueva'),
+    path('ciudades/<int:pk>/editar/', panel_views.ciudad_form, name='ciudad_editar'),
+    path('ciudades/<int:pk>/eliminar/', panel_views.ciudad_eliminar, name='ciudad_eliminar'),
 ]

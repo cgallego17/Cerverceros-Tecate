@@ -423,3 +423,60 @@ class UserProfile(models.Model):
         if self.avatar:
             return self.avatar.url
         return None
+
+
+# ──────────────────────────────────────────────
+#  LOCALIZACIONES
+# ──────────────────────────────────────────────
+
+class Pais(models.Model):
+    """País para sistema de localizaciones"""
+    nombre = models.CharField(max_length=100, unique=True)
+    codigo = models.CharField(max_length=3, unique=True, help_text="Código ISO (ej: MEX, USA)")
+    activo = models.BooleanField(default=True)
+    
+    class Meta:
+        verbose_name = 'País'
+        verbose_name_plural = 'Países'
+        ordering = ['nombre']
+    
+    def __str__(self):
+        return self.nombre
+
+
+class Estado(models.Model):
+    """Estado o provincia"""
+    pais = models.ForeignKey(Pais, on_delete=models.CASCADE, related_name='estados')
+    nombre = models.CharField(max_length=100)
+    codigo = models.CharField(max_length=10, blank=True, help_text="Código del estado (ej: BC, NL)")
+    activo = models.BooleanField(default=True)
+    
+    class Meta:
+        verbose_name = 'Estado'
+        verbose_name_plural = 'Estados'
+        ordering = ['pais', 'nombre']
+        unique_together = [['pais', 'nombre']]
+    
+    def __str__(self):
+        return f"{self.nombre}, {self.pais.nombre}"
+
+
+class Ciudad(models.Model):
+    """Ciudad o municipio"""
+    estado = models.ForeignKey(Estado, on_delete=models.CASCADE, related_name='ciudades')
+    nombre = models.CharField(max_length=100)
+    activo = models.BooleanField(default=True)
+    
+    class Meta:
+        verbose_name = 'Ciudad'
+        verbose_name_plural = 'Ciudades'
+        ordering = ['estado', 'nombre']
+        unique_together = [['estado', 'nombre']]
+    
+    def __str__(self):
+        return f"{self.nombre}, {self.estado.nombre}"
+    
+    @property
+    def nombre_completo(self):
+        """Retorna nombre completo con estado y país"""
+        return f"{self.nombre}, {self.estado.nombre}, {self.estado.pais.nombre}"
