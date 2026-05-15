@@ -83,6 +83,23 @@
                 <span class="panel-nav-icon"><i class="fas fa-baseball"></i></span> Partidos
             </a>
 
+            <div class="panel-nav-section">LOCALIZACIONES</div>
+
+            <a href="{% url 'panel:paises_lista' %}"
+               class="panel-nav-link {% if 'pais' in request.resolver_match.url_name %}active{% endif %}">
+                <span class="panel-nav-icon"><i class="fas fa-globe"></i></span> Países
+            </a>
+
+            <a href="{% url 'panel:estados_lista' %}"
+               class="panel-nav-link {% if 'estado' in request.resolver_match.url_name %}active{% endif %}">
+                <span class="panel-nav-icon"><i class="fas fa-map"></i></span> Estados
+            </a>
+
+            <a href="{% url 'panel:ciudades_lista' %}"
+               class="panel-nav-link {% if 'ciudad' in request.resolver_match.url_name %}active{% endif %}">
+                <span class="panel-nav-icon"><i class="fas fa-city"></i></span> Ciudades
+            </a>
+
             <div class="panel-nav-section">ADMINISTRACIÓN</div>
 
             {% if request.user.is_superuser %}
