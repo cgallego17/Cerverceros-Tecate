@@ -3,14 +3,16 @@ from django.contrib.auth import authenticate, login, logout, update_session_auth
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User, Group, Permission
 from django.contrib import messages
+from django.db.models import Sum, Q
+from django.utils import timezone
 from itertools import groupby
 from operator import attrgetter
 
-from .models import HeroSlide, Patrocinador, CategoriaProducto, Producto, ItemFaq, Noticia, Jugador
+from .models import HeroSlide, Patrocinador, CategoriaProducto, Producto, ItemFaq, Noticia, Jugador, Transaccion
 from .panel_forms import (
     HeroSlideForm, PatrocinadorForm, CategoriaProductoForm,
     ProductoForm, ItemFaqForm, NoticiaForm, JugadorForm,
-    UsuarioCrearForm, UsuarioEditarForm, RolForm,
+    UsuarioCrearForm, UsuarioEditarForm, RolForm, TransaccionForm,
 )
 
 _LOGIN = '/panel/login/'
@@ -53,6 +55,8 @@ def dashboard(request):
         'total_jugadores': Jugador.objects.count(),
         'total_usuarios': User.objects.count(),
         'total_roles': Group.objects.count(),
+        'total_transacciones': Transaccion.objects.count(),
+        'balance_hoy': _caja_stats()['hoy']['balance'],
     }
     return render(request, 'panel/dashboard.html', context)
 
@@ -384,4 +388,115 @@ def rol_eliminar(request, pk):
         'objeto': rol,
         'back_url': 'panel:roles_lista',
         'titulo': 'Rol',
+    })
+
+
+# ── CAJA REGISTRADORA ─────────────────────────
+
+def _staff_check(request):
+    if not (request.user.is_staff or request.user.is_superuser):
+        messages.error(request, 'No tienes permiso para acceder a esta sección.')
+        return False
+    return True
+
+
+def _caja_stats():
+    """Returns aggregated stats for today and current month."""
+    hoy = timezone.now().date()
+    mes_inicio = hoy.replace(day=1)
+
+    def _agg(qs):
+        r = qs.aggregate(
+            ingresos=Sum('monto', filter=Q(tipo='ingreso')),
+            egresos=Sum('monto',  filter=Q(tipo='egreso')),
+        )
+        ing = r['ingresos'] or 0
+        egr = r['egresos']  or 0
+        return {'ingresos': ing, 'egresos': egr, 'balance': ing - egr}
+
+    return {
+        'hoy':  _agg(Transaccion.objects.filter(fecha__date=hoy)),
+        'mes':  _agg(Transaccion.objects.filter(fecha__date__gte=mes_inicio)),
+        'total': _agg(Transaccion.objects.all()),
+    }
+
+
+@login_required(login_url=_LOGIN)
+def caja_lista(request):
+    if not _staff_check(request):
+        return redirect('panel:dashboard')
+
+    qs = Transaccion.objects.select_related('registrado_por').all()
+
+    tipo      = request.GET.get('tipo', '')
+    categoria = request.GET.get('categoria', '')
+    metodo    = request.GET.get('metodo', '')
+    fecha_desde = request.GET.get('fecha_desde', '')
+    fecha_hasta = request.GET.get('fecha_hasta', '')
+
+    if tipo:         qs = qs.filter(tipo=tipo)
+    if categoria:    qs = qs.filter(categoria=categoria)
+    if metodo:       qs = qs.filter(metodo_pago=metodo)
+    if fecha_desde:  qs = qs.filter(fecha__date__gte=fecha_desde)
+    if fecha_hasta:  qs = qs.filter(fecha__date__lte=fecha_hasta)
+
+    stats = _caja_stats()
+
+    return render(request, 'panel/caja_lista.html', {
+        'transacciones':    qs,
+        'stats':            stats,
+        'tipo_actual':      tipo,
+        'categoria_actual': categoria,
+        'metodo_actual':    metodo,
+        'fecha_desde':      fecha_desde,
+        'fecha_hasta':      fecha_hasta,
+        'TIPO_CHOICES':     Transaccion.TIPO_CHOICES,
+        'CATEGORIA_CHOICES': Transaccion.CATEGORIA_CHOICES,
+        'METODO_CHOICES':   Transaccion.METODO_CHOICES,
+    })
+
+
+@login_required(login_url=_LOGIN)
+def transaccion_crear(request):
+    if not _staff_check(request):
+        return redirect('panel:dashboard')
+    form = TransaccionForm(request.POST or None)
+    if form.is_valid():
+        t = form.save(commit=False)
+        t.registrado_por = request.user
+        t.save()
+        messages.success(request, 'Transacción registrada correctamente.')
+        return redirect('panel:caja_lista')
+    return render(request, 'panel/transaccion_form.html', {'form': form})
+
+
+@login_required(login_url=_LOGIN)
+def transaccion_editar(request, pk):
+    if not _staff_check(request):
+        return redirect('panel:dashboard')
+    transaccion = get_object_or_404(Transaccion, pk=pk)
+    form = TransaccionForm(request.POST or None, instance=transaccion)
+    # Pre-fill datetime-local field with current value
+    if request.method == 'GET':
+        form.initial['fecha'] = transaccion.fecha.strftime('%Y-%m-%dT%H:%M')
+    if form.is_valid():
+        form.save()
+        messages.success(request, 'Transacción actualizada correctamente.')
+        return redirect('panel:caja_lista')
+    return render(request, 'panel/transaccion_form.html', {'form': form, 'objeto': transaccion})
+
+
+@login_required(login_url=_LOGIN)
+def transaccion_eliminar(request, pk):
+    if not _staff_check(request):
+        return redirect('panel:dashboard')
+    transaccion = get_object_or_404(Transaccion, pk=pk)
+    if request.method == 'POST':
+        transaccion.delete()
+        messages.success(request, 'Transacción eliminada correctamente.')
+        return redirect('panel:caja_lista')
+    return render(request, 'panel/confirmar_eliminar.html', {
+        'objeto':   transaccion,
+        'back_url': 'panel:caja_lista',
+        'titulo':   'Transacción',
     })

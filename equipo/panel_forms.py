@@ -1,7 +1,8 @@
 from django import forms
 from django.contrib.auth.models import User, Group, Permission
 from django.contrib.auth.password_validation import validate_password
-from .models import HeroSlide, Patrocinador, CategoriaProducto, Producto, ItemFaq, Noticia, Jugador
+from django.utils import timezone
+from .models import HeroSlide, Patrocinador, CategoriaProducto, Producto, ItemFaq, Noticia, Jugador, Transaccion
 
 _i = {'class': 'panel-input'}
 _ta = {'class': 'panel-textarea', 'rows': 5}
@@ -221,5 +222,31 @@ class RolForm(forms.ModelForm):
         fields = ['name', 'permissions']
         widgets = {
             'name': forms.TextInput(attrs=_i),
+        }
+
+
+# ── CAJA REGISTRADORA ─────────────────────────
+
+class TransaccionForm(forms.ModelForm):
+    fecha = forms.DateTimeField(
+        label='Fecha y hora',
+        widget=forms.DateTimeInput(
+            attrs={**_i, 'type': 'datetime-local'},
+            format='%Y-%m-%dT%H:%M',
+        ),
+        input_formats=['%Y-%m-%dT%H:%M'],
+        initial=timezone.now,
+    )
+
+    class Meta:
+        model = Transaccion
+        fields = ['concepto', 'tipo', 'categoria', 'monto', 'metodo_pago', 'fecha', 'notas']
+        widgets = {
+            'concepto':   forms.TextInput(attrs=_i),
+            'tipo':       forms.Select(attrs=_sel),
+            'categoria':  forms.Select(attrs=_sel),
+            'monto':      forms.NumberInput(attrs={**_i, 'step': '0.01', 'min': '0.01'}),
+            'metodo_pago': forms.Select(attrs=_sel),
+            'notas':      forms.Textarea(attrs={**_ta, 'rows': 3}),
         }
 

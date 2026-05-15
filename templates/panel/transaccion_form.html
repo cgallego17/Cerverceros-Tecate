@@ -1,0 +1,360 @@
+{% extends 'panel/base.html' %}
+{% load static %}
+
+{% block page_title %}{% if objeto %}Editar transacción{% else %}Nueva transacción{% endif %}{% endblock %}
+
+{% block content %}
+
+<div class="panel-page-header">
+    <div class="panel-page-title">
+        {% if objeto %}Editar transacción{% else %}Nueva transacción{% endif %}
+    </div>
+    <a href="{% url 'panel:caja_lista' %}" class="panel-btn panel-btn-secondary">← Volver</a>
+</div>
+
+{% if objeto %}
+{% url 'panel:transaccion_editar' objeto.pk as form_action %}
+{% else %}
+{% url 'panel:transaccion_nueva' as form_action %}
+{% endif %}
+
+<form method="post" action="{{ form_action }}">
+    {% csrf_token %}
+
+    <div class="tf-layout">
+
+        {# ── LEFT: Main fields ── #}
+        <div class="tf-main">
+
+            {# Tipo toggle ── #}
+            <div class="panel-card">
+                <div class="tf-section-title"><i class="fas fa-arrow-right-arrow-left"></i> Tipo de transacción</div>
+                <div class="tf-tipo-btns">
+                    <label class="tf-tipo-btn tf-ingreso {% if form.tipo.value == 'ingreso' or not form.tipo.value %}active{% endif %}">
+                        <input type="radio" name="{{ form.tipo.html_name }}" value="ingreso"
+                               {% if form.tipo.value == 'ingreso' or not form.tipo.value %}checked{% endif %}>
+                        <i class="fas fa-arrow-down"></i>
+                        <span>Ingreso</span>
+                        <small>Entrada de dinero</small>
+                    </label>
+                    <label class="tf-tipo-btn tf-egreso {% if form.tipo.value == 'egreso' %}active{% endif %}">
+                        <input type="radio" name="{{ form.tipo.html_name }}" value="egreso"
+                               {% if form.tipo.value == 'egreso' %}checked{% endif %}>
+                        <i class="fas fa-arrow-up"></i>
+                        <span>Egreso</span>
+                        <small>Salida de dinero</small>
+                    </label>
+                </div>
+                {% if form.tipo.errors %}
+                <div class="panel-field-error">{{ form.tipo.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            {# Concepto + Monto ── #}
+            <div class="panel-card">
+                <div class="tf-section-title"><i class="fas fa-file-invoice-dollar"></i> Detalle</div>
+
+                <div class="panel-form-group">
+                    <label class="panel-form-label" for="{{ form.concepto.id_for_label }}">
+                        Concepto <span style="color:var(--p-accent);">*</span>
+                    </label>
+                    {{ form.concepto }}
+                    {% if form.concepto.errors %}
+                    <div class="panel-field-error">{{ form.concepto.errors.0 }}</div>
+                    {% endif %}
+                    <div class="panel-form-help">Descripción breve de la transacción</div>
+                </div>
+
+                <div class="tf-row-2">
+                    <div class="panel-form-group">
+                        <label class="panel-form-label" for="{{ form.categoria.id_for_label }}">Categoría</label>
+                        {{ form.categoria }}
+                        {% if form.categoria.errors %}
+                        <div class="panel-field-error">{{ form.categoria.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="panel-form-group">
+                        <label class="panel-form-label" for="{{ form.metodo_pago.id_for_label }}">Método de pago</label>
+                        {{ form.metodo_pago }}
+                        {% if form.metodo_pago.errors %}
+                        <div class="panel-field-error">{{ form.metodo_pago.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="panel-form-group">
+                    <label class="panel-form-label" for="{{ form.notas.id_for_label }}">Notas (opcional)</label>
+                    {{ form.notas }}
+                    {% if form.notas.errors %}
+                    <div class="panel-field-error">{{ form.notas.errors.0 }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+
+        {# ── RIGHT: Amount + Date ── #}
+        <div class="tf-sidebar">
+
+            {# Amount ── #}
+            <div class="panel-card tf-amount-card">
+                <div class="tf-section-title"><i class="fas fa-peso-sign"></i> Monto</div>
+                <div class="tf-amount-wrap">
+                    <span class="tf-currency">$</span>
+                    {{ form.monto }}
+                </div>
+                {% if form.monto.errors %}
+                <div class="panel-field-error" style="margin-top:.5rem;">{{ form.monto.errors.0 }}</div>
+                {% endif %}
+                <div id="tf-monto-preview" class="tf-amount-preview"></div>
+            </div>
+
+            {# Date ── #}
+            <div class="panel-card">
+                <div class="tf-section-title"><i class="fas fa-calendar-day"></i> Fecha y hora</div>
+                <div class="panel-form-group" style="margin-bottom:0;">
+                    {{ form.fecha }}
+                    {% if form.fecha.errors %}
+                    <div class="panel-field-error">{{ form.fecha.errors.0 }}</div>
+                    {% endif %}
+                    <div class="panel-form-help">Por defecto: hora actual</div>
+                </div>
+            </div>
+
+            {# Submit ── #}
+            <button type="submit" class="panel-btn panel-btn-primary panel-btn-lg tf-submit-btn" id="tf-submit">
+                <i class="fas fa-cash-register"></i>
+                {% if objeto %}Guardar cambios{% else %}Registrar{% endif %}
+            </button>
+            <a href="{% url 'panel:caja_lista' %}" class="panel-btn panel-btn-secondary tf-cancel-btn">
+                Cancelar
+            </a>
+
+        </div>
+    </div>
+</form>
+
+<style>
+.tf-layout {
+    display: grid;
+    grid-template-columns: 1fr 240px;
+    gap: 1.25rem;
+    align-items: start;
+}
+
+@media (max-width: 768px) {
+    .tf-layout {
+        grid-template-columns: 1fr;
+    }
+    .tf-sidebar { order: -1; }
+}
+
+.tf-section-title {
+    font-size: .8125rem;
+    font-weight: 700;
+    letter-spacing: .4px;
+    text-transform: uppercase;
+    color: var(--p-text-muted);
+    margin-bottom: 1rem;
+    padding-bottom: .625rem;
+    border-bottom: 1px solid var(--p-border);
+}
+
+.tf-section-title i { margin-right: .4rem; }
+
+/* ── Tipo buttons ── */
+.tf-tipo-btns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .75rem;
+}
+
+.tf-tipo-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .25rem;
+    padding: 1.25rem;
+    border-radius: 8px;
+    border: 2px solid var(--p-border);
+    background: #fafafa;
+    cursor: pointer;
+    transition: all .2s;
+    text-align: center;
+}
+
+.tf-tipo-btn input[type="radio"] { display: none; }
+
+.tf-tipo-btn i {
+    font-size: 1.5rem;
+    margin-bottom: .25rem;
+    transition: transform .2s;
+}
+
+.tf-tipo-btn span {
+    font-weight: 700;
+    font-size: .9375rem;
+    font-family: 'Bebas Neue', cursive;
+    letter-spacing: 1px;
+}
+
+.tf-tipo-btn small {
+    font-size: .7rem;
+    color: var(--p-text-muted);
+}
+
+.tf-ingreso:hover,
+.tf-ingreso.active {
+    border-color: #16a34a;
+    background: #f0fdf4;
+    color: #16a34a;
+}
+
+.tf-ingreso.active i { transform: scale(1.15); }
+
+.tf-egreso:hover,
+.tf-egreso.active {
+    border-color: var(--p-accent);
+    background: #fff5f5;
+    color: var(--p-accent);
+}
+
+.tf-egreso.active i { transform: scale(1.15); }
+
+/* ── Two-col row ── */
+.tf-row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+@media (max-width: 480px) {
+    .tf-row-2 { grid-template-columns: 1fr; }
+}
+
+/* ── Amount card ── */
+.tf-amount-card { position: sticky; top: 1.25rem; }
+
+.tf-amount-wrap {
+    display: flex;
+    align-items: center;
+    border: 2px solid var(--p-border);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: border-color .2s;
+    background: #fff;
+}
+
+.tf-amount-wrap:focus-within { border-color: var(--p-accent); }
+
+.tf-currency {
+    font-size: 1.375rem;
+    font-weight: 900;
+    color: var(--p-text-muted);
+    padding: 0 .75rem;
+    background: #f3f4f6;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    border-right: 2px solid var(--p-border);
+    flex-shrink: 0;
+}
+
+.tf-amount-wrap .panel-input {
+    border: none !important;
+    font-size: 1.5rem;
+    font-weight: 900;
+    font-family: 'Bebas Neue', cursive;
+    letter-spacing: 1px;
+    text-align: right;
+    padding: .75rem;
+    width: 100%;
+    background: transparent;
+}
+
+.tf-amount-wrap .panel-input:focus { box-shadow: none; }
+
+.tf-amount-preview {
+    text-align: center;
+    font-size: .8125rem;
+    color: var(--p-text-muted);
+    margin-top: .5rem;
+    min-height: 1.2em;
+    font-style: italic;
+}
+
+/* ── Submit ── */
+.tf-submit-btn {
+    width: 100%;
+    justify-content: center;
+    margin-top: .75rem;
+}
+
+.tf-cancel-btn {
+    width: 100%;
+    text-align: center;
+    display: block;
+    margin-top: .5rem;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    // Tipo toggle
+    const radios = document.querySelectorAll('input[name="{{ form.tipo.html_name }}"]');
+    const btns   = document.querySelectorAll('.tf-tipo-btn');
+    const submit = document.getElementById('tf-submit');
+
+    function updateTipo() {
+        btns.forEach(b => b.classList.remove('active'));
+        radios.forEach(r => {
+            if (r.checked) {
+                r.closest('.tf-tipo-btn').classList.add('active');
+                if (r.value === 'egreso') {
+                    submit.style.background = 'var(--p-accent)';
+                } else {
+                    submit.style.background = '#16a34a';
+                }
+            }
+        });
+    }
+
+    radios.forEach(r => r.addEventListener('change', updateTipo));
+    updateTipo();
+
+    btns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const radio = btn.querySelector('input[type="radio"]');
+            if (radio) { radio.checked = true; updateTipo(); }
+        });
+    });
+
+    // Amount preview
+    const montoInput = document.getElementById('{{ form.monto.id_for_label }}');
+    const preview    = document.getElementById('tf-monto-preview');
+
+    function formatMXN(val) {
+        const n = parseFloat(val);
+        if (isNaN(n)) return '';
+        return n.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' });
+    }
+
+    if (montoInput && preview) {
+        montoInput.addEventListener('input', () => {
+            preview.textContent = formatMXN(montoInput.value);
+        });
+        preview.textContent = formatMXN(montoInput.value);
+    }
+
+    // Pre-fill datetime-local with now if empty
+    const fechaInput = document.querySelector('input[type="datetime-local"]');
+    if (fechaInput && !fechaInput.value) {
+        const now = new Date();
+        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+        fechaInput.value = now.toISOString().slice(0, 16);
+    }
+});
+</script>
+
+{% endblock %}

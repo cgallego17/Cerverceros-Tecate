@@ -1,0 +1,335 @@
+{% extends 'panel/base.html' %}
+
+{% block page_title %}Caja Registradora{% endblock %}
+
+{% block content %}
+
+{# ── STATS ──────────────────────────────────────────── #}
+<div class="cj-stats-grid">
+
+    <div class="cj-stat ingreso">
+        <div class="cj-stat-label"><i class="fas fa-arrow-down"></i> Ingresos hoy</div>
+        <div class="cj-stat-val">${{ stats.hoy.ingresos|floatformat:2 }}</div>
+    </div>
+    <div class="cj-stat egreso">
+        <div class="cj-stat-label"><i class="fas fa-arrow-up"></i> Egresos hoy</div>
+        <div class="cj-stat-val">${{ stats.hoy.egresos|floatformat:2 }}</div>
+    </div>
+    <div class="cj-stat {% if stats.hoy.balance >= 0 %}balance-pos{% else %}balance-neg{% endif %}">
+        <div class="cj-stat-label"><i class="fas fa-scale-balanced"></i> Balance hoy</div>
+        <div class="cj-stat-val">${{ stats.hoy.balance|floatformat:2 }}</div>
+    </div>
+
+    <div class="cj-stat ingreso dim">
+        <div class="cj-stat-label"><i class="fas fa-calendar"></i> Ingresos mes</div>
+        <div class="cj-stat-val">${{ stats.mes.ingresos|floatformat:2 }}</div>
+    </div>
+    <div class="cj-stat egreso dim">
+        <div class="cj-stat-label"><i class="fas fa-calendar"></i> Egresos mes</div>
+        <div class="cj-stat-val">${{ stats.mes.egresos|floatformat:2 }}</div>
+    </div>
+    <div class="cj-stat {% if stats.mes.balance >= 0 %}balance-pos{% else %}balance-neg{% endif %} dim">
+        <div class="cj-stat-label"><i class="fas fa-calendar-check"></i> Balance mes</div>
+        <div class="cj-stat-val">${{ stats.mes.balance|floatformat:2 }}</div>
+    </div>
+
+</div>
+
+{# ── HEADER + FILTERS ──────────────────────────────── #}
+<div class="panel-page-header" style="margin-top:1.5rem;">
+    <div class="panel-page-title">Transacciones</div>
+    <a href="{% url 'panel:transaccion_nueva' %}" class="panel-btn panel-btn-primary">
+        <i class="fas fa-plus"></i> Nueva transacción
+    </a>
+</div>
+
+<form method="get" class="cj-filters">
+    <div class="cj-filter-group">
+        <label class="cj-filter-label">Tipo</label>
+        <select name="tipo" class="panel-select" onchange="this.form.submit()">
+            <option value="">Todos</option>
+            {% for val, label in TIPO_CHOICES %}
+            <option value="{{ val }}" {% if tipo_actual == val %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="cj-filter-group">
+        <label class="cj-filter-label">Categoría</label>
+        <select name="categoria" class="panel-select" onchange="this.form.submit()">
+            <option value="">Todas</option>
+            {% for val, label in CATEGORIA_CHOICES %}
+            <option value="{{ val }}" {% if categoria_actual == val %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="cj-filter-group">
+        <label class="cj-filter-label">Método de pago</label>
+        <select name="metodo" class="panel-select" onchange="this.form.submit()">
+            <option value="">Todos</option>
+            {% for val, label in METODO_CHOICES %}
+            <option value="{{ val }}" {% if metodo_actual == val %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="cj-filter-group">
+        <label class="cj-filter-label">Desde</label>
+        <input type="date" name="fecha_desde" class="panel-input" value="{{ fecha_desde }}" onchange="this.form.submit()">
+    </div>
+    <div class="cj-filter-group">
+        <label class="cj-filter-label">Hasta</label>
+        <input type="date" name="fecha_hasta" class="panel-input" value="{{ fecha_hasta }}" onchange="this.form.submit()">
+    </div>
+    {% if tipo_actual or categoria_actual or metodo_actual or fecha_desde or fecha_hasta %}
+    <div class="cj-filter-group" style="align-self:flex-end;">
+        <a href="{% url 'panel:caja_lista' %}" class="panel-btn panel-btn-secondary panel-btn-sm">
+            <i class="fas fa-xmark"></i> Limpiar
+        </a>
+    </div>
+    {% endif %}
+</form>
+
+{# ── TABLE ─────────────────────────────────────────── #}
+{% if transacciones %}
+<div class="panel-table-wrap">
+    <table class="panel-table">
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Concepto</th>
+                <th>Categoría</th>
+                <th>Tipo</th>
+                <th>Método</th>
+                <th style="text-align:right;">Monto</th>
+                <th>Registrado por</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for t in transacciones %}
+            <tr class="cj-row-{{ t.tipo }}">
+                <td style="white-space:nowrap; font-size:.8rem; color:#6b7280;">
+                    {{ t.fecha|date:"d/m/Y" }}<br>
+                    <span style="font-size:.7rem;">{{ t.fecha|time:"H:i" }}</span>
+                </td>
+                <td>
+                    <span style="font-weight:600;">{{ t.concepto }}</span>
+                    {% if t.notas %}
+                    <span class="cj-notes-icon" title="{{ t.notas }}"><i class="fas fa-note-sticky"></i></span>
+                    {% endif %}
+                </td>
+                <td>
+                    <span class="cj-cat-badge cj-cat-{{ t.categoria }}">
+                        {{ t.get_categoria_display }}
+                    </span>
+                </td>
+                <td>
+                    {% if t.tipo == 'ingreso' %}
+                    <span class="panel-badge panel-badge-green"><i class="fas fa-arrow-down"></i> Ingreso</span>
+                    {% else %}
+                    <span class="panel-badge panel-badge-red"><i class="fas fa-arrow-up"></i> Egreso</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <span class="cj-metodo-badge">
+                        {% if t.metodo_pago == 'efectivo' %}<i class="fas fa-money-bill-wave"></i>
+                        {% elif t.metodo_pago == 'tarjeta' %}<i class="fas fa-credit-card"></i>
+                        {% elif t.metodo_pago == 'transferencia' %}<i class="fas fa-building-columns"></i>
+                        {% else %}<i class="fas fa-circle-question"></i>{% endif %}
+                        {{ t.get_metodo_pago_display }}
+                    </span>
+                </td>
+                <td style="text-align:right; font-weight:700; font-size:.9375rem;"
+                    class="{% if t.tipo == 'ingreso' %}cj-amount-ingreso{% else %}cj-amount-egreso{% endif %}">
+                    {% if t.tipo == 'egreso' %}−{% endif %}${{ t.monto|floatformat:2 }}
+                </td>
+                <td style="font-size:.78rem; color:#6b7280;">
+                    {{ t.registrado_por.username|default:"—" }}
+                </td>
+                <td>
+                    <div class="panel-table-actions">
+                        <a href="{% url 'panel:transaccion_editar' t.pk %}" class="panel-btn panel-btn-secondary panel-btn-sm">
+                            <i class="fas fa-pen"></i>
+                        </a>
+                        <a href="{% url 'panel:transaccion_eliminar' t.pk %}" class="panel-btn panel-btn-danger panel-btn-sm">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{# Totals row #}
+{% with ing=transacciones|length %}
+<div class="cj-totals-bar">
+    <span>{{ transacciones|length }} transacción{{ transacciones|length|pluralize:"es" }}</span>
+    <span class="cj-totals-bal">
+        Balance de la selección:
+        <strong class="{% if stats.total.balance >= 0 %}cj-amount-ingreso{% else %}cj-amount-egreso{% endif %}">
+            ${{ stats.total.balance|floatformat:2 }}
+        </strong>
+    </span>
+</div>
+{% endwith %}
+
+{% else %}
+<div class="panel-card" style="padding:3rem; text-align:center; color:#9ca3af;">
+    <i class="fas fa-cash-register" style="font-size:3rem; display:block; margin-bottom:1rem;"></i>
+    <p style="margin-bottom:1.5rem;">
+        {% if tipo_actual or categoria_actual or metodo_actual or fecha_desde or fecha_hasta %}
+            No hay transacciones con los filtros aplicados.
+        {% else %}
+            No hay transacciones registradas aún.
+        {% endif %}
+    </p>
+    <a href="{% url 'panel:transaccion_nueva' %}" class="panel-btn panel-btn-primary">Registrar primera transacción</a>
+</div>
+{% endif %}
+
+<style>
+/* ── Stats ── */
+.cj-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+@media (max-width: 768px) {
+    .cj-stats-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 480px) {
+    .cj-stats-grid { grid-template-columns: 1fr; }
+}
+
+.cj-stat {
+    background: #fff;
+    border: 1px solid var(--p-border);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    border-left: 4px solid transparent;
+}
+
+.cj-stat.ingreso      { border-left-color: #16a34a; }
+.cj-stat.egreso       { border-left-color: var(--p-accent); }
+.cj-stat.balance-pos  { border-left-color: #2563eb; }
+.cj-stat.balance-neg  { border-left-color: #9333ea; }
+.cj-stat.dim          { opacity: .85; }
+
+.cj-stat-label {
+    font-size: .7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    color: var(--p-text-muted);
+    margin-bottom: .35rem;
+}
+
+.cj-stat-label i { margin-right: .3rem; }
+
+.cj-stat-val {
+    font-size: 1.375rem;
+    font-weight: 900;
+    font-family: 'Bebas Neue', cursive;
+    letter-spacing: 1px;
+    color: #111827;
+}
+
+.cj-stat.ingreso .cj-stat-val     { color: #16a34a; }
+.cj-stat.egreso .cj-stat-val      { color: var(--p-accent); }
+.cj-stat.balance-pos .cj-stat-val { color: #2563eb; }
+.cj-stat.balance-neg .cj-stat-val { color: #9333ea; }
+
+/* ── Filters ── */
+.cj-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .75rem;
+    background: #fff;
+    border: 1px solid var(--p-border);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.25rem;
+    align-items: flex-end;
+}
+
+.cj-filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
+    min-width: 0;
+    flex: 1 1 140px;
+    max-width: 200px;
+}
+
+.cj-filter-label {
+    font-size: .7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+    color: var(--p-text-muted);
+}
+
+/* ── Table rows ── */
+.cj-row-ingreso { background: #fafffe; }
+.cj-row-egreso  { background: #fffafa; }
+
+.cj-amount-ingreso { color: #16a34a; }
+.cj-amount-egreso  { color: var(--p-accent); }
+
+/* ── Category badges ── */
+.cj-cat-badge {
+    font-size: .7rem;
+    font-weight: 700;
+    padding: .2rem .5rem;
+    border-radius: 4px;
+    letter-spacing: .3px;
+}
+
+.cj-cat-boletos     { background: #dbeafe; color: #1d4ed8; }
+.cj-cat-tienda      { background: #ede9fe; color: #6d28d9; }
+.cj-cat-patrocinios { background: #fef9c3; color: #854d0e; }
+.cj-cat-nomina      { background: #ffedd5; color: #c2410c; }
+.cj-cat-operaciones { background: #f3f4f6; color: #374151; }
+.cj-cat-otro        { background: #f3f4f6; color: #6b7280; }
+
+/* ── Método ── */
+.cj-metodo-badge {
+    font-size: .78rem;
+    color: #374151;
+    white-space: nowrap;
+}
+
+.cj-metodo-badge i { margin-right: .25rem; color: var(--p-text-muted); }
+
+/* ── Notes icon ── */
+.cj-notes-icon {
+    color: #f59e0b;
+    margin-left: .35rem;
+    font-size: .8rem;
+    cursor: help;
+}
+
+/* ── Totals bar ── */
+.cj-totals-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f8f9fa;
+    border: 1px solid var(--p-border);
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    padding: .625rem 1.25rem;
+    font-size: .8rem;
+    color: var(--p-text-muted);
+}
+
+.cj-totals-bal strong {
+    font-size: .9375rem;
+    margin-left: .4rem;
+}
+</style>
+
+{% endblock %}

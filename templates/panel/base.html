@@ -84,6 +84,15 @@
             </a>
             {% endif %}
 
+            <div class="panel-nav-section">CAJA</div>
+
+            {% if request.user.is_staff or request.user.is_superuser %}
+            <a href="{% url 'panel:caja_lista' %}"
+               class="panel-nav-link {% if 'caja' in request.resolver_match.url_name or 'transaccion' in request.resolver_match.url_name %}active{% endif %}">
+                <span class="panel-nav-icon"><i class="fas fa-cash-register"></i></span> Caja Registradora
+            </a>
+            {% endif %}
+
             <div class="panel-nav-section">SITIO</div>
 
             <a href="{% url 'equipo:inicio' %}" class="panel-nav-link" target="_blank" rel="noopener">

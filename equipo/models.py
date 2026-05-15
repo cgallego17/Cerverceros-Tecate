@@ -357,3 +357,48 @@ class ImagenInstagram(models.Model):
             return self.imagen.url
         return self.imagen_url or ''
 
+
+# ──────────────────────────────────────────────
+#  CAJA REGISTRADORA
+# ──────────────────────────────────────────────
+
+class Transaccion(models.Model):
+    TIPO_CHOICES = [
+        ('ingreso', 'Ingreso'),
+        ('egreso',  'Egreso'),
+    ]
+    CATEGORIA_CHOICES = [
+        ('boletos',      'Boletos'),
+        ('tienda',       'Tienda'),
+        ('patrocinios',  'Patrocinios'),
+        ('nomina',       'Nómina'),
+        ('operaciones',  'Operaciones'),
+        ('otro',         'Otro'),
+    ]
+    METODO_CHOICES = [
+        ('efectivo',      'Efectivo'),
+        ('tarjeta',       'Tarjeta'),
+        ('transferencia', 'Transferencia'),
+        ('otro',          'Otro'),
+    ]
+
+    concepto      = models.CharField(max_length=200, verbose_name='Concepto')
+    tipo          = models.CharField(max_length=10, choices=TIPO_CHOICES, verbose_name='Tipo')
+    categoria     = models.CharField(max_length=20, choices=CATEGORIA_CHOICES, default='otro', verbose_name='Categoría')
+    monto         = models.DecimalField(max_digits=12, decimal_places=2, verbose_name='Monto')
+    metodo_pago   = models.CharField(max_length=20, choices=METODO_CHOICES, default='efectivo', verbose_name='Método de pago')
+    fecha         = models.DateTimeField(default=timezone.now, verbose_name='Fecha')
+    notas         = models.TextField(blank=True, verbose_name='Notas')
+    registrado_por = models.ForeignKey(
+        'auth.User', on_delete=models.SET_NULL, null=True, blank=True,
+        related_name='transacciones', verbose_name='Registrado por'
+    )
+
+    class Meta:
+        verbose_name = 'Transacción'
+        verbose_name_plural = 'Transacciones'
+        ordering = ['-fecha']
+
+    def __str__(self):
+        return f"{self.get_tipo_display()} – {self.concepto} (${self.monto})"
+

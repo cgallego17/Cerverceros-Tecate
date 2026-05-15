@@ -62,4 +62,10 @@ urlpatterns = [
     path('roles/nuevo/', panel_views.rol_crear, name='rol_nuevo'),
     path('roles/<int:pk>/editar/', panel_views.rol_editar, name='rol_editar'),
     path('roles/<int:pk>/eliminar/', panel_views.rol_eliminar, name='rol_eliminar'),
+
+    # Caja Registradora
+    path('caja/', panel_views.caja_lista, name='caja_lista'),
+    path('caja/nueva/', panel_views.transaccion_crear, name='transaccion_nueva'),
+    path('caja/<int:pk>/editar/', panel_views.transaccion_editar, name='transaccion_editar'),
+    path('caja/<int:pk>/eliminar/', panel_views.transaccion_eliminar, name='transaccion_eliminar'),
 ]

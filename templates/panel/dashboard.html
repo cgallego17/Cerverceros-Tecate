@@ -60,6 +60,16 @@
         <div class="panel-stat-label">Roles</div>
     </a>
     {% endif %}
+    {% if request.user.is_staff or request.user.is_superuser %}
+    <a href="{% url 'panel:caja_lista' %}" class="panel-stat-card"
+       style="{% if balance_hoy >= 0 %}border-left:4px solid #16a34a;{% else %}border-left:4px solid var(--p-accent);{% endif %}">
+        <div class="panel-stat-icon"><i class="fas fa-cash-register"></i></div>
+        <div class="panel-stat-value" style="{% if balance_hoy >= 0 %}color:#16a34a;{% else %}color:var(--p-accent);{% endif %}">
+            ${{ balance_hoy|floatformat:2 }}
+        </div>
+        <div class="panel-stat-label">Balance hoy</div>
+    </a>
+    {% endif %}
 </div>
 
 {# Quick-access sections #}
