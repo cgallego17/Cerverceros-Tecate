@@ -268,12 +268,74 @@ class TransaccionForm(forms.ModelForm):
 
 
 class EquipoForm(forms.ModelForm):
+    CIUDADES_MEXICO = [
+        ('', '-- Selecciona una ciudad --'),
+        ('Aguascalientes', 'Aguascalientes'),
+        ('Tijuana', 'Tijuana'),
+        ('Mexicali', 'Mexicali'),
+        ('Ensenada', 'Ensenada'),
+        ('Tecate', 'Tecate'),
+        ('La Paz', 'La Paz'),
+        ('Campeche', 'Campeche'),
+        ('Saltillo', 'Saltillo'),
+        ('Torreón', 'Torreón'),
+        ('Colima', 'Colima'),
+        ('Tuxtla Gutiérrez', 'Tuxtla Gutiérrez'),
+        ('Chihuahua', 'Chihuahua'),
+        ('Ciudad Juárez', 'Ciudad Juárez'),
+        ('Ciudad de México', 'Ciudad de México'),
+        ('Durango', 'Durango'),
+        ('Guanajuato', 'Guanajuato'),
+        ('León', 'León'),
+        ('Celaya', 'Celaya'),
+        ('Acapulco', 'Acapulco'),
+        ('Chilpancingo', 'Chilpancingo'),
+        ('Pachuca', 'Pachuca'),
+        ('Guadalajara', 'Guadalajara'),
+        ('Zapopan', 'Zapopan'),
+        ('Tlaquepaque', 'Tlaquepaque'),
+        ('Toluca', 'Toluca'),
+        ('Morelia', 'Morelia'),
+        ('Cuernavaca', 'Cuernavaca'),
+        ('Tepic', 'Tepic'),
+        ('Monterrey', 'Monterrey'),
+        ('San Pedro Garza García', 'San Pedro Garza García'),
+        ('Guadalupe', 'Guadalupe'),
+        ('Oaxaca', 'Oaxaca'),
+        ('Puebla', 'Puebla'),
+        ('Querétaro', 'Querétaro'),
+        ('Chetumal', 'Chetumal'),
+        ('Cancún', 'Cancún'),
+        ('Playa del Carmen', 'Playa del Carmen'),
+        ('San Luis Potosí', 'San Luis Potosí'),
+        ('Culiacán', 'Culiacán'),
+        ('Mazatlán', 'Mazatlán'),
+        ('Los Mochis', 'Los Mochis'),
+        ('Hermosillo', 'Hermosillo'),
+        ('Nogales', 'Nogales'),
+        ('Villahermosa', 'Villahermosa'),
+        ('Ciudad Victoria', 'Ciudad Victoria'),
+        ('Tampico', 'Tampico'),
+        ('Reynosa', 'Reynosa'),
+        ('Matamoros', 'Matamoros'),
+        ('Tlaxcala', 'Tlaxcala'),
+        ('Xalapa', 'Xalapa'),
+        ('Veracruz', 'Veracruz'),
+        ('Mérida', 'Mérida'),
+        ('Zacatecas', 'Zacatecas'),
+    ]
+    
+    ciudad = forms.ChoiceField(
+        choices=CIUDADES_MEXICO,
+        widget=forms.Select(attrs=_sel),
+        label='Ciudad'
+    )
+    
     class Meta:
         model = Equipo
         fields = ['nombre', 'ciudad', 'logo']
         widgets = {
             'nombre': forms.TextInput(attrs=_i),
-            'ciudad': forms.TextInput(attrs=_i),
         }
 
 
