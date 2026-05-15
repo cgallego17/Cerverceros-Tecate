@@ -61,7 +61,7 @@
         {% if patrocinadores %}
             {% for p in patrocinadores %}
             <div class="sponsor-logo">
-                {% if p.logo %}<img src="{{ p.logo.url }}" alt="{{ p.nombre }}" style="max-height:60px;">
+                {% if p.logo %}<img src="{{ p.logo.url }}" alt="{{ p.nombre }}" style="max-height:90px;">
                 {% else %}<span style="font-family:'Bebas Neue',cursive;font-size:2rem;color:white;">{{ p.nombre }}</span>{% endif %}
             </div>
             {% endfor %}
