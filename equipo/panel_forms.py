@@ -122,6 +122,12 @@ class UsuarioCrearForm(forms.ModelForm):
         label='Confirmar contraseña',
         widget=forms.PasswordInput(attrs=_i),
     )
+    
+    avatar = forms.ImageField(
+        label='Foto de perfil',
+        required=False,
+        widget=forms.FileInput(attrs={'class': 'panel-input', 'accept': 'image/*'}),
+    )
 
     groups = forms.ModelMultipleChoiceField(
         queryset=Group.objects.all(),
@@ -150,11 +156,19 @@ class UsuarioCrearForm(forms.ModelForm):
         return p2
 
     def save(self, commit=True):
+        from .models import UserProfile
         user = super().save(commit=False)
         user.set_password(self.cleaned_data['password1'])
         if commit:
             user.save()
             user.groups.set(self.cleaned_data.get('groups', []))
+            
+            # Crear perfil con avatar si se proporcionó
+            avatar = self.cleaned_data.get('avatar')
+            if avatar:
+                UserProfile.objects.create(user=user, avatar=avatar)
+            else:
+                UserProfile.objects.create(user=user)
         return user
 
 

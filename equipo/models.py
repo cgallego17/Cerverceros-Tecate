@@ -402,3 +402,24 @@ class Transaccion(models.Model):
     def __str__(self):
         return f"{self.get_tipo_display()} – {self.concepto} (${self.monto})"
 
+
+class UserProfile(models.Model):
+    """Perfil extendido de usuario con imagen"""
+    from django.contrib.auth.models import User
+    
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    avatar = models.ImageField(upload_to='usuarios/', blank=True, null=True)
+    
+    class Meta:
+        verbose_name = 'Perfil de Usuario'
+        verbose_name_plural = 'Perfiles de Usuario'
+    
+    def __str__(self):
+        return f"Perfil de {self.user.username}"
+    
+    @property
+    def avatar_url(self):
+        """Retorna la URL del avatar o un placeholder"""
+        if self.avatar:
+            return self.avatar.url
+        return None

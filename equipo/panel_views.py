@@ -270,7 +270,7 @@ def usuarios_lista(request):
 def usuario_crear(request):
     if not _superuser_check(request):
         return redirect('panel:dashboard')
-    form = UsuarioCrearForm(request.POST or None)
+    form = UsuarioCrearForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         form.save()
         messages.success(request, f'Usuario "{form.cleaned_data["username"]}" creado correctamente.')
