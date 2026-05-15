@@ -3,395 +3,631 @@
 #
 msgid ""
 msgstr ""
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-05-15 16:58-0500\n"
+"Language: es\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 # Top bar
+#: .\templates\equipo\base.html:18 .\templates\equipo\inicio.html:31
+#: .\templates\equipo\inicio.html:111 .\templates\equipo\inicio.html:133
+#: .\templates\equipo\inicio.html:154 .\templates\equipo\inicio.html:175
+#: .\templates\equipo\inicio.html:215
 msgid "COMPRAR BOLETOS"
 msgstr ""
 
+#: .\templates\equipo\base.html:21
 msgid "INICIO"
 msgstr ""
 
+#: .\templates\equipo\base.html:22 .\templates\equipo\base.html:57
 msgid "NOTICIAS"
 msgstr ""
 
+#: .\templates\equipo\base.html:33
 msgid "SÍGUENOS:"
 msgstr ""
 
 # Navbar
+#: .\templates\equipo\base.html:46
 msgid "HOME"
 msgstr ""
 
+#: .\templates\equipo\base.html:47
 msgid "EQUIPO"
 msgstr ""
 
+#: .\templates\equipo\base.html:48
 msgid "CALENDARIO"
 msgstr ""
 
+#: .\templates\equipo\base.html:56
 msgid "RESULTADOS"
 msgstr ""
 
+#: .\templates\equipo\base.html:58
+msgid "TIENDA"
+msgstr ""
+
+#: .\templates\equipo\base.html:59
 msgid "BOLETOS"
 msgstr ""
 
 # Footer brand
+#: .\templates\equipo\base.html:83
 msgid "Liga Mexicana del Pacífico · Temporada 2026"
 msgstr ""
 
 # Footer brand nav
+#: .\templates\equipo\base.html:93 .\templates\equipo\base.html:123
+#: .\templates\equipo\producto_detalle.html:13
+#: .\templates\equipo\tienda.html:14
 msgid "Inicio"
 msgstr ""
 
+#: .\templates\equipo\base.html:94 .\templates\equipo\tabla_posiciones.html:20
 msgid "Equipo"
 msgstr ""
 
+#: .\templates\equipo\base.html:95 .\templates\equipo\base.html:125
 msgid "Calendario"
 msgstr ""
 
+#: .\templates\equipo\base.html:96 .\templates\equipo\base.html:126
+#: .\templates\equipo\resultados.html:9
 msgid "Resultados"
 msgstr ""
 
+#: .\templates\equipo\base.html:97 .\templates\equipo\base.html:128
+#: .\templates\equipo\noticias.html:9
 msgid "Noticias"
 msgstr ""
 
+#: .\templates\equipo\base.html:98 .\templates\equipo\producto_detalle.html:4
+#: .\templates\equipo\producto_detalle.html:15
+#: .\templates\equipo\tienda.html:16
+msgid "Tienda"
+msgstr ""
+
+#: .\templates\equipo\base.html:99
 msgid "Boletos"
 msgstr ""
 
 # Footer about
+#: .\templates\equipo\base.html:110
 msgid "ACERCA DEL CLUB"
 msgstr ""
 
-msgid "Los Cerveceros de Tecate son el equipo de béisbol profesional de la ciudad de Tecate, Baja California. Orgullo de la región y miembros de la Liga Mexicana del Pacífico."
+#: .\templates\equipo\base.html:111
+msgid ""
+"Los Cerveceros de Tecate son el equipo de béisbol profesional de la ciudad "
+"de Tecate, Baja California. Orgullo de la región y miembros de la Liga "
+"Mexicana del Pacífico."
 msgstr ""
 
 # Footer navigation
+#: .\templates\equipo\base.html:121
 msgid "NAVEGACIÓN"
 msgstr ""
 
+#: .\templates\equipo\base.html:124 .\templates\equipo\nuestro_equipo.html:9
 msgid "Nuestro Equipo"
 msgstr ""
 
+#: .\templates\equipo\base.html:127 .\templates\equipo\tabla_posiciones.html:9
 msgid "Tabla de Posiciones"
 msgstr ""
 
+#: .\templates\equipo\base.html:129
 msgid "Boletería"
 msgstr ""
 
 # Footer fixtures
+#: .\templates\equipo\base.html:135
 msgid "PRÓXIMOS PARTIDOS"
 msgstr ""
 
+#: .\templates\equipo\base.html:139
 msgid "Vie 15 Mayo"
 msgstr ""
 
+#: .\templates\equipo\base.html:140 .\templates\equipo\base.html:148
 msgid "LOCAL"
 msgstr ""
 
+#: .\templates\equipo\base.html:142
 msgid "vs. Toros de Tijuana"
 msgstr ""
 
+#: .\templates\equipo\base.html:143 .\templates\equipo\base.html:151
 msgid "Estadio Cerveceros"
 msgstr ""
 
+#: .\templates\equipo\base.html:147
 msgid "Sáb 16 Mayo"
 msgstr ""
 
+#: .\templates\equipo\base.html:150
 msgid "vs. Mayos de Navojoa"
 msgstr ""
 
+#: .\templates\equipo\base.html:155
 msgid "Dom 17 Mayo"
 msgstr ""
 
+#: .\templates\equipo\base.html:156
 msgid "VISITA"
 msgstr ""
 
+#: .\templates\equipo\base.html:158
 msgid "vs. Yaquis de Obregón"
 msgstr ""
 
+#: .\templates\equipo\base.html:159
 msgid "Estadio Yaquis"
 msgstr ""
 
+#: .\templates\equipo\base.html:162
 msgid "Ver calendario completo →"
 msgstr ""
 
 # Footer instagram
+#: .\templates\equipo\base.html:167
 msgid "SÍGUENOS EN INSTAGRAM"
 msgstr ""
 
 # Footer copyright
+#: .\templates\equipo\base.html:202
 msgid "© 2026 Cerveceros de Tecate · Todos los derechos reservados"
 msgstr ""
 
+#: .\templates\equipo\base.html:204
 msgid "Privacidad"
 msgstr ""
 
+#: .\templates\equipo\base.html:206
 msgid "Términos de uso"
 msgstr ""
 
+#: .\templates\equipo\base.html:208
 msgid "Contacto"
 msgstr ""
 
+#: .\templates\equipo\boleteria.html:9
+msgid "Boletaría"
+msgstr ""
+
+# boleteria.html
+#: .\templates\equipo\boleteria.html:10
+msgid "Compra tus boletos para los próximos partidos"
+msgstr ""
+
+#: .\templates\equipo\boleteria.html:15
+msgid "Partidos Disponibles"
+msgstr ""
+
+#: .\templates\equipo\boleteria.html:34
+msgid "Ver Boletos Disponibles"
+msgstr ""
+
+#: .\templates\equipo\boleteria.html:38
+msgid "No hay partidos con boletos disponibles en este momento."
+msgstr ""
+
+# calendario.html
+#: .\templates\equipo\calendario.html:9
+msgid "Calendario de Partidos"
+msgstr ""
+
+#: .\templates\equipo\calendario.html:10
+msgid "Todos los partidos de la temporada"
+msgstr ""
+
+#: .\templates\equipo\calendario.html:15
+msgid "Próximos Partidos"
+msgstr ""
+
+#: .\templates\equipo\calendario.html:33
+msgid "No hay partidos programados próximamente."
+msgstr ""
+
+#: .\templates\equipo\calendario.html:36
+msgid "Partidos Pasados"
+msgstr ""
+
+#: .\templates\equipo\calendario.html:55
+msgid "No hay partidos pasados registrados."
+msgstr ""
+
 # inicio.html - Hero slides
+#: .\templates\equipo\inicio.html:27
 msgid "CERVECEROS DE TECATE 2026"
 msgstr ""
 
+#: .\templates\equipo\inicio.html:28
 msgid "LA TRADICIÓN"
 msgstr ""
 
+#: .\templates\equipo\inicio.html:28
 msgid "SE VIVE EN EL DIAMANTE"
 msgstr ""
 
+#: .\templates\equipo\inicio.html:30
 msgid "CONOCE AL EQUIPO"
 msgstr ""
 
+#: .\templates\equipo\inicio.html:37
 msgid "ORGULLO DE BAJA CALIFORNIA"
 msgstr ""
 
+#: .\templates\equipo\inicio.html:38
 msgid "MÁS QUE UN EQUIPO"
 msgstr ""
 
+#: .\templates\equipo\inicio.html:38
 msgid "UNA FAMILIA CERVECERA"
 msgstr ""
 
+#: .\templates\equipo\inicio.html:40
 msgid "VER CALENDARIO"
 msgstr ""
 
+#: .\templates\equipo\inicio.html:41
 msgid "ÚLTIMAS NOTICIAS"
 msgstr ""
 
+#: .\templates\equipo\inicio.html:47
 msgid "TEMPORADA 2026 EN MARCHA"
 msgstr ""
 
+#: .\templates\equipo\inicio.html:48
 msgid "VIVE LA EMOCIÓN"
 msgstr ""
 
+#: .\templates\equipo\inicio.html:48
 msgid "DEL BÉISBOL PROFESIONAL"
 msgstr ""
 
+#: .\templates\equipo\inicio.html:50
 msgid "VER RESULTADOS"
 msgstr ""
 
+#: .\templates\equipo\inicio.html:51
 msgid "TABLA DE POSICIONES"
 msgstr ""
 
 # inicio.html - Scores section
+#: .\templates\equipo\inicio.html:81 .\templates\equipo\inicio.html:189
 msgid "LO QUE ESTÁ EN TENDENCIA"
 msgstr ""
 
+#: .\templates\equipo\inicio.html:82
 msgid "REVISA LOS MARCADORES"
 msgstr ""
 
+#: .\templates\equipo\inicio.html:107 .\templates\equipo\inicio.html:129
+#: .\templates\equipo\inicio.html:150 .\templates\equipo\inicio.html:171
 msgid "SEDE DEL PARTIDO"
 msgstr ""
 
+#: .\templates\equipo\inicio.html:112 .\templates\equipo\inicio.html:134
+#: .\templates\equipo\inicio.html:155 .\templates\equipo\inicio.html:176
 msgid "VER TRANSMISIÓN"
 msgstr ""
 
 # inicio.html - Next match section
+#: .\templates\equipo\inicio.html:190
 msgid "PRÓXIMO PARTIDO"
 msgstr ""
 
+#: .\templates\equipo\inicio.html:200
 msgid "DÍA"
 msgstr ""
 
+#: .\templates\equipo\inicio.html:204
 msgid "HORA"
 msgstr ""
 
+#: .\templates\equipo\inicio.html:208
 msgid "MINUTO"
 msgstr ""
 
+#: .\templates\equipo\inicio.html:212
 msgid "SEGUNDO"
 msgstr ""
 
-# inicio.html - Featured player
-msgid "DEFENSIVO 2ND"
-msgstr ""
-
+#: .\templates\equipo\inicio.html:244 .\templates\equipo\inicio.html:268
 msgid "BREVE BIOGRAFÍA"
 msgstr ""
 
+#: .\templates\equipo\inicio.html:246 .\templates\equipo\inicio.html:270
 msgid "VER PERFIL"
 msgstr ""
 
+# inicio.html - Featured player
+#: .\templates\equipo\inicio.html:261
+msgid "DEFENSIVO 2ND"
+msgstr ""
+
 # inicio.html - News grid
+#: .\templates\equipo\inicio.html:290 .\templates\equipo\inicio.html:302
+#: .\templates\equipo\inicio.html:311 .\templates\equipo\inicio.html:321
+#: .\templates\equipo\inicio.html:330
 msgid "TEMPORADA"
 msgstr ""
 
-msgid "2010'S: UNA DÉCADA"
-msgstr ""
-
+#: .\templates\equipo\inicio.html:294 .\templates\equipo\inicio.html:305
+#: .\templates\equipo\inicio.html:314 .\templates\equipo\inicio.html:324
+#: .\templates\equipo\inicio.html:333 .\templates\equipo\inicio.html:421
 msgid "LEER MÁS"
 msgstr ""
 
+#: .\templates\equipo\inicio.html:303
+msgid "2010'S: UNA DÉCADA"
+msgstr ""
+
+#: .\templates\equipo\inicio.html:312
 msgid "SATURDAY SPORCLE"
 msgstr ""
 
+#: .\templates\equipo\inicio.html:322
 msgid "SECOND BASE"
 msgstr ""
 
+#: .\templates\equipo\inicio.html:331
 msgid "D-BACKS SPRING TRAINING"
 msgstr ""
 
 # inicio.html - Store section
+#: .\templates\equipo\inicio.html:344
 msgid "LA HISTORIA DEL CLUB"
 msgstr ""
 
+#: .\templates\equipo\inicio.html:345 .\templates\equipo\tienda.html:12
 msgid "TIENDA OFICIAL"
 msgstr ""
 
+#: .\templates\equipo\inicio.html:356 .\templates\equipo\inicio.html:377
+#: .\templates\equipo\inicio.html:396
+#: .\templates\equipo\producto_detalle.html:31
+#: .\templates\equipo\producto_detalle.html:101
+#: .\templates\equipo\tienda.html:82
 msgid "OFERTA"
 msgstr ""
 
+#: .\templates\equipo\inicio.html:356 .\templates\equipo\inicio.html:386
+#: .\templates\equipo\producto_detalle.html:32
+#: .\templates\equipo\producto_detalle.html:102
+#: .\templates\equipo\tienda.html:83
 msgid "NUEVO"
 msgstr ""
 
-msgid "AÑADIR AL CARRITO"
-msgstr ""
-
+#: .\templates\equipo\inicio.html:356
+#: .\templates\equipo\producto_detalle.html:33
+#: .\templates\equipo\producto_detalle.html:103
+#: .\templates\equipo\tienda.html:84 .\templates\equipo\tienda.html:105
 msgid "AGOTADO"
 msgstr ""
 
+#: .\templates\equipo\inicio.html:371
+#: .\templates\equipo\producto_detalle.html:117
+#: .\templates\equipo\tienda.html:103
+msgid "VER PRODUCTO"
+msgstr ""
+
+#: .\templates\equipo\inicio.html:392
+msgid "VER TIENDA"
+msgstr ""
+
+#: .\templates\equipo\inicio.html:410
+msgid "VER TODA LA TIENDA"
+msgstr ""
+
 # inicio.html - Features banner
+#: .\templates\equipo\inicio.html:419
 msgid "EXPLORA LAS CARACTERÍSTICAS"
 msgstr ""
 
+#: .\templates\equipo\inicio.html:420
 msgid "LOREM IPSUM DOLOR SIT AMET ADIPIS"
 msgstr ""
 
-# inicio.html - Skills section
-msgid "RANKING CADA PARTIDO"
-msgstr ""
-
-# noticias.html
-msgid "Mantente al día con las últimas novedades del equipo"
-msgstr ""
-
-msgid "Leer más"
-msgstr ""
-
-msgid "No hay noticias disponibles en este momento."
-msgstr ""
-
-# calendario.html
-msgid "Calendario de Partidos"
-msgstr ""
-
-msgid "Todos los partidos de la temporada"
-msgstr ""
-
-msgid "Próximos Partidos"
-msgstr ""
-
-msgid "No hay partidos programados próximamente."
-msgstr ""
-
-msgid "Partidos Pasados"
-msgstr ""
-
-msgid "No hay partidos pasados registrados."
-msgstr ""
-
-# resultados.html
-msgid "Resultados de los partidos finalizados"
-msgstr ""
-
-msgid "No hay resultados disponibles en este momento."
-msgstr ""
-
-# boleteria.html
-msgid "Compra tus boletos para los próximos partidos"
-msgstr ""
-
-msgid "Partidos Disponibles"
-msgstr ""
-
-msgid "Ver Boletos Disponibles"
-msgstr ""
-
-msgid "No hay partidos con boletos disponibles en este momento."
-msgstr ""
-
-# nuestro_equipo.html
-msgid "Conoce a los jugadores de Cerveceros de Tecate"
-msgstr ""
-
-msgid "Ver Perfil"
-msgstr ""
-
-msgid "No hay jugadores registrados en este momento."
-msgstr ""
-
-# tabla_posiciones.html
-msgid "Clasificación de la temporada"
-msgstr ""
-
-msgid "Posición"
-msgstr ""
-
-msgid "Racha"
-msgstr ""
-
-msgid "No hay datos de la tabla de posiciones."
-msgstr ""
-
 # jugador_detalle.html
+#: .\templates\equipo\jugador_detalle.html:22
 msgid "Información del Jugador"
 msgstr ""
 
+#: .\templates\equipo\jugador_detalle.html:25
 msgid "Número:"
 msgstr ""
 
+#: .\templates\equipo\jugador_detalle.html:29
 msgid "Posición:"
 msgstr ""
 
+#: .\templates\equipo\jugador_detalle.html:34
 msgid "Fecha de Nacimiento:"
 msgstr ""
 
+#: .\templates\equipo\jugador_detalle.html:40
 msgid "Altura:"
 msgstr ""
 
+#: .\templates\equipo\jugador_detalle.html:46
 msgid "Peso:"
 msgstr ""
 
+#: .\templates\equipo\jugador_detalle.html:52
 msgid "Bateo:"
 msgstr ""
 
+#: .\templates\equipo\jugador_detalle.html:58
 msgid "Lanzamiento:"
 msgstr ""
 
+#: .\templates\equipo\jugador_detalle.html:65
 msgid "Biografía"
 msgstr ""
 
+#: .\templates\equipo\jugador_detalle.html:69
 msgid "Volver al Equipo"
 msgstr ""
 
-# partido_boletos.html
-msgid "Boletos Disponibles"
-msgstr ""
-
-msgid "Tipos de Boletos"
-msgstr ""
-
-msgid "Sección:"
-msgstr ""
-
-msgid "Disponibles:"
-msgstr ""
-
-msgid "Comprar"
-msgstr ""
-
-msgid "No hay boletos disponibles para este partido."
-msgstr ""
-
-msgid "Volver a Boletería"
-msgstr ""
-
 # noticia_detalle.html
+#: .\templates\equipo\noticia_detalle.html:26
 msgid "Volver a Noticias"
 msgstr ""
 
-# tabla_posiciones.html - table headers
+#: .\templates\equipo\noticias.html:10
+msgid "Manténte al día con las últimas novedades del equipo"
+msgstr ""
+
+#: .\templates\equipo\noticias.html:28
+msgid "Leer más"
+msgstr ""
+
+#: .\templates\equipo\noticias.html:32
+msgid "No hay noticias disponibles en este momento."
+msgstr ""
+
+# nuestro_equipo.html
+#: .\templates\equipo\nuestro_equipo.html:10
+msgid "Conoce a los jugadores de Cerveceros de Tecate"
+msgstr ""
+
+#: .\templates\equipo\nuestro_equipo.html:25
+msgid "Ver Perfil"
+msgstr ""
+
+#: .\templates\equipo\nuestro_equipo.html:29
+msgid "No hay jugadores registrados en este momento."
+msgstr ""
+
+# partido_boletos.html
+#: .\templates\equipo\partido_boletos.html:9
+msgid "Boletos Disponibles"
+msgstr ""
+
+#: .\templates\equipo\partido_boletos.html:16
+msgid "Tipos de Boletos"
+msgstr ""
+
+#: .\templates\equipo\partido_boletos.html:23
+msgid "Sección:"
+msgstr ""
+
+#: .\templates\equipo\partido_boletos.html:25
+msgid "Disponibles:"
+msgstr ""
+
+#: .\templates\equipo\partido_boletos.html:29
+msgid "Comprar"
+msgstr ""
+
+#: .\templates\equipo\partido_boletos.html:33
+msgid "No hay boletos disponibles para este partido."
+msgstr ""
+
+#: .\templates\equipo\partido_boletos.html:36
+msgid "Volver a Boletaría"
+msgstr ""
+
+#: .\templates\equipo\producto_detalle.html:70
+msgid "VOLVER A LA TIENDA"
+msgstr ""
+
+#: .\templates\equipo\producto_detalle.html:72
+msgid "Este producto está agotado."
+msgstr ""
+
+#: .\templates\equipo\producto_detalle.html:73
+msgid "VER OTROS PRODUCTOS"
+msgstr ""
+
+#: .\templates\equipo\producto_detalle.html:78
+#: .\templates\equipo\tienda.html:63
+msgid "Categoría:"
+msgstr ""
+
+#: .\templates\equipo\producto_detalle.html:87
+msgid "PRODUCTOS RELACIONADOS"
+msgstr ""
+
+# resultados.html
+#: .\templates\equipo\resultados.html:10
+msgid "Resultados de los partidos finalizados"
+msgstr ""
+
+#: .\templates\equipo\resultados.html:32
+msgid "No hay resultados disponibles en este momento."
+msgstr ""
+
+# tabla_posiciones.html
+#: .\templates\equipo\tabla_posiciones.html:10
+msgid "Clasificación de la temporada"
+msgstr ""
+
+#: .\templates\equipo\tabla_posiciones.html:19
+msgid "Posición"
+msgstr ""
+
+#: .\templates\equipo\tabla_posiciones.html:27
+msgid "Racha"
+msgstr ""
+
+#: .\templates\equipo\tabla_posiciones.html:45
+msgid "No hay datos de la tabla de posiciones."
+msgstr ""
+
+#: .\templates\equipo\tienda.html:4
+msgid "Tienda Oficial"
+msgstr ""
+
+#: .\templates\equipo\tienda.html:11
+msgid "CERVECEROS DE TECATE"
+msgstr ""
+
+#: .\templates\equipo\tienda.html:29
+msgid "CATEGORÍAS"
+msgstr ""
+
+#: .\templates\equipo\tienda.html:32
+msgid "Todos los productos"
+msgstr ""
+
+#: .\templates\equipo\tienda.html:47
+msgid "FILTROS"
+msgstr ""
+
+#: .\templates\equipo\tienda.html:49
+msgid "Ofertas"
+msgstr ""
+
+#: .\templates\equipo\tienda.html:50
+msgid "Nuevos"
+msgstr ""
+
+#: .\templates\equipo\tienda.html:59
+#, python-format
+msgid "%(count)s producto encontrado"
+msgid_plural "%(count)s productos encontrados"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\templates\equipo\tienda.html:111
+msgid "No se encontraron productos en esta categoría."
+msgstr ""
+
+#: .\templates\equipo\tienda.html:112
+msgid "VER TODOS"
+msgstr ""
+
+#: .\templates\panel\base.html:117
+msgid "Hola"
+msgstr ""
+
+#: .\templates\panel\base.html:118
+msgid "Salir"
+msgstr ""

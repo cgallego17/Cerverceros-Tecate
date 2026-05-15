@@ -1,6 +1,6 @@
-{% load static %}
+{% load static i18n %}
 <!DOCTYPE html>
-<html lang="es">
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -108,8 +108,14 @@
         <header class="panel-topbar">
             <button class="panel-toggle-btn" id="sidebarToggle" aria-label="Toggle sidebar"><i class="fas fa-bars"></i></button>
             <div class="panel-topbar-right">
-                <span class="panel-topbar-user">Hola, <strong>{{ request.user.username }}</strong></span>
-                <a href="{% url 'panel:logout' %}" class="panel-logout-link"><i class="fas fa-right-from-bracket"></i> Salir</a>
+                <form action="{% url 'set_language' %}" method="post" style="display: inline-block; margin-right: 15px;">
+                    {% csrf_token %}
+                    <input name="next" type="hidden" value="{{ request.get_full_path }}">
+                    <button type="submit" name="language" value="es" style="background: {% if LANGUAGE_CODE == 'es' %}#e31e24{% else %}transparent{% endif %}; border: 1px solid #ddd; padding: 5px 10px; cursor: pointer; border-radius: 3px; color: {% if LANGUAGE_CODE == 'es' %}white{% else %}#666{% endif %}; font-size: 12px; margin-right: 5px;">ES</button>
+                    <button type="submit" name="language" value="en" style="background: {% if LANGUAGE_CODE == 'en' %}#e31e24{% else %}transparent{% endif %}; border: 1px solid #ddd; padding: 5px 10px; cursor: pointer; border-radius: 3px; color: {% if LANGUAGE_CODE == 'en' %}white{% else %}#666{% endif %}; font-size: 12px;">EN</button>
+                </form>
+                <span class="panel-topbar-user">{% trans "Hola" %}, <strong>{{ request.user.username }}</strong></span>
+                <a href="{% url 'panel:logout' %}" class="panel-logout-link"><i class="fas fa-right-from-bracket"></i> {% trans "Salir" %}</a>
             </div>
         </header>
 
