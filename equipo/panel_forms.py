@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.models import User, Group, Permission
 from django.contrib.auth.password_validation import validate_password
 from django.utils import timezone
-from .models import HeroSlide, Patrocinador, CategoriaProducto, Producto, ItemFaq, Noticia, Jugador, Transaccion
+from .models import HeroSlide, Patrocinador, CategoriaProducto, Producto, ItemFaq, Noticia, Jugador, Transaccion, Equipo, Partido
 
 _i = {'class': 'panel-input'}
 _ta = {'class': 'panel-textarea', 'rows': 5}
@@ -266,3 +266,32 @@ class TransaccionForm(forms.ModelForm):
             'notas':      forms.Textarea(attrs={**_ta, 'rows': 3}),
         }
 
+
+class EquipoForm(forms.ModelForm):
+    class Meta:
+        model = Equipo
+        fields = ['nombre', 'ciudad', 'logo']
+        widgets = {
+            'nombre': forms.TextInput(attrs=_i),
+            'ciudad': forms.TextInput(attrs=_i),
+        }
+
+
+class PartidoForm(forms.ModelForm):
+    fecha = forms.DateTimeField(
+        widget=forms.DateTimeInput(attrs={**_i, 'type': 'datetime-local'}),
+        label='Fecha y hora'
+    )
+    
+    class Meta:
+        model = Partido
+        fields = ['fecha', 'equipo_local', 'equipo_visitante', 'carreras_local', 'carreras_visitante', 'estado', 'estadio', 'temporada']
+        widgets = {
+            'equipo_local': forms.Select(attrs=_sel),
+            'equipo_visitante': forms.Select(attrs=_sel),
+            'carreras_local': forms.NumberInput(attrs={**_i, 'min': '0'}),
+            'carreras_visitante': forms.NumberInput(attrs={**_i, 'min': '0'}),
+            'estado': forms.Select(attrs=_sel),
+            'estadio': forms.TextInput(attrs=_i),
+            'temporada': forms.TextInput(attrs=_i),
+        }

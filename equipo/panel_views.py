@@ -8,11 +8,12 @@ from django.utils import timezone
 from itertools import groupby
 from operator import attrgetter
 
-from .models import HeroSlide, Patrocinador, CategoriaProducto, Producto, ItemFaq, Noticia, Jugador, Transaccion
+from .models import HeroSlide, Patrocinador, CategoriaProducto, Producto, ItemFaq, Noticia, Jugador, Transaccion, Equipo, Partido
 from .panel_forms import (
     HeroSlideForm, PatrocinadorForm, CategoriaProductoForm,
     ProductoForm, ItemFaqForm, NoticiaForm, JugadorForm,
     UsuarioCrearForm, UsuarioEditarForm, RolForm, TransaccionForm,
+    EquipoForm, PartidoForm,
 )
 
 _LOGIN = '/panel/login/'
