@@ -347,7 +347,7 @@ class PartidoForm(forms.ModelForm):
     
     class Meta:
         model = Partido
-        fields = ['fecha', 'equipo_local', 'equipo_visitante', 'carreras_local', 'carreras_visitante', 'estado', 'estadio', 'temporada']
+        fields = ['fecha', 'equipo_local', 'equipo_visitante', 'carreras_local', 'carreras_visitante', 'estado', 'estadio', 'temporada', 'destacado']
         widgets = {
             'equipo_local': forms.Select(attrs=_sel),
             'equipo_visitante': forms.Select(attrs=_sel),

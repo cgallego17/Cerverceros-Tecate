@@ -26,10 +26,13 @@
         </thead>
         <tbody>
             {% for partido in partidos %}
-            <tr>
+            <tr {% if partido.destacado %}style="background-color: #fef3c7;"{% endif %}>
                 <td>
                     <strong>{{ partido.fecha|date:"d/m/Y" }}</strong><br>
                     <small style="color: #6b7280;">{{ partido.fecha|date:"H:i" }} hrs</small>
+                    {% if partido.destacado %}
+                    <br><span class="panel-badge panel-badge-warning" style="margin-top: 0.25rem;"><i class="fas fa-star"></i> Destacado</span>
+                    {% endif %}
                 </td>
                 <td>
                     <div style="display: flex; flex-direction: column; gap: 0.25rem;">

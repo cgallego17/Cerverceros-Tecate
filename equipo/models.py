@@ -71,10 +71,16 @@ class Partido(models.Model):
     estado = models.CharField(max_length=20, choices=ESTADOS, default='programado')
     estadio = models.CharField(max_length=200, blank=True)
     temporada = models.CharField(max_length=20)
+    destacado = models.BooleanField(default=False, verbose_name='Próximo partido destacado', help_text='Marcar como el próximo partido a mostrar en la página de inicio')
     
     class Meta:
         verbose_name_plural = "Partidos"
         ordering = ['-fecha']
+    
+    def save(self, *args, **kwargs):
+        if self.destacado:
+            Partido.objects.filter(destacado=True).exclude(pk=self.pk).update(destacado=False)
+        super().save(*args, **kwargs)
     
     def __str__(self):
         return f"{self.equipo_local} vs {self.equipo_visitante} - {self.fecha.strftime('%d/%m/%Y')}"

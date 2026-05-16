@@ -1,0 +1,59 @@
+{% extends 'panel/base.html' %}
+
+{% block page_title %}Ciudades{% endblock %}
+
+{% block content %}
+<div class="panel-page-header">
+    <div class="panel-page-title">
+        Ciudades
+        <small>Administra las ciudades por estado</small>
+    </div>
+    <a href="{% url 'panel:ciudad_nueva' %}" class="panel-btn panel-btn-primary">+ Nueva Ciudad</a>
+</div>
+
+{% if ciudades %}
+<div class="panel-card">
+    <table class="panel-table">
+        <thead>
+            <tr>
+                <th>Ciudad</th>
+                <th>Estado</th>
+                <th>País</th>
+                <th>Estado</th>
+                <th class="text-right">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ciudad in ciudades %}
+            <tr>
+                <td><strong>{{ ciudad.nombre }}</strong></td>
+                <td>{{ ciudad.estado.nombre }}</td>
+                <td>{{ ciudad.estado.pais.nombre }}</td>
+                <td>
+                    {% if ciudad.activo %}
+                    <span class="panel-badge panel-badge-success">Activo</span>
+                    {% else %}
+                    <span class="panel-badge panel-badge-secondary">Inactivo</span>
+                    {% endif %}
+                </td>
+                <td class="text-right">
+                    <a href="{% url 'panel:ciudad_editar' ciudad.pk %}" class="panel-btn-icon" title="Editar">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <a href="{% url 'panel:ciudad_eliminar' ciudad.pk %}" class="panel-btn-icon panel-btn-danger" title="Eliminar">
+                        <i class="fas fa-trash"></i>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="panel-empty-state">
+    <i class="fas fa-city"></i>
+    <p>No hay ciudades registradas</p>
+    <a href="{% url 'panel:ciudad_nueva' %}" class="panel-btn panel-btn-primary">Crear primera ciudad</a>
+</div>
+{% endif %}
+{% endblock %}
