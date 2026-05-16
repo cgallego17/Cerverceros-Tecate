@@ -345,9 +345,18 @@ class PartidoForm(forms.ModelForm):
         label='Fecha y hora'
     )
     
+    opacidad_overlay = forms.DecimalField(
+        min_value=0.00,
+        max_value=1.00,
+        decimal_places=2,
+        widget=forms.NumberInput(attrs={**_i, 'step': '0.05', 'min': '0', 'max': '1'}),
+        label='Opacidad del overlay',
+        help_text='0.00 = transparente, 1.00 = completamente opaco'
+    )
+    
     class Meta:
         model = Partido
-        fields = ['fecha', 'equipo_local', 'equipo_visitante', 'carreras_local', 'carreras_visitante', 'estado', 'estadio', 'temporada', 'destacado']
+        fields = ['fecha', 'equipo_local', 'equipo_visitante', 'carreras_local', 'carreras_visitante', 'estado', 'estadio', 'temporada', 'destacado', 'imagen_fondo', 'opacidad_overlay']
         widgets = {
             'equipo_local': forms.Select(attrs=_sel),
             'equipo_visitante': forms.Select(attrs=_sel),

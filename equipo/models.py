@@ -72,6 +72,8 @@ class Partido(models.Model):
     estadio = models.CharField(max_length=200, blank=True)
     temporada = models.CharField(max_length=20)
     destacado = models.BooleanField(default=False, verbose_name='Próximo partido destacado', help_text='Marcar como el próximo partido a mostrar en la página de inicio')
+    imagen_fondo = models.ImageField(upload_to='partidos/', blank=True, null=True, verbose_name='Imagen de fondo', help_text='Imagen de fondo para la sección de próximo partido')
+    opacidad_overlay = models.DecimalField(max_digits=3, decimal_places=2, default=0.60, verbose_name='Opacidad del overlay', help_text='Opacidad del overlay oscuro (0.00 = transparente, 1.00 = opaco)')
     
     class Meta:
         verbose_name_plural = "Partidos"

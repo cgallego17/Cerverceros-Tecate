@@ -182,8 +182,8 @@
 </section>
 
 {# ─── PRÓXIMO PARTIDO / COUNTDOWN ────────────────────────── #}
-<section class="next-match-section">
-    <div class="next-match-overlay"></div>
+<section class="next-match-section" {% if proximo_partido and proximo_partido.imagen_fondo %}style="background-image: url('{{ proximo_partido.imagen_fondo.url }}');"{% endif %}>
+    <div class="next-match-overlay" {% if proximo_partido and proximo_partido.opacidad_overlay %}style="background: rgba(0, 0, 0, {{ proximo_partido.opacidad_overlay }});"{% endif %}></div>
     <div class="container">
         <div class="next-match-content">
             <p class="next-match-subtitle">{% trans "LO QUE ESTÁ EN TENDENCIA" %}</p>
