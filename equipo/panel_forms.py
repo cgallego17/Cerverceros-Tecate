@@ -268,12 +268,19 @@ class TransaccionForm(forms.ModelForm):
 
 
 class EquipoForm(forms.ModelForm):
+    ciudad = forms.ModelChoiceField(
+        queryset=Ciudad.objects.select_related('estado__pais').filter(activo=True).order_by('estado__pais__nombre', 'estado__nombre', 'nombre'),
+        required=False,
+        label='Ciudad',
+        widget=forms.Select(attrs={**_sel, 'class': 'panel-select ciudad-autocomplete'}),
+        empty_label='-- Selecciona una ciudad --'
+    )
+    
     class Meta:
         model = Equipo
         fields = ['nombre', 'ciudad', 'logo']
         widgets = {
             'nombre': forms.TextInput(attrs=_i),
-            'ciudad': forms.Select(attrs=_sel),
         }
 
 
