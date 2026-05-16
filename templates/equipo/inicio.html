@@ -117,10 +117,9 @@
             {% endfor %}
             
             {% if proximos_partidos %}
-            <div style="grid-column: 1 / -1; text-align: center; margin: 2rem 0 1rem;">
-                <h3 style="font-size: 1.5rem; font-weight: 700; color: var(--p-accent, #e31e24); text-transform: uppercase; letter-spacing: 2px;">
-                    {% trans "PRÓXIMOS PARTIDOS" %}
-                </h3>
+            <div class="scores-header" style="grid-column: 1 / -1; margin-top: 2rem;">
+                <p class="scores-subtitle">{% trans "PRÓXIMOS ENCUENTROS" %}</p>
+                <h2 class="scores-title">{% trans "PRÓXIMOS PARTIDOS" %}</h2>
             </div>
             {% endif %}
             
