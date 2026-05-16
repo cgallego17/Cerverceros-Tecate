@@ -17,6 +17,11 @@ def inicio(request):
         fecha__gte=timezone.now(), estado='programado'
     ).order_by('fecha')[:3]
     proximo_partido = proximos_partidos.first()
+    
+    # Partidos anteriores con marcador (para scores-section)
+    partidos_anteriores = Partido.objects.filter(
+        fecha__lt=timezone.now(), estado='finalizado'
+    ).exclude(marcador_local__isnull=True).exclude(marcador_visitante__isnull=True).order_by('-fecha')[:3]
 
     # Jugador destacado
     jugador_destacado = Jugador.objects.filter(activo=True, destacado_inicio=True).first()
@@ -45,6 +50,7 @@ def inicio(request):
         'patrocinadores': patrocinadores,
         'proximos_partidos': proximos_partidos,
         'proximo_partido': proximo_partido,
+        'partidos_anteriores': partidos_anteriores,
         'jugador_destacado': jugador_destacado,
         'noticias_inicio': noticias_inicio,
         'noticias_destacadas': noticias_destacadas,

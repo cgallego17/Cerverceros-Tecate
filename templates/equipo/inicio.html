@@ -74,15 +74,15 @@
     </div>
 </div>
 
-{# ─── SCORES / PRÓXIMOS PARTIDOS ────────────────────────────── #}
+{# ─── SCORES / PARTIDOS ANTERIORES ────────────────────────────── #}
 <section class="scores-section">
     <div class="container">
         <div class="scores-header">
-            <p class="scores-subtitle">{% trans "LO QUE ESTÁ EN TENDENCIA" %}</p>
+            <p class="scores-subtitle">{% trans "RESULTADOS RECIENTES" %}</p>
             <h2 class="scores-title">{% trans "REVISA LOS MARCADORES" %}</h2>
         </div>
         <div class="scores-grid">
-            {% for partido in proximos_partidos %}
+            {% for partido in partidos_anteriores %}
             <div class="score-card">
                 <div class="score-teams">
                     <div class="score-team">
@@ -92,8 +92,9 @@
                         <div class="team-logo-placeholder"><span class="team-initial">{{ partido.equipo_local.nombre|first }}</span></div>
                         {% endif %}
                         <h3 class="team-name">{{ partido.equipo_local.nombre|upper }}</h3>
+                        <p class="team-score">{{ partido.marcador_local }}</p>
                     </div>
-                    <div class="score-vs">VS</div>
+                    <div class="score-vs">-</div>
                     <div class="score-team">
                         {% if 'CERVECERO' in partido.equipo_visitante.nombre|upper %}
                         <div class="team-logo-real"><img src="{% static 'images/logo.png' %}" alt="Cerveceros de Tecate"></div>
@@ -101,15 +102,16 @@
                         <div class="team-logo-placeholder"><span class="team-initial">{{ partido.equipo_visitante.nombre|first }}</span></div>
                         {% endif %}
                         <h3 class="team-name">{{ partido.equipo_visitante.nombre|upper }}</h3>
+                        <p class="team-score">{{ partido.marcador_visitante }}</p>
                     </div>
                 </div>
                 <div class="score-info">
-                    <p class="score-venue-label">{% trans "SEDE DEL PARTIDO" %}</p>
-                    <h3 class="score-venue">{{ partido.estadio|upper }}</h3>
+                    <p class="score-venue-label">{% trans "FECHA" %}</p>
+                    <h3 class="score-venue">{{ partido.fecha|date:"d/m/Y" }}</h3>
                 </div>
                 <div class="score-actions">
-                    <a href="{% url 'equipo:boleteria' %}" class="btn-score-outline">{% trans "COMPRAR BOLETOS" %}</a>
-                    <a href="#" class="btn-score-filled">{% trans "VER TRANSMISIÓN" %}</a>
+                    <a href="{% url 'equipo:calendario' %}" class="btn-score-outline">{% trans "VER CALENDARIO" %}</a>
+                    <a href="{% url 'equipo:boleteria' %}" class="btn-score-filled">{% trans "COMPRAR BOLETOS" %}</a>
                 </div>
             </div>
             {% empty %}
