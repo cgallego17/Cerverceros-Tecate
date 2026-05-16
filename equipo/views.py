@@ -34,8 +34,8 @@ def inicio(request):
     # Skills Progress
     skills = SkillProgress.objects.filter(activo=True).order_by('orden')
 
-    # Artículos de Noticias (News Grid)
-    articulos_news = ArticuloNoticia.objects.filter(activo=True, destacado_grid=True).order_by('orden')
+    # Artículos de Noticias (News Grid) - Usando noticias del panel
+    articulos_news = Noticia.objects.filter(activo=True).order_by('-fecha_publicacion')[:6]
 
     # Imágenes de Instagram
     imagenes_instagram = ImagenInstagram.objects.filter(activo=True).order_by('orden')[:4]

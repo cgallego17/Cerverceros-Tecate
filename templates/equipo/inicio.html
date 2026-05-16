@@ -278,21 +278,18 @@
 {# ─── NOTICIAS GRID ──────────────────────────────────────── #}
 <section class="news-grid-section">
     <div class="news-grid">
-        {% for articulo in articulos_news %}
-            {% if articulo.tipo == 'imagen' %}
+        {% for noticia in articulos_news %}
+            {% if forloop.counter|divisibleby:2 and noticia.imagen %}
             <article class="news-item news-item-image">
-                {% if articulo.imagen %}<img src="{{ articulo.imagen.url }}" alt="{{ articulo.titulo }}">
-                {% else %}<img src="https://placehold.co/600x400/{{ forloop.counter|divisibleby:2|yesno:'2a2a2a,1a1a1a' }}/e31e24?text=Noticia+{{ forloop.counter }}+(600x400)" alt="{{ articulo.titulo }}">{% endif %}
+                <img src="{{ noticia.imagen.url }}" alt="{{ noticia.titulo }}">
             </article>
             {% else %}
             <article class="news-item news-item-dark">
                 <div class="news-content">
-                    <p class="news-category">{% trans "TEMPORADA" %}</p>
-                    <h3 class="news-title">{{ articulo.titulo|upper|truncatechars:40 }}</h3>
-                    <p class="news-excerpt">{{ articulo.descripcion|truncatewords:15 }}</p>
-                    {% if articulo.enlace %}
-                    <a href="{{ articulo.enlace }}" class="news-link">{% trans "LEER MÁS" %}</a>
-                    {% endif %}
+                    <p class="news-category">{% trans "NOTICIAS" %}</p>
+                    <h3 class="news-title">{{ noticia.titulo|upper|truncatechars:40 }}</h3>
+                    <p class="news-excerpt">{{ noticia.contenido|striptags|truncatewords:15 }}</p>
+                    <a href="{% url 'equipo:noticia_detalle' noticia.slug %}" class="news-link">{% trans "LEER MÁS" %}</a>
                 </div>
             </article>
             {% endif %}
