@@ -30,48 +30,7 @@
                 <span class="panel-nav-icon"><i class="fas fa-gauge"></i></span> Dashboard
             </a>
 
-            <div class="panel-nav-section">INICIO</div>
-
-            <a href="{% url 'panel:hero_lista' %}"
-               class="panel-nav-link {% if 'hero' in request.resolver_match.url_name %}active{% endif %}">
-                <span class="panel-nav-icon"><i class="fas fa-image"></i></span> Hero Slides
-            </a>
-
-            <a href="{% url 'panel:patrocinadores_lista' %}"
-               class="panel-nav-link {% if 'patrocinador' in request.resolver_match.url_name %}active{% endif %}">
-                <span class="panel-nav-icon"><i class="fas fa-handshake"></i></span> Patrocinadores
-            </a>
-
-            <a href="{% url 'panel:faq_lista' %}"
-               class="panel-nav-link {% if 'faq' in request.resolver_match.url_name %}active{% endif %}">
-                <span class="panel-nav-icon"><i class="fas fa-circle-question"></i></span> FAQ / Acordeón
-            </a>
-
-            <div class="panel-nav-section">TIENDA</div>
-
-            <a href="{% url 'panel:categorias_lista' %}"
-               class="panel-nav-link {% if 'categoria' in request.resolver_match.url_name %}active{% endif %}">
-                <span class="panel-nav-icon"><i class="fas fa-folder-open"></i></span> Categorías
-            </a>
-
-            <a href="{% url 'panel:productos_lista' %}"
-               class="panel-nav-link {% if 'producto' in request.resolver_match.url_name %}active{% endif %}">
-                <span class="panel-nav-icon"><i class="fas fa-bag-shopping"></i></span> Productos
-            </a>
-
-            <div class="panel-nav-section">CONTENIDO</div>
-
-            <a href="{% url 'panel:noticias_lista' %}"
-               class="panel-nav-link {% if 'noticia' in request.resolver_match.url_name %}active{% endif %}">
-                <span class="panel-nav-icon"><i class="fas fa-newspaper"></i></span> Noticias
-            </a>
-
-            <a href="{% url 'panel:jugadores_lista' %}"
-               class="panel-nav-link {% if 'jugador' in request.resolver_match.url_name %}active{% endif %}">
-                <span class="panel-nav-icon"><i class="fas fa-users"></i></span> Jugadores
-            </a>
-
-            <div class="panel-nav-section">PARTIDOS</div>
+            <div class="panel-nav-section">⚾ EQUIPO & PARTIDOS</div>
 
             <a href="{% url 'panel:equipos_lista' %}"
                class="panel-nav-link {% if 'equipo' in request.resolver_match.url_name %}active{% endif %}">
@@ -83,7 +42,46 @@
                 <span class="panel-nav-icon"><i class="fas fa-baseball"></i></span> Partidos
             </a>
 
-            <div class="panel-nav-section">LOCALIZACIONES</div>
+            <a href="{% url 'panel:jugadores_lista' %}"
+               class="panel-nav-link {% if 'jugador' in request.resolver_match.url_name %}active{% endif %}">
+                <span class="panel-nav-icon"><i class="fas fa-users"></i></span> Jugadores
+            </a>
+
+            <div class="panel-nav-section">🌐 SITIO WEB</div>
+
+            <a href="{% url 'panel:hero_lista' %}"
+               class="panel-nav-link {% if 'hero' in request.resolver_match.url_name %}active{% endif %}">
+                <span class="panel-nav-icon"><i class="fas fa-images"></i></span> Hero Slides
+            </a>
+
+            <a href="{% url 'panel:noticias_lista' %}"
+               class="panel-nav-link {% if 'noticia' in request.resolver_match.url_name %}active{% endif %}">
+                <span class="panel-nav-icon"><i class="fas fa-newspaper"></i></span> Noticias
+            </a>
+
+            <a href="{% url 'panel:patrocinadores_lista' %}"
+               class="panel-nav-link {% if 'patrocinador' in request.resolver_match.url_name %}active{% endif %}">
+                <span class="panel-nav-icon"><i class="fas fa-handshake"></i></span> Patrocinadores
+            </a>
+
+            <a href="{% url 'panel:faq_lista' %}"
+               class="panel-nav-link {% if 'faq' in request.resolver_match.url_name %}active{% endif %}">
+                <span class="panel-nav-icon"><i class="fas fa-circle-question"></i></span> FAQ
+            </a>
+
+            <div class="panel-nav-section">🛍️ TIENDA</div>
+
+            <a href="{% url 'panel:categorias_lista' %}"
+               class="panel-nav-link {% if 'categoria' in request.resolver_match.url_name %}active{% endif %}">
+                <span class="panel-nav-icon"><i class="fas fa-folder-open"></i></span> Categorías
+            </a>
+
+            <a href="{% url 'panel:productos_lista' %}"
+               class="panel-nav-link {% if 'producto' in request.resolver_match.url_name %}active{% endif %}">
+                <span class="panel-nav-icon"><i class="fas fa-bag-shopping"></i></span> Productos
+            </a>
+
+            <div class="panel-nav-section">📍 CONFIGURACIÓN</div>
 
             <a href="{% url 'panel:paises_lista' %}"
                class="panel-nav-link {% if 'pais' in request.resolver_match.url_name %}active{% endif %}">
@@ -100,8 +98,6 @@
                 <span class="panel-nav-icon"><i class="fas fa-city"></i></span> Ciudades
             </a>
 
-            <div class="panel-nav-section">ADMINISTRACIÓN</div>
-
             {% if request.user.is_superuser %}
             <a href="{% url 'panel:usuarios_lista' %}"
                class="panel-nav-link {% if 'usuario' in request.resolver_match.url_name %}active{% endif %}">
@@ -113,7 +109,7 @@
             </a>
             {% endif %}
 
-            <div class="panel-nav-section">CAJA</div>
+            <div class="panel-nav-section">💰 FINANZAS</div>
 
             {% if request.user.is_staff or request.user.is_superuser %}
             <a href="{% url 'panel:caja_lista' %}"
