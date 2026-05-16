@@ -790,51 +790,101 @@
 
 /* ── Table Filters ─────────────────────────────── */
 .panel-table-filters {
-    display: flex;
-    gap: 1rem;
+    background: #f9fafb;
+    padding: 1.25rem;
+    border-radius: 8px;
     margin-bottom: 1.5rem;
-    flex-wrap: wrap;
-    align-items: center;
+    border: 1px solid #e5e7eb;
 }
 
 .panel-search-box {
     position: relative;
     flex: 1;
-    min-width: 250px;
+    min-width: 280px;
+    margin-bottom: 1rem;
 }
 
 .panel-search-box i {
     position: absolute;
-    left: 0.875rem;
+    left: 1rem;
     top: 50%;
     transform: translateY(-50%);
-    color: #9ca3af;
-    font-size: 0.875rem;
+    color: #6b7280;
+    font-size: 1rem;
+    z-index: 1;
 }
 
 .panel-search-input {
     width: 100%;
-    padding: 0.625rem 0.875rem 0.625rem 2.5rem;
-    border: 1px solid var(--p-border);
-    border-radius: 4px;
+    padding: 0.75rem 1rem 0.75rem 2.75rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 6px;
     font-size: 0.875rem;
-    transition: all 0.15s;
+    transition: all 0.2s;
+    background: white;
+    font-weight: 500;
 }
 
 .panel-search-input:focus {
     outline: none;
     border-color: var(--p-accent);
-    box-shadow: 0 0 0 3px rgba(227, 30, 36, 0.1);
+    box-shadow: 0 0 0 4px rgba(227, 30, 36, 0.08);
+    background: white;
+}
+
+.panel-search-input::placeholder {
+    color: #9ca3af;
+    font-weight: 400;
 }
 
 .panel-filter-group {
     display: flex;
     gap: 0.75rem;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .panel-filter-select {
-    min-width: 180px;
+    min-width: 200px;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    background: white;
+    transition: all 0.2s;
+}
+
+.panel-filter-select:focus {
+    outline: none;
+    border-color: var(--p-accent);
+    box-shadow: 0 0 0 4px rgba(227, 30, 36, 0.08);
+}
+
+.panel-filter-group .panel-btn {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+    .panel-table-filters {
+        padding: 1rem;
+    }
+    
+    .panel-search-box {
+        min-width: 100%;
+    }
+    
+    .panel-filter-group {
+        width: 100%;
+    }
+    
+    .panel-filter-select {
+        flex: 1;
+        min-width: 0;
+    }
 }
 
 /* ── Responsive ────────────────────────────────── */
