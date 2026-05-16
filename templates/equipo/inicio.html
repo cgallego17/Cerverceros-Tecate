@@ -296,38 +296,10 @@
         {% empty %}
         <article class="news-item news-item-dark">
             <div class="news-content">
-                <p class="news-category">{% trans "TEMPORADA" %}</p>
-                <h3 class="news-title">{% trans "2010'S: UNA DÉCADA" %}</h3>
-                <p class="news-excerpt">Lorem ipsum dolor sit amet, purto vocent volupatibus.</p>
-                <a href="{% url 'equipo:noticias' %}" class="news-link">{% trans "LEER MÁS" %}</a>
-            </div>
-        </article>
-        <article class="news-item news-item-image"><img src="{% static 'images/news-glove.jpg' %}" alt="Baseball"></article>
-        <article class="news-item news-item-dark">
-            <div class="news-content">
-                <p class="news-category">{% trans "TEMPORADA" %}</p>
-                <h3 class="news-title">{% trans "SATURDAY SPORCLE" %}</h3>
-                <p class="news-excerpt">Lorem ipsum dolor sit amet, purto vocent volupatibus.</p>
-                <a href="{% url 'equipo:noticias' %}" class="news-link">{% trans "LEER MÁS" %}</a>
-            </div>
-        </article>
-        <article class="news-item news-item-image"><img src="{% static 'images/news-batter.jpg' %}" alt="Baseball"></article>
-        <article class="news-item news-item-image"><img src="{% static 'images/news-player.jpg' %}" alt="Baseball"></article>
-        <article class="news-item news-item-dark">
-            <div class="news-content">
-                <p class="news-category">{% trans "TEMPORADA" %}</p>
-                <h3 class="news-title">{% trans "SECOND BASE" %}</h3>
-                <p class="news-excerpt">Lorem ipsum dolor sit amet, purto vocent volupatibus.</p>
-                <a href="{% url 'equipo:noticias' %}" class="news-link">{% trans "LEER MÁS" %}</a>
-            </div>
-        </article>
-        <article class="news-item news-item-image"><img src="{% static 'images/news-stadium.jpg' %}" alt="Baseball"></article>
-        <article class="news-item news-item-dark">
-            <div class="news-content">
-                <p class="news-category">{% trans "TEMPORADA" %}</p>
-                <h3 class="news-title">{% trans "D-BACKS SPRING TRAINING" %}</h3>
-                <p class="news-excerpt">Lorem ipsum dolor sit amet, purto vocent volupatibus.</p>
-                <a href="{% url 'equipo:noticias' %}" class="news-link">{% trans "LEER MÁS" %}</a>
+                <p class="news-category">{% trans "NOTICIAS" %}</p>
+                <h3 class="news-title">{% trans "NO HAY NOTICIAS" %}</h3>
+                <p class="news-excerpt">{% trans "Aún no hay noticias publicadas. Crea noticias desde el panel de administración." %}</p>
+                <a href="{% url 'panel:noticias_lista' %}" class="news-link">{% trans "IR AL PANEL" %}</a>
             </div>
         </article>
         {% endfor %}
