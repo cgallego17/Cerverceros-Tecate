@@ -90,15 +90,23 @@ class Partido(models.Model):
 
 class Noticia(models.Model):
     titulo = models.CharField(max_length=200)
+    slug = models.SlugField(max_length=200, blank=True)
     contenido = models.TextField()
     imagen = models.ImageField(upload_to='noticias/', blank=True, null=True)
     fecha_publicacion = models.DateTimeField(default=timezone.now)
     autor = models.CharField(max_length=100, blank=True)
     destacada = models.BooleanField(default=False)
+    activo = models.BooleanField(default=True)
     
     class Meta:
         verbose_name_plural = "Noticias"
         ordering = ['-fecha_publicacion']
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            from django.utils.text import slugify
+            self.slug = slugify(self.titulo)
+        super().save(*args, **kwargs)
     
     def __str__(self):
         return self.titulo
