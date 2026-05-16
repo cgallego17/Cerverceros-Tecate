@@ -74,11 +74,11 @@
     </div>
 </div>
 
-{# ─── SCORES / PARTIDOS ANTERIORES ────────────────────────────── #}
+{# ─── SCORES / PARTIDOS ────────────────────────────── #}
 <section class="scores-section">
     <div class="container">
         <div class="scores-header">
-            <p class="scores-subtitle">{% trans "RESULTADOS RECIENTES" %}</p>
+            <p class="scores-subtitle">{% trans "RESULTADOS Y PRÓXIMOS PARTIDOS" %}</p>
             <h2 class="scores-title">{% trans "REVISA LOS MARCADORES" %}</h2>
         </div>
         <div class="scores-grid">
@@ -114,68 +114,36 @@
                     <a href="{% url 'equipo:boleteria' %}" class="btn-score-filled">{% trans "COMPRAR BOLETOS" %}</a>
                 </div>
             </div>
-            {% empty %}
+            {% endfor %}
+            
+            {% for partido in proximos_partidos %}
             <div class="score-card">
                 <div class="score-teams">
                     <div class="score-team">
-                        <div class="team-logo-real"><img src="{% static 'images/logo.png' %}" alt="Cerveceros"></div>
-                        <h3 class="team-name">CERVECEROS</h3>
+                        {% if partido.equipo_local.logo %}
+                        <div class="team-logo-real"><img src="{{ partido.equipo_local.logo.url }}" alt="{{ partido.equipo_local.nombre }}"></div>
+                        {% else %}
+                        <div class="team-logo-placeholder"><span class="team-initial">{{ partido.equipo_local.nombre|first }}</span></div>
+                        {% endif %}
+                        <h3 class="team-name">{{ partido.equipo_local.nombre|upper }}</h3>
                     </div>
                     <div class="score-vs">VS</div>
                     <div class="score-team">
-                        <div class="team-logo-placeholder"><span class="team-initial">T</span></div>
-                        <h3 class="team-name">TOROS</h3>
+                        {% if partido.equipo_visitante.logo %}
+                        <div class="team-logo-real"><img src="{{ partido.equipo_visitante.logo.url }}" alt="{{ partido.equipo_visitante.nombre }}"></div>
+                        {% else %}
+                        <div class="team-logo-placeholder"><span class="team-initial">{{ partido.equipo_visitante.nombre|first }}</span></div>
+                        {% endif %}
+                        <h3 class="team-name">{{ partido.equipo_visitante.nombre|upper }}</h3>
                     </div>
                 </div>
                 <div class="score-info">
-                    <p class="score-venue-label">{% trans "SEDE DEL PARTIDO" %}</p>
-                    <h3 class="score-venue">ESTADIO CERVECEROS</h3>
+                    <p class="score-venue-label">{% trans "FECHA" %}</p>
+                    <h3 class="score-venue">{{ partido.fecha|date:"d/m/Y H:i" }}</h3>
                 </div>
                 <div class="score-actions">
                     <a href="{% url 'equipo:boleteria' %}" class="btn-score-outline">{% trans "COMPRAR BOLETOS" %}</a>
-                    <a href="#" class="btn-score-filled">{% trans "VER TRANSMISIÓN" %}</a>
-                </div>
-            </div>
-            <div class="score-card">
-                <div class="score-teams">
-                    <div class="score-team">
-                        <div class="team-logo-real"><img src="{% static 'images/logo.png' %}" alt="Cerveceros"></div>
-                        <h3 class="team-name">CERVECEROS</h3>
-                    </div>
-                    <div class="score-vs">VS</div>
-                    <div class="score-team">
-                        <div class="team-logo-placeholder"><span class="team-initial">A</span></div>
-                        <h3 class="team-name">ÁGUILAS</h3>
-                    </div>
-                </div>
-                <div class="score-info">
-                    <p class="score-venue-label">{% trans "SEDE DEL PARTIDO" %}</p>
-                    <h3 class="score-venue">ESTADIO REGIONAL</h3>
-                </div>
-                <div class="score-actions">
-                    <a href="{% url 'equipo:boleteria' %}" class="btn-score-outline">{% trans "COMPRAR BOLETOS" %}</a>
-                    <a href="#" class="btn-score-filled">{% trans "VER TRANSMISIÓN" %}</a>
-                </div>
-            </div>
-            <div class="score-card">
-                <div class="score-teams">
-                    <div class="score-team">
-                        <div class="team-logo-placeholder"><span class="team-initial">L</span></div>
-                        <h3 class="team-name">LEONES</h3>
-                    </div>
-                    <div class="score-vs">VS</div>
-                    <div class="score-team">
-                        <div class="team-logo-real"><img src="{% static 'images/logo.png' %}" alt="Cerveceros"></div>
-                        <h3 class="team-name">CERVECEROS</h3>
-                    </div>
-                </div>
-                <div class="score-info">
-                    <p class="score-venue-label">{% trans "SEDE DEL PARTIDO" %}</p>
-                    <h3 class="score-venue">ESTADIO MUNICIPAL</h3>
-                </div>
-                <div class="score-actions">
-                    <a href="{% url 'equipo:boleteria' %}" class="btn-score-outline">{% trans "COMPRAR BOLETOS" %}</a>
-                    <a href="#" class="btn-score-filled">{% trans "VER TRANSMISIÓN" %}</a>
+                    <a href="{% url 'equipo:calendario' %}" class="btn-score-filled">{% trans "VER CALENDARIO" %}</a>
                 </div>
             </div>
             {% endfor %}
