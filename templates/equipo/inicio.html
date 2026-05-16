@@ -116,6 +116,14 @@
             </div>
             {% endfor %}
             
+            {% if proximos_partidos %}
+            <div style="grid-column: 1 / -1; text-align: center; margin: 2rem 0 1rem;">
+                <h3 style="font-size: 1.5rem; font-weight: 700; color: var(--p-accent, #e31e24); text-transform: uppercase; letter-spacing: 2px;">
+                    {% trans "PRÓXIMOS PARTIDOS" %}
+                </h3>
+            </div>
+            {% endif %}
+            
             {% for partido in proximos_partidos %}
             <div class="score-card">
                 <div class="score-teams">
