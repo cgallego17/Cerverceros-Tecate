@@ -86,8 +86,8 @@
             <div class="score-card">
                 <div class="score-teams">
                     <div class="score-team">
-                        {% if 'CERVECERO' in partido.equipo_local.nombre|upper %}
-                        <div class="team-logo-real"><img src="{% static 'images/logo.png' %}" alt="Cerveceros de Tecate"></div>
+                        {% if partido.equipo_local.logo %}
+                        <div class="team-logo-real"><img src="{{ partido.equipo_local.logo.url }}" alt="{{ partido.equipo_local.nombre }}"></div>
                         {% else %}
                         <div class="team-logo-placeholder"><span class="team-initial">{{ partido.equipo_local.nombre|first }}</span></div>
                         {% endif %}
@@ -96,8 +96,8 @@
                     </div>
                     <div class="score-vs">-</div>
                     <div class="score-team">
-                        {% if 'CERVECERO' in partido.equipo_visitante.nombre|upper %}
-                        <div class="team-logo-real"><img src="{% static 'images/logo.png' %}" alt="Cerveceros de Tecate"></div>
+                        {% if partido.equipo_visitante.logo %}
+                        <div class="team-logo-real"><img src="{{ partido.equipo_visitante.logo.url }}" alt="{{ partido.equipo_visitante.nombre }}"></div>
                         {% else %}
                         <div class="team-logo-placeholder"><span class="team-initial">{{ partido.equipo_visitante.nombre|first }}</span></div>
                         {% endif %}
