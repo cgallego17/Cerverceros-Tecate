@@ -279,7 +279,7 @@
 <section class="news-grid-section">
     <div class="news-grid">
         {% for noticia in articulos_news %}
-            {% if forloop.counter|divisibleby:2 and noticia.imagen %}
+            {% if noticia.imagen %}
             <article class="news-item news-item-image">
                 <img src="{{ noticia.imagen.url }}" alt="{{ noticia.titulo }}">
             </article>
