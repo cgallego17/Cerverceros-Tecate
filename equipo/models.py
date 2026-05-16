@@ -44,7 +44,7 @@ class Jugador(models.Model):
 
 class Equipo(models.Model):
     nombre = models.CharField(max_length=100)
-    ciudad = models.CharField(max_length=100)
+    ciudad = models.ForeignKey('Ciudad', on_delete=models.SET_NULL, null=True, blank=True, related_name='equipos', verbose_name='Ciudad')
     logo = models.ImageField(upload_to='equipos/', blank=True, null=True)
     
     class Meta:
