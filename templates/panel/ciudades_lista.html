@@ -1,4 +1,5 @@
 {% extends 'panel/base.html' %}
+{% load static %}
 
 {% block page_title %}Ciudades{% endblock %}
 
@@ -13,7 +14,31 @@
 
 {% if ciudades %}
 <div class="panel-card">
-    <table class="panel-table">
+    <!-- Buscador y Filtros -->
+    <div class="panel-table-filters">
+        <div class="panel-search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="tableSearch" class="panel-search-input" placeholder="Buscar por ciudad, estado o país...">
+        </div>
+        <div class="panel-filter-group">
+            <select id="filterEstado" class="panel-select panel-filter-select">
+                <option value="">Todos los estados</option>
+                {% for ciudad in ciudades %}
+                <option value="{{ ciudad.estado.nombre }}">{{ ciudad.estado.nombre }}</option>
+                {% endfor %}
+            </select>
+            <select id="filterActivo" class="panel-select panel-filter-select">
+                <option value="">Todos los estados</option>
+                <option value="activo">Activos</option>
+                <option value="inactivo">Inactivos</option>
+            </select>
+            <button id="clearFilters" class="panel-btn panel-btn-secondary" style="display: none;">
+                <i class="fas fa-times"></i> Limpiar
+            </button>
+        </div>
+    </div>
+
+    <table class="panel-table" id="dataTable">
         <thead>
             <tr>
                 <th>Ciudad</th>
@@ -25,7 +50,7 @@
         </thead>
         <tbody>
             {% for ciudad in ciudades %}
-            <tr>
+            <tr data-ciudad="{{ ciudad.nombre|lower }}" data-estado="{{ ciudad.estado.nombre|lower }}" data-pais="{{ ciudad.estado.pais.nombre|lower }}" data-activo="{% if ciudad.activo %}activo{% else %}inactivo{% endif %}">
                 <td><strong>{{ ciudad.nombre }}</strong></td>
                 <td>{{ ciudad.estado.nombre }}</td>
                 <td>{{ ciudad.estado.pais.nombre }}</td>
@@ -48,6 +73,11 @@
             {% endfor %}
         </tbody>
     </table>
+    
+    <div id="noResults" class="panel-empty-state" style="display: none; margin-top: 2rem;">
+        <i class="fas fa-search"></i>
+        <p>No se encontraron resultados</p>
+    </div>
 </div>
 {% else %}
 <div class="panel-empty-state">
@@ -56,4 +86,8 @@
     <a href="{% url 'panel:ciudad_nueva' %}" class="panel-btn panel-btn-primary">Crear primera ciudad</a>
 </div>
 {% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/table-filters.js' %}"></script>
 {% endblock %}

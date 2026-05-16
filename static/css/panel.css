@@ -202,6 +202,31 @@
     background: var(--p-border);
 }
 
+.panel-home-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1px solid #3b82f6;
+    border-radius: 4px;
+    color: #3b82f6;
+    background: transparent;
+    transition: all 0.15s;
+    margin-right: 1rem;
+}
+
+.panel-home-btn:hover {
+    background: #3b82f6;
+    color: #fff;
+}
+
+.panel-home-btn i {
+    font-size: 1rem;
+}
+
 .panel-logout-link {
     display: inline-flex;
     align-items: center;
@@ -762,6 +787,55 @@
 }
 
 .panel-login-submit:hover { background: var(--p-accent-dark); }
+
+/* ── Table Filters ─────────────────────────────── */
+.panel-table-filters {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.panel-search-box {
+    position: relative;
+    flex: 1;
+    min-width: 250px;
+}
+
+.panel-search-box i {
+    position: absolute;
+    left: 0.875rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9ca3af;
+    font-size: 0.875rem;
+}
+
+.panel-search-input {
+    width: 100%;
+    padding: 0.625rem 0.875rem 0.625rem 2.5rem;
+    border: 1px solid var(--p-border);
+    border-radius: 4px;
+    font-size: 0.875rem;
+    transition: all 0.15s;
+}
+
+.panel-search-input:focus {
+    outline: none;
+    border-color: var(--p-accent);
+    box-shadow: 0 0 0 3px rgba(227, 30, 36, 0.1);
+}
+
+.panel-filter-group {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.panel-filter-select {
+    min-width: 180px;
+}
 
 /* ── Responsive ────────────────────────────────── */
 @media (max-width: 900px) {
