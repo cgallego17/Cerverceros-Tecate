@@ -289,7 +289,7 @@
                     <p class="news-category">{% trans "NOTICIAS" %}</p>
                     <h3 class="news-title">{{ noticia.titulo|upper|truncatechars:40 }}</h3>
                     <p class="news-excerpt">{{ noticia.contenido|striptags|truncatewords:15 }}</p>
-                    <a href="{% url 'equipo:noticia_detalle' noticia.slug %}" class="news-link">{% trans "LEER MÁS" %}</a>
+                    <a href="{% url 'equipo:noticia_detalle' noticia.pk %}" class="news-link">{% trans "LEER MÁS" %}</a>
                 </div>
             </article>
             {% endif %}
