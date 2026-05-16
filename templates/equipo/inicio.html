@@ -92,7 +92,7 @@
                         <div class="team-logo-placeholder"><span class="team-initial">{{ partido.equipo_local.nombre|first }}</span></div>
                         {% endif %}
                         <h3 class="team-name">{{ partido.equipo_local.nombre|upper }}</h3>
-                        <p class="team-score">{{ partido.marcador_local }}</p>
+                        <p class="team-score">{{ partido.carreras_local }}</p>
                     </div>
                     <div class="score-vs">-</div>
                     <div class="score-team">
@@ -102,7 +102,7 @@
                         <div class="team-logo-placeholder"><span class="team-initial">{{ partido.equipo_visitante.nombre|first }}</span></div>
                         {% endif %}
                         <h3 class="team-name">{{ partido.equipo_visitante.nombre|upper }}</h3>
-                        <p class="team-score">{{ partido.marcador_visitante }}</p>
+                        <p class="team-score">{{ partido.carreras_visitante }}</p>
                     </div>
                 </div>
                 <div class="score-info">

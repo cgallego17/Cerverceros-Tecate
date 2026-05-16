@@ -21,7 +21,7 @@ def inicio(request):
     # Partidos anteriores con marcador (para scores-section)
     partidos_anteriores = Partido.objects.filter(
         fecha__lt=timezone.now(), estado='finalizado'
-    ).exclude(marcador_local__isnull=True).exclude(marcador_visitante__isnull=True).order_by('-fecha')[:3]
+    ).exclude(carreras_local__isnull=True).exclude(carreras_visitante__isnull=True).order_by('-fecha')[:3]
 
     # Jugador destacado
     jugador_destacado = Jugador.objects.filter(activo=True, destacado_inicio=True).first()
