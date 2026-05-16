@@ -285,7 +285,7 @@
             <article class="news-item news-item-image">
                 <img src="{{ noticia.imagen.url }}" alt="{{ noticia.titulo }}">
             </article>
-            {% else %}
+            {% endif %}
             <article class="news-item news-item-dark">
                 <div class="news-content">
                     <p class="news-category">{% trans "NOTICIAS" %}</p>
@@ -294,7 +294,6 @@
                     <a href="{% url 'equipo:noticia_detalle' noticia.pk %}" class="news-link">{% trans "LEER MÁS" %}</a>
                 </div>
             </article>
-            {% endif %}
         {% empty %}
         <article class="news-item news-item-dark">
             <div class="news-content">
