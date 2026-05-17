@@ -90,9 +90,9 @@
             {% endif %}
             
             {% for partido in partidos_en_curso %}
-            <div class="score-card" style="border: 3px solid #e31e24; position: relative;">
-                <div style="position: absolute; top: 10px; right: 10px; background: #e31e24; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; animation: pulse 2s infinite;">
-                    <i class="fas fa-circle" style="font-size: 0.5rem; margin-right: 0.25rem;"></i>
+            <div class="score-card live-game">
+                <div class="live-badge">
+                    <i class="fas fa-circle"></i>
                     {% trans "EN VIVO" %}
                 </div>
                 <div class="score-teams">
