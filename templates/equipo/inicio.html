@@ -28,7 +28,7 @@
             <h1>{% trans "LA TRADICIÓN" %}<br>{% trans "SE VIVE EN EL DIAMANTE" %}</h1>
             <div class="hero-buttons">
                 <a href="{% url 'equipo:nuestro_equipo' %}" class="btn">{% trans "CONOCE AL EQUIPO" %}</a>
-                <a href="{% url 'equipo:boleteria' %}" class="btn btn-secondary">{% trans "COMPRAR BOLETOS" %}</a>
+                <a href="https://arema.mx/e/17890" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">{% trans "COMPRAR BOLETOS" %}</a>
             </div>
         </div>
     </div>
@@ -111,7 +111,7 @@
                 </div>
                 <div class="score-actions">
                     <a href="{% url 'equipo:calendario' %}" class="btn-score-outline">{% trans "VER CALENDARIO" %}</a>
-                    <a href="{% url 'equipo:boleteria' %}" class="btn-score-filled">{% trans "COMPRAR BOLETOS" %}</a>
+                    <a href="https://arema.mx/e/17890" class="btn-score-filled" target="_blank" rel="noopener noreferrer">{% trans "COMPRAR BOLETOS" %}</a>
                 </div>
             </div>
             {% endfor %}
@@ -149,7 +149,7 @@
                     <h3 class="score-venue">{{ partido.fecha|date:"d/m/Y H:i" }}</h3>
                 </div>
                 <div class="score-actions">
-                    <a href="{% url 'equipo:boleteria' %}" class="btn-score-outline">{% trans "COMPRAR BOLETOS" %}</a>
+                    <a href="https://arema.mx/e/17890" class="btn-score-outline" target="_blank" rel="noopener noreferrer">{% trans "COMPRAR BOLETOS" %}</a>
                     <a href="{% url 'equipo:calendario' %}" class="btn-score-filled">{% trans "VER CALENDARIO" %}</a>
                 </div>
             </div>
@@ -189,7 +189,7 @@
                     <span class="countdown-label">{% trans "SEGUNDO" %}</span>
                 </div>
             </div>
-            <a href="{% url 'equipo:boleteria' %}" class="btn-next-match">{% trans "COMPRAR BOLETOS" %}</a>
+            <a href="https://arema.mx/e/17890" class="btn-next-match" target="_blank" rel="noopener noreferrer">{% trans "COMPRAR BOLETOS" %}</a>
         </div>
     </div>
 </section>
