@@ -303,8 +303,9 @@ class PartidoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if self.instance and self.instance.pk and self.instance.fecha:
-            # Formatear la fecha para datetime-local (formato ISO 8601)
-            self.initial['fecha'] = self.instance.fecha.strftime('%Y-%m-%dT%H:%M')
+            # Convertir a zona horaria local y formatear para datetime-local
+            fecha_local = timezone.localtime(self.instance.fecha)
+            self.initial['fecha'] = fecha_local.strftime('%Y-%m-%dT%H:%M')
     
     class Meta:
         model = Partido

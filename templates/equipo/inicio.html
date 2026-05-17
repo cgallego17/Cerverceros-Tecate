@@ -78,10 +78,62 @@
 <section class="scores-section">
     <div class="container">
         <div class="scores-header">
-            <p class="scores-subtitle">{% trans "RESULTADOS Y PRÓXIMOS PARTIDOS" %}</p>
+            <p class="scores-subtitle">{% trans "RESULTADOS Y PRÓXIMOS JUEGOS" %}</p>
             <h2 class="scores-title">{% trans "REVISA LOS MARCADORES" %}</h2>
         </div>
         <div class="scores-grid">
+            {% if partidos_en_curso %}
+            <div class="scores-header" style="grid-column: 1 / -1;">
+                <p class="scores-subtitle">{% trans "EN VIVO" %}</p>
+                <h2 class="scores-title">{% trans "JUEGOS EN CURSO" %}</h2>
+            </div>
+            {% endif %}
+            
+            {% for partido in partidos_en_curso %}
+            <div class="score-card" style="border: 3px solid #e31e24; position: relative;">
+                <div style="position: absolute; top: 10px; right: 10px; background: #e31e24; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; animation: pulse 2s infinite;">
+                    <i class="fas fa-circle" style="font-size: 0.5rem; margin-right: 0.25rem;"></i>
+                    {% trans "EN VIVO" %}
+                </div>
+                <div class="score-teams">
+                    <div class="score-team">
+                        {% if partido.equipo_local.logo %}
+                        <div class="team-logo-real"><img src="{{ partido.equipo_local.logo.url }}" alt="{{ partido.equipo_local.nombre }}"></div>
+                        {% else %}
+                        <div class="team-logo-placeholder"><span class="team-initial">{{ partido.equipo_local.nombre|first }}</span></div>
+                        {% endif %}
+                        <h3 class="team-name">{{ partido.equipo_local.nombre|upper }}</h3>
+                        <p class="team-score">{{ partido.carreras_local|default:"0" }}</p>
+                    </div>
+                    <div class="score-vs">-</div>
+                    <div class="score-team">
+                        {% if partido.equipo_visitante.logo %}
+                        <div class="team-logo-real"><img src="{{ partido.equipo_visitante.logo.url }}" alt="{{ partido.equipo_visitante.nombre }}"></div>
+                        {% else %}
+                        <div class="team-logo-placeholder"><span class="team-initial">{{ partido.equipo_visitante.nombre|first }}</span></div>
+                        {% endif %}
+                        <h3 class="team-name">{{ partido.equipo_visitante.nombre|upper }}</h3>
+                        <p class="team-score">{{ partido.carreras_visitante|default:"0" }}</p>
+                    </div>
+                </div>
+                <div class="score-info">
+                    <p class="score-venue-label">{% trans "SEDE DEL JUEGO" %}</p>
+                    <h3 class="score-venue">{{ partido.estadio|upper }}</h3>
+                </div>
+                <div class="score-actions">
+                    <a href="{% url 'equipo:calendario' %}" class="btn-score-outline">{% trans "VER CALENDARIO" %}</a>
+                    <a href="https://arema.mx/e/17890" class="btn-score-filled" target="_blank" rel="noopener noreferrer">{% trans "COMPRAR BOLETOS" %}</a>
+                </div>
+            </div>
+            {% endfor %}
+            
+            {% if partidos_anteriores %}
+            <div class="scores-header" style="grid-column: 1 / -1; margin-top: 2rem;">
+                <p class="scores-subtitle">{% trans "RESULTADOS RECIENTES" %}</p>
+                <h2 class="scores-title">{% trans "JUEGOS ANTERIORES" %}</h2>
+            </div>
+            {% endif %}
+            
             {% for partido in partidos_anteriores %}
             <div class="score-card">
                 <div class="score-teams">
@@ -119,7 +171,7 @@
             {% if proximos_partidos %}
             <div class="scores-header" style="grid-column: 1 / -1; margin-top: 2rem;">
                 <p class="scores-subtitle">{% trans "PRÓXIMOS ENCUENTROS" %}</p>
-                <h2 class="scores-title">{% trans "PRÓXIMOS PARTIDOS" %}</h2>
+                <h2 class="scores-title">{% trans "PRÓXIMOS JUEGOS" %}</h2>
             </div>
             {% endif %}
             
@@ -164,7 +216,7 @@
     <div class="container">
         <div class="next-match-content">
             <p class="next-match-subtitle">{% trans "LO QUE ESTÁ EN TENDENCIA" %}</p>
-            <h2 class="next-match-title">{% trans "PRÓXIMO PARTIDO" %}</h2>
+            <h2 class="next-match-title">{% trans "PRÓXIMO JUEGO" %}</h2>
             {% if proximo_partido %}
             <p style="color:#fff;margin-bottom:1rem;font-size:1.1rem;">
                 {{ proximo_partido.equipo_local.nombre }} vs {{ proximo_partido.equipo_visitante.nombre }}

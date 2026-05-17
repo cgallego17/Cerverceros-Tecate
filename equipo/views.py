@@ -22,6 +22,11 @@ def inicio(request):
     partidos_anteriores = Partido.objects.filter(
         fecha__lt=timezone.now(), estado='finalizado'
     ).exclude(carreras_local__isnull=True).exclude(carreras_visitante__isnull=True).order_by('-fecha')[:3]
+    
+    # Partidos en curso (para scores-section)
+    partidos_en_curso = Partido.objects.filter(
+        estado='en_curso'
+    ).order_by('fecha')[:3]
 
     # Jugador destacado
     jugador_destacado = Jugador.objects.filter(activo=True, destacado_inicio=True).first()
@@ -51,6 +56,7 @@ def inicio(request):
         'proximos_partidos': proximos_partidos,
         'proximo_partido': proximo_partido,
         'partidos_anteriores': partidos_anteriores,
+        'partidos_en_curso': partidos_en_curso,
         'jugador_destacado': jugador_destacado,
         'noticias_inicio': noticias_inicio,
         'noticias_destacadas': noticias_destacadas,
