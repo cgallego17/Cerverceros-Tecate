@@ -287,7 +287,8 @@ class EquipoForm(forms.ModelForm):
 class PartidoForm(forms.ModelForm):
     fecha = forms.DateTimeField(
         widget=forms.DateTimeInput(attrs={**_i, 'type': 'datetime-local'}),
-        label='Fecha y hora'
+        label='Fecha y hora',
+        input_formats=['%Y-%m-%dT%H:%M']
     )
     
     opacidad_overlay = forms.DecimalField(
@@ -298,6 +299,12 @@ class PartidoForm(forms.ModelForm):
         label='Opacidad del overlay',
         help_text='0.00 = transparente, 1.00 = completamente opaco'
     )
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance and self.instance.pk and self.instance.fecha:
+            # Formatear la fecha para datetime-local (formato ISO 8601)
+            self.initial['fecha'] = self.instance.fecha.strftime('%Y-%m-%dT%H:%M')
     
     class Meta:
         model = Partido

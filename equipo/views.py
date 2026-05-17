@@ -155,8 +155,21 @@ def noticias(request):
 
 def noticia_detalle(request, pk):
     noticia = get_object_or_404(Noticia, pk=pk)
+    
+    # Noticias relacionadas (excluir la actual)
+    noticias_relacionadas = Noticia.objects.filter(
+        activo=True
+    ).exclude(pk=pk).order_by('-fecha_publicacion')[:4]
+    
+    # Próximos partidos
+    proximos_partidos = Partido.objects.filter(
+        fecha__gte=timezone.now(), estado='programado'
+    ).order_by('fecha')[:3]
+    
     context = {
         'noticia': noticia,
+        'noticias_relacionadas': noticias_relacionadas,
+        'proximos_partidos': proximos_partidos,
     }
     return render(request, 'equipo/noticia_detalle.html', context)
 

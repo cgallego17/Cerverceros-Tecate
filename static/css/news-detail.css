@@ -1,0 +1,431 @@
+/* ═══════════════════════════════════════════════════════════
+   NEWS DETAIL PAGE STYLES
+   ═══════════════════════════════════════════════════════════ */
+
+/* ─── HERO DE NOTICIA ─────────────────────────────────────── */
+.news-detail-hero {
+    background-size: cover;
+    background-position: center;
+    background-color: #1a1a1a;
+    padding: 8rem 0 4rem;
+    position: relative;
+}
+
+.news-detail-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.8));
+}
+
+.news-detail-hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+    color: white;
+}
+
+.news-detail-category {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+}
+
+.news-badge {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: rgba(227, 30, 36, 0.9);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-radius: 4px;
+}
+
+.news-badge-featured {
+    background: rgba(255, 193, 7, 0.9);
+    color: #1a1a1a;
+}
+
+.news-detail-title {
+    font-size: 3rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.news-detail-meta {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    font-size: 1rem;
+    opacity: 0.9;
+}
+
+.news-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.news-meta-item i {
+    font-size: 1.1rem;
+}
+
+/* ─── CONTENIDO DE NOTICIA ────────────────────────────────── */
+.news-detail-content {
+    padding: 4rem 0;
+    background: #f9fafb;
+}
+
+.news-detail-layout {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 3rem;
+    align-items: start;
+}
+
+/* ─── CONTENIDO PRINCIPAL ─────────────────────────────────── */
+.news-detail-main {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    overflow: hidden;
+}
+
+.news-detail-image {
+    width: 100%;
+    aspect-ratio: 16/9;
+    overflow: hidden;
+}
+
+.news-detail-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.news-detail-body {
+    padding: 3rem;
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: #374151;
+}
+
+.news-detail-body p {
+    margin-bottom: 1.5rem;
+}
+
+.news-detail-body h2,
+.news-detail-body h3 {
+    color: #1a1a1a;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.news-detail-body h2 {
+    font-size: 1.75rem;
+}
+
+.news-detail-body h3 {
+    font-size: 1.5rem;
+}
+
+/* ─── COMPARTIR EN REDES SOCIALES ─────────────────────────── */
+.news-detail-share {
+    padding: 2rem 3rem 3rem;
+    border-top: 2px solid #e5e7eb;
+}
+
+.news-detail-share h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: #1a1a1a;
+}
+
+.share-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+}
+
+.share-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.875rem 1.25rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: white;
+}
+
+.share-facebook {
+    background: #1877f2;
+}
+
+.share-facebook:hover {
+    background: #0d65d9;
+    transform: translateY(-2px);
+}
+
+.share-twitter {
+    background: #1da1f2;
+}
+
+.share-twitter:hover {
+    background: #0c8bd9;
+    transform: translateY(-2px);
+}
+
+.share-whatsapp {
+    background: #25d366;
+}
+
+.share-whatsapp:hover {
+    background: #1fb855;
+    transform: translateY(-2px);
+}
+
+.share-copy {
+    background: #6b7280;
+}
+
+.share-copy:hover {
+    background: #4b5563;
+    transform: translateY(-2px);
+}
+
+/* ─── NAVEGACIÓN ──────────────────────────────────────────── */
+.news-detail-navigation {
+    padding: 2rem 3rem 3rem;
+}
+
+/* ─── SIDEBAR ─────────────────────────────────────────────── */
+.news-detail-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.sidebar-widget {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.sidebar-widget-cta {
+    background: linear-gradient(135deg, #e31e24 0%, #b71c1c 100%);
+    color: white;
+}
+
+.sidebar-widget-cta p {
+    color: rgba(255,255,255,0.9);
+}
+
+.sidebar-widget-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: #1a1a1a;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.sidebar-widget-cta .sidebar-widget-title {
+    color: white;
+}
+
+/* ─── NOTICIAS RELACIONADAS ───────────────────────────────── */
+.sidebar-news-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.sidebar-news-item {
+    display: flex;
+    gap: 1rem;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.3s ease;
+}
+
+.sidebar-news-item:hover {
+    transform: translateX(4px);
+}
+
+.sidebar-news-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.sidebar-news-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.sidebar-news-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.sidebar-news-content h4 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1.4;
+    color: #1a1a1a;
+    margin: 0;
+}
+
+.sidebar-news-date {
+    font-size: 0.75rem;
+    color: #6b7280;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.sidebar-empty {
+    color: #9ca3af;
+    font-size: 0.875rem;
+    text-align: center;
+    padding: 1rem 0;
+}
+
+/* ─── PRÓXIMOS PARTIDOS ───────────────────────────────────── */
+.sidebar-fixtures {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.sidebar-fixture {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: #f9fafb;
+    border-radius: 8px;
+    border-left: 4px solid #e31e24;
+}
+
+.sidebar-fixture-date {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #e31e24;
+    min-width: 50px;
+}
+
+.sidebar-fixture-teams {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    font-size: 0.875rem;
+}
+
+.sidebar-fixture-teams span {
+    font-weight: 600;
+    color: #1a1a1a;
+}
+
+.sidebar-fixture-teams .vs {
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: #6b7280;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    background: #f9fafb;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #e31e24;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.sidebar-link:hover {
+    background: #e31e24;
+    color: white;
+}
+
+/* ─── RESPONSIVE ──────────────────────────────────────────── */
+@media (max-width: 1024px) {
+    .news-detail-layout {
+        grid-template-columns: 1fr;
+    }
+    
+    .news-detail-sidebar {
+        order: 2;
+    }
+    
+    .news-detail-title {
+        font-size: 2.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .news-detail-hero {
+        padding: 6rem 0 3rem;
+    }
+    
+    .news-detail-title {
+        font-size: 2rem;
+    }
+    
+    .news-detail-meta {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    
+    .news-detail-body {
+        padding: 2rem 1.5rem;
+        font-size: 1rem;
+    }
+    
+    .news-detail-share {
+        padding: 1.5rem;
+    }
+    
+    .share-buttons {
+        grid-template-columns: 1fr;
+    }
+    
+    .news-detail-navigation {
+        padding: 1.5rem;
+    }
+    
+    .sidebar-widget {
+        padding: 1.5rem;
+    }
+}
