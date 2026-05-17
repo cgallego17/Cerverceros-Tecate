@@ -121,8 +121,7 @@
                     <h3 class="score-venue">{{ partido.estadio|upper }}</h3>
                 </div>
                 <div class="score-actions">
-                    <a href="{% url 'equipo:calendario' %}" class="btn-score-outline">{% trans "VER CALENDARIO" %}</a>
-                    <a href="https://arema.mx/e/17890" class="btn-score-filled" target="_blank" rel="noopener noreferrer">{% trans "COMPRAR BOLETOS" %}</a>
+                    <a href="{% url 'equipo:calendario' %}" class="btn-score-filled">{% trans "VER CALENDARIO" %}</a>
                 </div>
             </div>
             {% endfor %}
