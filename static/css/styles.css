@@ -874,6 +874,14 @@ tbody tr:hover {
     z-index: 1;
 }
 
+.scores-grid .scores-header {
+    margin-bottom: 1.5rem;
+}
+
+.scores-grid .scores-header::before {
+    display: none;
+}
+
 .scores-grid {
     display: grid;
     gap: 2rem;
