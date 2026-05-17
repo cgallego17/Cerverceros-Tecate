@@ -3007,49 +3007,96 @@ tbody tr:hover {
 
 /* Tarjeta de juego en curso mejorada */
 .score-card.live-game {
-    border: 4px solid #e31e24 !important;
+    border: 5px solid #e31e24 !important;
     position: relative;
-    background: linear-gradient(135deg, #ffffff 0%, #fff5f5 100%);
+    background: linear-gradient(145deg, #ffffff 0%, #ffe5e5 50%, #fff0f0 100%);
     animation: glowBorder 2s ease-in-out infinite;
     transform: translateY(0);
-    transition: transform 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    padding: 2.5rem 3rem !important;
+}
+
+.score-card.live-game::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, #e31e24 0%, #ff4444 50%, #e31e24 100%);
+    background-size: 200% 100%;
+    animation: shimmer 3s linear infinite;
+}
+
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
 }
 
 .score-card.live-game:hover {
-    transform: translateY(-5px);
+    transform: translateY(-8px) scale(1.02);
+    border-color: #ff0000;
 }
 
 /* Badge EN VIVO mejorado */
 .live-badge {
     position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: linear-gradient(135deg, #e31e24 0%, #b71c1c 100%);
+    top: 1.25rem;
+    right: 1.25rem;
+    background: linear-gradient(135deg, #e31e24 0%, #c41e1e 50%, #b71c1c 100%);
     color: white;
-    padding: 0.6rem 1.2rem;
-    border-radius: 30px;
-    font-size: 0.8rem;
-    font-weight: 800;
+    padding: 0.7rem 1.4rem;
+    border-radius: 35px;
+    font-size: 0.85rem;
+    font-weight: 900;
     text-transform: uppercase;
-    letter-spacing: 1.5px;
+    letter-spacing: 2px;
     animation: pulse 2s ease-in-out infinite;
-    box-shadow: 0 6px 20px rgba(227, 30, 36, 0.5), 0 0 30px rgba(227, 30, 36, 0.3);
+    box-shadow: 
+        0 8px 25px rgba(227, 30, 36, 0.6),
+        0 0 40px rgba(227, 30, 36, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
     display: flex;
     align-items: center;
-    gap: 0.6rem;
+    gap: 0.7rem;
     z-index: 10;
-    border: 2px solid rgba(255, 255, 255, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.4);
+}
+
+.live-badge::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 35px;
+    padding: 2px;
+    background: linear-gradient(45deg, rgba(255,255,255,0.5), transparent);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0.5;
 }
 
 .live-badge i {
-    font-size: 0.6rem;
+    font-size: 0.65rem;
     animation: blink 1.5s ease-in-out infinite;
-    filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.8));
+    filter: drop-shadow(0 0 4px rgba(255, 255, 255, 1));
 }
 
 /* Marcadores más grandes para juegos en curso */
 .score-card.live-game .team-score {
-    font-size: 3rem;
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: #e31e24;
+    text-shadow: 
+        3px 3px 6px rgba(0,0,0,0.15),
+        0 0 20px rgba(227, 30, 36, 0.3);
+    letter-spacing: -2px;
+}
+
+/* Separador VS mejorado */
+.score-card.live-game .score-vs {
+    font-size: 2rem;
     font-weight: 900;
     color: #e31e24;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
@@ -3057,31 +3104,80 @@ tbody tr:hover {
 
 /* Nombres de equipos destacados */
 .score-card.live-game .team-name {
-    font-weight: 700;
+    font-weight: 800;
     color: #1a1a1a;
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
 }
 
-/* Logos más grandes */
+/* Logos más grandes con efecto */
 .score-card.live-game .team-logo-real img,
 .score-card.live-game .team-logo-placeholder {
-    transform: scale(1.1);
+    transform: scale(1.15);
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+    transition: transform 0.3s ease;
+}
+
+.score-card.live-game:hover .team-logo-real img,
+.score-card.live-game:hover .team-logo-placeholder {
+    transform: scale(1.2) rotate(5deg);
 }
 
 /* Información del estadio destacada */
-.score-card.live-game .score-venue {
+.score-card.live-game .score-info {
+    background: rgba(227, 30, 36, 0.05);
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    border-left: 4px solid #e31e24;
+}
+
+.score-card.live-game .score-venue-label {
     color: #e31e24;
     font-weight: 700;
+    font-size: 0.75rem;
+}
+
+.score-card.live-game .score-venue {
+    color: #e31e24;
+    font-weight: 800;
+    font-size: 1.3rem;
 }
 
 /* Botones con mejor contraste */
+.score-card.live-game .score-actions {
+    justify-content: center;
+}
+
 .score-card.live-game .btn-score-filled {
-    background: linear-gradient(135deg, #e31e24 0%, #b71c1c 100%);
-    box-shadow: 0 4px 12px rgba(227, 30, 36, 0.3);
+    background: linear-gradient(135deg, #e31e24 0%, #c41e1e 50%, #b71c1c 100%);
+    box-shadow: 0 6px 20px rgba(227, 30, 36, 0.4);
+    font-weight: 800;
+    padding: 1rem 2.5rem;
+    font-size: 1rem;
+    letter-spacing: 1px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.score-card.live-game .btn-score-filled::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.5s;
+}
+
+.score-card.live-game .btn-score-filled:hover::before {
+    left: 100%;
 }
 
 .score-card.live-game .btn-score-filled:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(227, 30, 36, 0.4);
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(227, 30, 36, 0.5);
 }
 
 /* Responsive */
