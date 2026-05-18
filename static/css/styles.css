@@ -3986,6 +3986,11 @@ tbody tr:hover {
     transform: translateX(2px);
 }
 
+.calendar-game-finished {
+    background: #fff;
+    border-left: 3px solid #28a745;
+}
+
 .calendar-game-teams {
     display: flex;
     align-items: center;
@@ -4001,21 +4006,21 @@ tbody tr:hover {
 }
 
 .calendar-team-logo {
-    width: 24px;
-    height: 24px;
+    width: 40px;
+    height: 40px;
     object-fit: contain;
 }
 
 .calendar-team-logo-placeholder {
-    width: 24px;
-    height: 24px;
+    width: 40px;
+    height: 40px;
     background: #e31e24;
     color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 4px;
-    font-size: 0.6rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
     font-weight: 700;
 }
 
@@ -4030,6 +4035,23 @@ tbody tr:hover {
     font-size: 0.75rem;
     font-weight: 600;
     color: #666;
+}
+
+.calendar-score {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0 0.25rem;
+}
+
+.calendar-game-final {
+    text-align: center;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: #28a745;
+    letter-spacing: 1px;
+    margin-top: 0.25rem;
 }
 
 .calendar-game-live {
@@ -4107,8 +4129,8 @@ tbody tr:hover {
     
     .calendar-team-logo,
     .calendar-team-logo-placeholder {
-        width: 20px;
-        height: 20px;
+        width: 32px;
+        height: 32px;
     }
 }
 
@@ -4144,8 +4166,8 @@ tbody tr:hover {
     
     .calendar-team-logo,
     .calendar-team-logo-placeholder {
-        width: 16px;
-        height: 16px;
+        width: 28px;
+        height: 28px;
     }
     
     .calendar-game {

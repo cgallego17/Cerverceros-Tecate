@@ -66,7 +66,7 @@
                                     {% if key == dia %}
                                         <div class="calendar-day-games">
                                             {% for p in partidos %}
-                                                <div class="calendar-game">
+                                                <div class="calendar-game {% if p.estado == 'finalizado' %}calendar-game-finished{% endif %}">
                                                     <div class="calendar-game-teams">
                                                         <div class="calendar-team">
                                                             {% if p.equipo_local.logo %}
@@ -76,9 +76,15 @@
                                                                     {{ p.equipo_local.nombre|slice:":3"|upper }}
                                                                 </div>
                                                             {% endif %}
+                                                            {% if p.estado == 'finalizado' %}
+                                                                <span class="calendar-score">{{ p.carreras_local }}</span>
+                                                            {% endif %}
                                                         </div>
-                                                        <span class="calendar-vs">vs</span>
+                                                        <span class="calendar-vs">{% if p.estado == 'finalizado' %}-{% else %}vs{% endif %}</span>
                                                         <div class="calendar-team">
+                                                            {% if p.estado == 'finalizado' %}
+                                                                <span class="calendar-score">{{ p.carreras_visitante }}</span>
+                                                            {% endif %}
                                                             {% if p.equipo_visitante.logo %}
                                                                 <img src="{{ p.equipo_visitante.logo.url }}" alt="{{ p.equipo_visitante.nombre }}" class="calendar-team-logo">
                                                             {% else %}
@@ -88,9 +94,13 @@
                                                             {% endif %}
                                                         </div>
                                                     </div>
-                                                    <div class="calendar-game-time">
-                                                        {{ p.fecha|date:"H:i" }}
-                                                    </div>
+                                                    {% if p.estado != 'finalizado' %}
+                                                        <div class="calendar-game-time">
+                                                            {{ p.fecha|date:"H:i" }}
+                                                        </div>
+                                                    {% else %}
+                                                        <div class="calendar-game-final">FINAL</div>
+                                                    {% endif %}
                                                     {% if p.estado == 'en_curso' %}
                                                         <span class="calendar-game-live">EN VIVO</span>
                                                     {% endif %}
