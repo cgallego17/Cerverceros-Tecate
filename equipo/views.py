@@ -143,16 +143,15 @@ def jugador_detalle(request, pk):
 
 
 def calendario(request):
-    from datetime import datetime, timedelta
+    from datetime import datetime
     from collections import defaultdict
     import calendar as cal
     
     # Nombres de meses en español
-    meses_es = {
-        1: 'Enero', 2: 'Febrero', 3: 'Marzo', 4: 'Abril',
-        5: 'Mayo', 6: 'Junio', 7: 'Julio', 8: 'Agosto',
-        9: 'Septiembre', 10: 'Octubre', 11: 'Noviembre', 12: 'Diciembre'
-    }
+    meses_es = [
+        '', 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+        'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    ]
     
     # Obtener mes y año actual o de parámetros
     now = timezone.now()
@@ -183,21 +182,26 @@ def calendario(request):
         anio_siguiente = anio
     
     # Obtener todos los partidos del mes
-    primer_dia = timezone.make_aware(datetime(anio, mes, 1))
-    ultimo_dia_num = cal.monthrange(anio, mes)[1]
-    ultimo_dia = timezone.make_aware(
-        datetime(anio, mes, ultimo_dia_num, 23, 59, 59)
-    )
-    
-    partidos_mes = Partido.objects.filter(
-        fecha__gte=primer_dia,
-        fecha__lte=ultimo_dia
-    ).select_related('equipo_local', 'equipo_visitante').order_by('fecha')
+    try:
+        primer_dia = timezone.make_aware(datetime(anio, mes, 1))
+        ultimo_dia_num = cal.monthrange(anio, mes)[1]
+        ultimo_dia = timezone.make_aware(
+            datetime(anio, mes, ultimo_dia_num, 23, 59, 59)
+        )
+        
+        partidos_mes = Partido.objects.filter(
+            fecha__gte=primer_dia,
+            fecha__lte=ultimo_dia
+        ).select_related('equipo_local', 'equipo_visitante').order_by('fecha')
+    except Exception:
+        partidos_mes = []
     
     # Organizar partidos por día
-    partidos_por_dia = defaultdict(list)
+    partidos_por_dia = {}
     for partido in partidos_mes:
         dia = partido.fecha.day
+        if dia not in partidos_por_dia:
+            partidos_por_dia[dia] = []
         partidos_por_dia[dia].append(partido)
     
     # Generar estructura del calendario
@@ -208,7 +212,7 @@ def calendario(request):
         'anio': anio,
         'mes_nombre': meses_es[mes],
         'calendario': cal_obj,
-        'partidos_por_dia': dict(partidos_por_dia),
+        'partidos_por_dia': partidos_por_dia,
         'mes_anterior': {'month': mes_anterior_num, 'year': anio_anterior},
         'mes_siguiente': {'month': mes_siguiente_num, 'year': anio_siguiente},
         'hoy': now.date(),
