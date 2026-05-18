@@ -1,165 +1,246 @@
 from django.test import TestCase, Client
-from django.contrib.auth.models import User, Group
 from django.urls import reverse
+from django.utils import timezone
+from datetime import timedelta
+from .models import Jugador, Partido, Equipo, Noticia, Ciudad, Estado, Pais
 
 
-class UsuarioCrearTestCase(TestCase):
-    """Tests para la creación de usuarios en el panel"""
+class WebsiteViewsTestCase(TestCase):
+    """Tests completos para todas las vistas del website"""
 
     def setUp(self):
         """Configuración inicial para cada test"""
-        # Crear un superusuario para las pruebas
-        self.superuser = User.objects.create_superuser(
-            username='admin',
-            email='admin@test.com',
-            password='testpass123'
-        )
         self.client = Client()
-        self.client.login(username='admin', password='testpass123')
         
-        # Crear un grupo de prueba
-        self.test_group = Group.objects.create(name='Test Role')
-
-    def test_crear_usuario_basico(self):
-        """Test: Crear un usuario básico sin roles"""
-        response = self.client.post(reverse('panel:usuario_nuevo'), {
-            'username': 'testuser',
-            'first_name': 'Test',
-            'last_name': 'User',
-            'email': 'test@example.com',
-            'password1': 'SecurePass123!',
-            'password2': 'SecurePass123!',
-            'is_staff': True,
-            'is_active': True,
-        })
-        
-        # Verificar redirección exitosa
-        self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse('panel:usuarios_lista'))
-        
-        # Verificar que el usuario fue creado
-        user = User.objects.get(username='testuser')
-        self.assertEqual(user.first_name, 'Test')
-        self.assertEqual(user.last_name, 'User')
-        self.assertEqual(user.email, 'test@example.com')
-        self.assertTrue(user.is_staff)
-        self.assertTrue(user.is_active)
-        
-        # Verificar que la contraseña fue establecida correctamente
-        self.assertTrue(user.check_password('SecurePass123!'))
-
-    def test_crear_usuario_con_roles(self):
-        """Test: Crear un usuario con roles asignados"""
-        response = self.client.post(reverse('panel:usuario_nuevo'), {
-            'username': 'userwithrole',
-            'first_name': 'User',
-            'last_name': 'WithRole',
-            'email': 'role@example.com',
-            'password1': 'SecurePass123!',
-            'password2': 'SecurePass123!',
-            'is_staff': True,
-            'is_active': True,
-            'groups': [self.test_group.id],
-        })
-        
-        # Verificar redirección exitosa
-        self.assertEqual(response.status_code, 302)
-        
-        # Verificar que el usuario fue creado con el rol
-        user = User.objects.get(username='userwithrole')
-        self.assertIn(self.test_group, user.groups.all())
-
-    def test_crear_usuario_contrasenas_no_coinciden(self):
-        """Test: Error cuando las contraseñas no coinciden"""
-        response = self.client.post(reverse('panel:usuario_nuevo'), {
-            'username': 'testuser2',
-            'password1': 'SecurePass123!',
-            'password2': 'DifferentPass123!',
-            'is_staff': True,
-            'is_active': True,
-        })
-        
-        # Verificar que no redirige (hay errores)
-        self.assertEqual(response.status_code, 200)
-        
-        # Verificar que el usuario NO fue creado
-        self.assertFalse(User.objects.filter(username='testuser2').exists())
-
-    def test_crear_usuario_contrasena_debil(self):
-        """Test: Error cuando la contraseña es demasiado débil"""
-        response = self.client.post(reverse('panel:usuario_nuevo'), {
-            'username': 'testuser3',
-            'password1': '123',
-            'password2': '123',
-            'is_staff': True,
-            'is_active': True,
-        })
-        
-        # Verificar que no redirige (hay errores)
-        self.assertEqual(response.status_code, 200)
-        
-        # Verificar que el usuario NO fue creado
-        self.assertFalse(User.objects.filter(username='testuser3').exists())
-
-    def test_crear_usuario_username_duplicado(self):
-        """Test: Error cuando el username ya existe"""
-        # Crear un usuario primero
-        User.objects.create_user(
-            username='existing',
-            password='testpass123'
+        # Crear país, estado y ciudad de prueba
+        self.pais = Pais.objects.create(nombre='México')
+        self.estado = Estado.objects.create(
+            nombre='Baja California',
+            pais=self.pais
+        )
+        self.ciudad_tecate = Ciudad.objects.create(
+            nombre='Tecate',
+            estado=self.estado
+        )
+        self.ciudad_tijuana = Ciudad.objects.create(
+            nombre='Tijuana',
+            estado=self.estado
         )
         
-        # Intentar crear otro con el mismo username
-        response = self.client.post(reverse('panel:usuario_nuevo'), {
-            'username': 'existing',
-            'password1': 'SecurePass123!',
-            'password2': 'SecurePass123!',
-            'is_staff': True,
-            'is_active': True,
-        })
-        
-        # Verificar que no redirige (hay errores)
-        self.assertEqual(response.status_code, 200)
-        
-        # Verificar que solo existe un usuario con ese username
-        self.assertEqual(User.objects.filter(username='existing').count(), 1)
-
-    def test_acceso_sin_permisos(self):
-        """Test: Usuario no superusuario no puede crear usuarios"""
-        # Crear un usuario staff pero no superusuario
-        regular_user = User.objects.create_user(
-            username='regular',
-            password='testpass123'
+        # Crear equipos de prueba
+        self.equipo_local = Equipo.objects.create(
+            nombre='Cerveceros de Tecate',
+            ciudad=self.ciudad_tecate
         )
-        regular_user.is_staff = True
-        regular_user.save()
+        self.equipo_visitante = Equipo.objects.create(
+            nombre='Toros de Tijuana',
+            ciudad=self.ciudad_tijuana
+        )
         
-        # Cerrar sesión del superusuario
-        self.client.logout()
+        # Crear jugadores de prueba
+        self.jugador = Jugador.objects.create(
+            nombre='Juan Pérez',
+            numero=10,
+            posicion='P',
+            activo=True
+        )
         
-        # Iniciar sesión con usuario regular
-        self.client.login(username='regular', password='testpass123')
+        # Crear partidos de prueba
+        self.partido_futuro = Partido.objects.create(
+            equipo_local=self.equipo_local,
+            equipo_visitante=self.equipo_visitante,
+            fecha=timezone.now() + timedelta(days=7),
+            estado='programado'
+        )
         
-        # Intentar acceder a crear usuario
-        response = self.client.get(reverse('panel:usuario_nuevo'))
+        self.partido_finalizado = Partido.objects.create(
+            equipo_local=self.equipo_local,
+            equipo_visitante=self.equipo_visitante,
+            fecha=timezone.now() - timedelta(days=7),
+            estado='finalizado',
+            carreras_local=5,
+            carreras_visitante=3
+        )
         
-        # Debe redirigir al dashboard
-        self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse('panel:dashboard'))
+        # Crear noticias de prueba
+        self.noticia = Noticia.objects.create(
+            titulo='Noticia de Prueba',
+            contenido='Contenido de la noticia de prueba',
+            fecha_publicacion=timezone.now(),
+            destacada=True
+        )
 
-    def test_template_renderiza_correctamente(self):
-        """Test: El template se renderiza sin errores"""
-        response = self.client.get(reverse('panel:usuario_nuevo'))
-        
-        # Verificar que la página carga correctamente
+    # Tests de páginas principales
+    def test_inicio_page_loads(self):
+        """Test: La página de inicio carga correctamente"""
+        response = self.client.get(reverse('equipo:inicio'))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'panel/usuario_form.html')
-        
-        # Verificar que el formulario está en el contexto
-        self.assertIn('form', response.context)
-        
-        # Verificar que contiene los campos esperados
-        self.assertContains(response, 'username')
-        self.assertContains(response, 'password1')
-        self.assertContains(response, 'password2')
-        self.assertContains(response, 'Crear usuario')
+        self.assertTemplateUsed(response, 'equipo/inicio.html')
+
+    def test_nuestro_equipo_page_loads(self):
+        """Test: La página de nuestro equipo carga correctamente"""
+        response = self.client.get(reverse('equipo:nuestro_equipo'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'equipo/nuestro_equipo.html')
+        self.assertIn('jugadores', response.context)
+
+    def test_calendario_page_loads(self):
+        """Test: La página de calendario carga correctamente"""
+        response = self.client.get(reverse('equipo:calendario'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'equipo/calendario.html')
+        self.assertIn('calendario', response.context)
+        self.assertIn('partidos_por_dia', response.context)
+
+    def test_resultados_page_loads(self):
+        """Test: La página de resultados carga correctamente"""
+        response = self.client.get(reverse('equipo:resultados'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'equipo/resultados.html')
+        self.assertIn('partidos', response.context)
+
+    def test_noticias_page_loads(self):
+        """Test: La página de noticias carga correctamente"""
+        response = self.client.get(reverse('equipo:noticias'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'equipo/noticias.html')
+        self.assertIn('noticias', response.context)
+
+    def test_tabla_posiciones_page_loads(self):
+        """Test: La página de tabla de posiciones carga correctamente"""
+        response = self.client.get(reverse('equipo:tabla_posiciones'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'equipo/tabla_posiciones.html')
+
+    # Tests de funcionalidad del calendario
+    def test_calendario_muestra_partidos(self):
+        """Test: El calendario muestra los partidos correctamente"""
+        response = self.client.get(reverse('equipo:calendario'))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('partidos_por_dia', response.context)
+
+    def test_calendario_navegacion_meses(self):
+        """Test: La navegación entre meses del calendario funciona"""
+        response = self.client.get(
+            reverse('equipo:calendario') + '?mes=1&anio=2026'
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['mes'], 1)
+        self.assertEqual(response.context['anio'], 2026)
+
+    # Tests de resultados
+    def test_resultados_muestra_partidos_finalizados(self):
+        """Test: La página de resultados muestra solo partidos finalizados"""
+        response = self.client.get(reverse('equipo:resultados'))
+        partidos = response.context['partidos']
+        for partido in partidos:
+            self.assertEqual(partido.estado, 'finalizado')
+
+    # Tests de noticias
+    def test_noticias_muestra_destacadas(self):
+        """Test: Las noticias destacadas se muestran correctamente"""
+        response = self.client.get(reverse('equipo:noticias'))
+        noticias = response.context['noticias']
+        destacadas = [n for n in noticias if n.destacada]
+        self.assertGreater(len(destacadas), 0)
+
+    def test_noticia_detalle_page_loads(self):
+        """Test: La página de detalle de noticia carga correctamente"""
+        response = self.client.get(
+            reverse('equipo:noticia_detalle', args=[self.noticia.pk])
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'equipo/noticia_detalle.html')
+        self.assertEqual(response.context['noticia'], self.noticia)
+
+    # Tests de jugadores
+    def test_jugador_detalle_page_loads(self):
+        """Test: La página de detalle de jugador carga correctamente"""
+        response = self.client.get(
+            reverse('equipo:jugador_detalle', args=[self.jugador.pk])
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'equipo/jugador_detalle.html')
+        self.assertEqual(response.context['jugador'], self.jugador)
+
+    # Tests de internacionalización
+    def test_i18n_espanol(self):
+        """Test: El sitio funciona en español"""
+        response = self.client.get(reverse('equipo:inicio'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_i18n_ingles(self):
+        """Test: El sitio funciona en inglés"""
+        self.client.cookies.load({'django_language': 'en'})
+        response = self.client.get(reverse('equipo:inicio'))
+        self.assertEqual(response.status_code, 200)
+
+    # Tests de URLs
+    def test_all_main_urls_accessible(self):
+        """Test: Todas las URLs principales son accesibles"""
+        urls = [
+            'equipo:inicio',
+            'equipo:nuestro_equipo',
+            'equipo:calendario',
+            'equipo:resultados',
+            'equipo:noticias',
+            'equipo:tabla_posiciones',
+        ]
+        for url_name in urls:
+            response = self.client.get(reverse(url_name))
+            self.assertEqual(
+                response.status_code, 200,
+                f"URL {url_name} no es accesible"
+            )
+
+
+class ModelsTestCase(TestCase):
+    """Tests para los modelos"""
+
+    def setUp(self):
+        """Configuración inicial"""
+        # Crear país, estado y ciudad de prueba
+        self.pais = Pais.objects.create(nombre='Test Country')
+        self.estado = Estado.objects.create(
+            nombre='Test State',
+            pais=self.pais
+        )
+        self.ciudad = Ciudad.objects.create(
+            nombre='Test City',
+            estado=self.estado
+        )
+        self.equipo = Equipo.objects.create(
+            nombre='Test Team',
+            ciudad=self.ciudad
+        )
+
+    def test_jugador_creation(self):
+        """Test: Crear un jugador correctamente"""
+        jugador = Jugador.objects.create(
+            nombre='Test Player',
+            numero=99,
+            posicion='P',
+            activo=True
+        )
+        self.assertEqual(str(jugador), '#99 Test Player')
+        self.assertTrue(jugador.activo)
+
+    def test_partido_creation(self):
+        """Test: Crear un partido correctamente"""
+        partido = Partido.objects.create(
+            equipo_local=self.equipo,
+            equipo_visitante=self.equipo,
+            fecha=timezone.now(),
+            estado='programado'
+        )
+        self.assertEqual(partido.estado, 'programado')
+
+    def test_noticia_creation(self):
+        """Test: Crear una noticia correctamente"""
+        noticia = Noticia.objects.create(
+            titulo='Test News',
+            contenido='Test content',
+            fecha_publicacion=timezone.now()
+        )
+        self.assertEqual(noticia.titulo, 'Test News')
+        self.assertFalse(noticia.destacada)

@@ -22,26 +22,63 @@
     </div>
 </section>
 
-<div class="container">
-    <div class="card-grid">
-        {% for noticia in noticias %}
-        <div class="card {% if noticia.destacada %}noticia-destacada{% endif %}">
-            {% if noticia.imagen %}
-            <img src="{{ noticia.imagen.url }}" alt="{{ noticia.titulo }}" class="card-image">
-            {% endif %}
-            <div class="card-content">
-                <h3 class="card-title">{{ noticia.titulo }}</h3>
-                <p class="card-text" style="color: #999; font-size: 0.9rem;">
-                    {{ noticia.fecha_publicacion|date:"d/m/Y" }}
-                    {% if noticia.autor %} - Por {{ noticia.autor }}{% endif %}
-                </p>
-                <p class="card-text">{{ noticia.contenido|truncatewords:30 }}</p>
-                <a href="{% url 'equipo:noticia_detalle' noticia.pk %}" class="btn">{% trans "Leer más" %}</a>
+{# ─── NOTICIAS GRID ───────────────────────────────────────── #}
+<section class="news-section">
+    <div class="container">
+        <div class="news-grid">
+            {% for noticia in noticias %}
+            <article class="news-card {% if noticia.destacada %}news-card-featured{% endif %}">
+                <div class="news-card-image">
+                    {% if noticia.imagen %}
+                        <img src="{{ noticia.imagen.url }}" alt="{{ noticia.titulo }}">
+                    {% else %}
+                        <div class="news-card-placeholder">
+                            <i class="fas fa-newspaper"></i>
+                        </div>
+                    {% endif %}
+                    {% if noticia.destacada %}
+                        <span class="news-featured-badge">
+                            <i class="fas fa-star"></i>
+                            {% trans "DESTACADA" %}
+                        </span>
+                    {% endif %}
+                </div>
+                
+                <div class="news-card-content">
+                    <div class="news-card-meta">
+                        <span class="news-date">
+                            <i class="fas fa-calendar-alt"></i>
+                            {{ noticia.fecha_publicacion|date:"d/m/Y" }}
+                        </span>
+                        {% if noticia.autor %}
+                        <span class="news-author">
+                            <i class="fas fa-user"></i>
+                            {{ noticia.autor }}
+                        </span>
+                        {% endif %}
+                    </div>
+                    
+                    <h3 class="news-card-title">{{ noticia.titulo }}</h3>
+                    
+                    <p class="news-card-excerpt">
+                        {{ noticia.contenido|truncatewords:25 }}
+                    </p>
+                    
+                    <a href="{% url 'equipo:noticia_detalle' noticia.pk %}" class="news-card-link">
+                        {% trans "Leer más" %}
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </article>
+            {% empty %}
+            <div class="news-empty">
+                <i class="fas fa-newspaper"></i>
+                <h3>{% trans "No hay noticias disponibles" %}</h3>
+                <p>{% trans "Las últimas noticias del equipo aparecerán aquí." %}</p>
             </div>
+            {% endfor %}
         </div>
-        {% empty %}
-        <p>{% trans "No hay noticias disponibles en este momento." %}</p>
-        {% endfor %}
     </div>
-</div>
+</section>
+
 {% endblock %}

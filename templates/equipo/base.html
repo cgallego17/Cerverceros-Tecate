@@ -23,12 +23,18 @@
                 <a href="{% url 'equipo:noticias' %}" class="top-bar-link">{% trans "NOTICIAS" %}</a>
             </div>
             <div class="top-bar-right">
-                <form action="{% url 'set_language' %}" method="post" class="lang-toggle-form">
+                <form action="{% url 'set_language' %}" method="post" class="language-form">
                     {% csrf_token %}
-                    <input name="next" type="hidden" value="{{ request.get_full_path }}">
-                    <button type="submit" name="language" value="es" class="lang-btn{% if LANGUAGE_CODE == 'es' %} active{% endif %}"><span class="fi fi-mx"></span> ES</button>
-                    <span class="top-bar-separator">|</span>
-                    <button type="submit" name="language" value="en" class="lang-btn{% if LANGUAGE_CODE == 'en' %} active{% endif %}"><span class="fi fi-us"></span> EN</button>
+                    <input name="next" type="hidden" value="{{ request.path }}">
+                    <select name="language" onchange="this.form.submit()" class="language-select">
+                        {% get_current_language as LANGUAGE_CODE %}
+                        {% get_available_languages as LANGUAGES %}
+                        {% for lang_code, lang_name in LANGUAGES %}
+                            <option value="{{ lang_code }}" {% if lang_code == LANGUAGE_CODE %}selected{% endif %}>
+                                {% if lang_code == 'es' %}🇲🇽 ES{% else %}🇺🇸 EN{% endif %}
+                            </option>
+                        {% endfor %}
+                    </select>
                 </form>
                 <span class="top-bar-separator">|</span>
                 <span class="top-bar-text">{% trans "SÍGUENOS:" %}</span>
@@ -44,7 +50,7 @@
     <nav class="navbar">
         <div class="navbar-container">
             <ul class="navbar-menu navbar-menu-left">
-                <li><a href="{% url 'equipo:inicio' %}" class="navbar-link">{% trans "HOME" %}</a></li>
+                <li><a href="{% url 'equipo:inicio' %}" class="navbar-link">{% trans "INICIO" %}</a></li>
                 <li><a href="{% url 'equipo:nuestro_equipo' %}" class="navbar-link">{% trans "EQUIPO" %}</a></li>
                 <li><a href="{% url 'equipo:calendario' %}" class="navbar-link">{% trans "CALENDARIO" %}</a></li>
             </ul>
