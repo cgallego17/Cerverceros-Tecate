@@ -8,12 +8,13 @@ from django.utils import timezone
 from itertools import groupby
 from operator import attrgetter
 
-from .models import HeroSlide, Patrocinador, CategoriaProducto, Producto, ItemFaq, Noticia, Jugador, Transaccion, Equipo, Partido, Pais, Estado, Ciudad
+from .models import HeroSlide, Patrocinador, CategoriaProducto, Producto, ItemFaq, Noticia, Jugador, Transaccion, Equipo, Partido, Pais, Estado, Ciudad, ProximoJuegoDestacado
 from .panel_forms import (
     HeroSlideForm, PatrocinadorForm, CategoriaProductoForm,
     ProductoForm, ItemFaqForm, NoticiaForm, JugadorForm,
     UsuarioCrearForm, UsuarioEditarForm, RolForm, TransaccionForm,
     EquipoForm, PartidoForm, PaisForm, EstadoForm, CiudadForm,
+    ProximoJuegoDestacadoForm,
 )
 
 _LOGIN = '/panel/login/'
@@ -695,4 +696,43 @@ def ciudad_eliminar(request, pk):
         'objeto': ciudad,
         'back_url': 'panel:ciudades_lista',
         'titulo': 'Ciudad',
+    })
+
+
+# ── PRÓXIMO JUEGO DESTACADO ──────────────────────
+
+@login_required(login_url=_LOGIN)
+def proximo_juego_lista(request):
+    if not request.user.is_staff:
+        return redirect('panel:dashboard')
+    juegos = ProximoJuegoDestacado.objects.all().order_by('-activo', 'orden')
+    return render(request, 'panel/proximo_juego_lista.html', {
+        'juegos': juegos,
+    })
+
+
+@login_required(login_url=_LOGIN)
+def proximo_juego_form(request, pk=None):
+    if not request.user.is_staff:
+        return redirect('panel:dashboard')
+    return _crud_form(
+        request, ProximoJuegoDestacadoForm, 'panel/form.html', 'panel:proximo_juego_lista', pk,
+        msg_ok='Próximo juego guardado.',
+        extra_ctx={'titulo': 'Próximo Juego Destacado', 'back_url': 'panel:proximo_juego_lista'},
+    )
+
+
+@login_required(login_url=_LOGIN)
+def proximo_juego_eliminar(request, pk):
+    if not request.user.is_staff:
+        return redirect('panel:dashboard')
+    juego = get_object_or_404(ProximoJuegoDestacado, pk=pk)
+    if request.method == 'POST':
+        juego.delete()
+        messages.success(request, 'Próximo juego eliminado correctamente.')
+        return redirect('panel:proximo_juego_lista')
+    return render(request, 'panel/confirmar_eliminar.html', {
+        'objeto': juego,
+        'back_url': 'panel:proximo_juego_lista',
+        'titulo': 'Próximo Juego Destacado',
     })

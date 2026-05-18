@@ -1,14 +1,14 @@
 {% extends 'panel/base.html' %}
 
-{% block page_title %}{% if objeto %}Editar Partido{% else %}Nuevo Partido{% endif %}{% endblock %}
+{% block page_title %}{% if objeto %}Editar Juego{% else %}Nuevo Juego{% endif %}{% endblock %}
 
 {% block content %}
 <div class="panel-page-header">
     <div class="panel-page-title">
-        {% if objeto %}Editar Partido{% else %}Nuevo Partido{% endif %}
-        <small>{% if objeto %}Modifica los datos del partido{% else %}Registra un nuevo partido{% endif %}</small>
+        {% if objeto %}Editar Juego{% else %}Nuevo Juego{% endif %}
+        <small>{% if objeto %}Modifica los datos del juego{% else %}Registra un nuevo juego{% endif %}</small>
     </div>
-    <a href="{% url 'panel:partidos_lista' %}" class="panel-btn panel-btn-secondary">← Volver a partidos</a>
+    <a href="{% url 'panel:partidos_lista' %}" class="panel-btn panel-btn-secondary">← Volver a juegos</a>
 </div>
 
 <form method="post" novalidate>
@@ -83,9 +83,9 @@
             <div class="panel-form-group span-2">
                 <label class="panel-form-label" style="display: flex; align-items: center; gap: 0.5rem;">
                     {{ form.destacado }}
-                    <span>Próximo partido destacado</span>
+                    <span>Próximo juego destacado</span>
                 </label>
-                <span class="panel-form-help">Marcar este partido como el próximo partido destacado en la página de inicio (sección "PRÓXIMO PARTIDO")</span>
+                <span class="panel-form-help">Marcar este juego como el próximo juego destacado en la página de inicio (sección "PRÓXIMO JUEGO")</span>
                 {% for error in form.destacado.errors %}
                 <span class="panel-field-error"><i class="fas fa-triangle-exclamation"></i> {{ error }}</span>
                 {% endfor %}
@@ -93,7 +93,7 @@
         </div>
 
         <div class="panel-form-section" style="margin-top: 1.5rem;">
-            <h3 style="font-size: 1rem; font-weight: 600; margin-bottom: 1rem; color: #374151;">Configuración de Próximo Partido</h3>
+            <h3 style="font-size: 1rem; font-weight: 600; margin-bottom: 1rem; color: #374151;">Configuración de Próximo Juego</h3>
             <div class="panel-form-grid">
                 <div class="panel-form-group span-2">
                     <label class="panel-form-label" for="{{ form.imagen_fondo.id_for_label }}">Imagen de fondo</label>
@@ -106,7 +106,7 @@
                     {% for error in form.imagen_fondo.errors %}
                     <span class="panel-field-error"><i class="fas fa-triangle-exclamation"></i> {{ error }}</span>
                     {% endfor %}
-                    <span class="panel-form-help">Imagen de fondo para la sección "PRÓXIMO PARTIDO" cuando este partido esté destacado</span>
+                    <span class="panel-form-help">Imagen de fondo para la sección "PRÓXIMO JUEGO" cuando este juego esté destacado</span>
                 </div>
 
                 <div class="panel-form-group">
@@ -130,7 +130,7 @@
         <div class="panel-form-actions">
             <button type="submit" class="panel-btn panel-btn-primary panel-btn-lg">
                 <i class="fas fa-floppy-disk"></i>
-                {% if objeto %}Guardar cambios{% else %}Crear partido{% endif %}
+                {% if objeto %}Guardar cambios{% else %}Crear juego{% endif %}
             </button>
             <a href="{% url 'panel:partidos_lista' %}" class="panel-btn panel-btn-secondary panel-btn-lg">Cancelar</a>
         </div>

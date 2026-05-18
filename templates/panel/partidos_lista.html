@@ -1,14 +1,14 @@
 {% extends 'panel/base.html' %}
 
-{% block page_title %}Partidos{% endblock %}
+{% block page_title %}Juegos{% endblock %}
 
 {% block content %}
 <div class="panel-page-header">
     <div class="panel-page-title">
-        Partidos
-        <small>Administra los partidos y marcadores</small>
+        Juegos
+        <small>Administra los juegos y marcadores</small>
     </div>
-    <a href="{% url 'panel:partido_nuevo' %}" class="panel-btn panel-btn-primary">+ Nuevo Partido</a>
+    <a href="{% url 'panel:partido_nuevo' %}" class="panel-btn panel-btn-primary">+ Nuevo Juego</a>
 </div>
 
 {% if partidos %}
@@ -73,8 +73,8 @@
 {% else %}
 <div class="panel-empty-state">
     <i class="fas fa-baseball"></i>
-    <p>No hay partidos registrados</p>
-    <a href="{% url 'panel:partido_nuevo' %}" class="panel-btn panel-btn-primary">Crear primer partido</a>
+    <p>No hay juegos registrados</p>
+    <a href="{% url 'panel:partido_nuevo' %}" class="panel-btn panel-btn-primary">Crear primer juego</a>
 </div>
 {% endif %}
 {% endblock %}

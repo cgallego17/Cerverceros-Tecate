@@ -98,4 +98,10 @@ urlpatterns = [
     path('ciudades/nueva/', panel_views.ciudad_form, name='ciudad_nueva'),
     path('ciudades/<int:pk>/editar/', panel_views.ciudad_form, name='ciudad_editar'),
     path('ciudades/<int:pk>/eliminar/', panel_views.ciudad_eliminar, name='ciudad_eliminar'),
+
+    # Próximo Juego Destacado
+    path('proximo-juego/', panel_views.proximo_juego_lista, name='proximo_juego_lista'),
+    path('proximo-juego/nuevo/', panel_views.proximo_juego_form, name='proximo_juego_nuevo'),
+    path('proximo-juego/<int:pk>/editar/', panel_views.proximo_juego_form, name='proximo_juego_editar'),
+    path('proximo-juego/<int:pk>/eliminar/', panel_views.proximo_juego_eliminar, name='proximo_juego_eliminar'),
 ]
