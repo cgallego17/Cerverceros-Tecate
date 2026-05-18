@@ -1,5 +1,5 @@
 {% extends 'equipo/base.html' %}
-{% load static i18n %}
+{% load static i18n calendar_filters %}
 
 {% block title %}Calendario - Cerveceros de Tecate{% endblock %}
 
@@ -22,48 +22,104 @@
     </div>
 </section>
 
-<div class="container">
-    <h2 class="section-title">{% trans "Próximos Partidos" %}</h2>
-    {% for partido in partidos_futuros %}
-    <div class="partido-card">
-        <div class="equipo">
-            <p class="equipo-nombre">{{ partido.equipo_local.nombre }}</p>
+{# ─── CALENDARIO MENSUAL ──────────────────────────────────── #}
+<section class="calendar-section">
+    <div class="container">
+        {# Navegación del calendario #}
+        <div class="calendar-navigation">
+            <a href="?mes={{ mes_anterior.month }}&anio={{ mes_anterior.year }}" class="calendar-nav-btn">
+                <i class="fas fa-chevron-left"></i>
+                <span>{% trans "Anterior" %}</span>
+            </a>
+            <h2 class="calendar-month-title">{{ mes_nombre|upper }} {{ anio }}</h2>
+            <a href="?mes={{ mes_siguiente.month }}&anio={{ mes_siguiente.year }}" class="calendar-nav-btn">
+                <span>{% trans "Siguiente" %}</span>
+                <i class="fas fa-chevron-right"></i>
+            </a>
         </div>
-        <div class="marcador">
-            <span class="estado-badge estado-{{ partido.estado }}">{{ partido.get_estado_display }}</span>
-            <p class="fecha-partido">{{ partido.fecha|date:"d/m/Y H:i" }}</p>
-            {% if partido.estadio %}
-            <p class="fecha-partido">{{ partido.estadio }}</p>
-            {% endif %}
-        </div>
-        <div class="equipo">
-            <p class="equipo-nombre">{{ partido.equipo_visitante.nombre }}</p>
-        </div>
-    </div>
-    {% empty %}
-    <p>{% trans "No hay partidos programados próximamente." %}</p>
-    {% endfor %}
 
-    <h2 class="section-title" style="margin-top: 3rem;">{% trans "Partidos Pasados" %}</h2>
-    {% for partido in partidos_pasados %}
-    <div class="partido-card">
-        <div class="equipo">
-            <p class="equipo-nombre">{{ partido.equipo_local.nombre }}</p>
+        {# Grid del calendario #}
+        <div class="calendar-grid">
+            {# Encabezados de días de la semana #}
+            <div class="calendar-header">
+                <div class="calendar-day-name">{% trans "DOM" %}</div>
+                <div class="calendar-day-name">{% trans "LUN" %}</div>
+                <div class="calendar-day-name">{% trans "MAR" %}</div>
+                <div class="calendar-day-name">{% trans "MIÉ" %}</div>
+                <div class="calendar-day-name">{% trans "JUE" %}</div>
+                <div class="calendar-day-name">{% trans "VIE" %}</div>
+                <div class="calendar-day-name">{% trans "SÁB" %}</div>
+            </div>
+
+            {# Días del mes #}
+            <div class="calendar-days">
+                {% for semana in calendario %}
+                    {% for dia in semana %}
+                        {% if dia == 0 %}
+                            <div class="calendar-day calendar-day-empty"></div>
+                        {% else %}
+                            <div class="calendar-day {% if dia == hoy.day and mes == hoy.month and anio == hoy.year %}calendar-day-today{% endif %}">
+                                <div class="calendar-day-number">{{ dia }}</div>
+                                
+                                {# Partidos del día #}
+                                {% if dia in partidos_por_dia %}
+                                    <div class="calendar-day-games">
+                                        {% for partido in partidos_por_dia|get_item:dia %}
+                                            <div class="calendar-game">
+                                                <div class="calendar-game-teams">
+                                                    <div class="calendar-team">
+                                                        {% if partido.equipo_local.logo %}
+                                                            <img src="{{ partido.equipo_local.logo.url }}" alt="{{ partido.equipo_local.nombre }}" class="calendar-team-logo">
+                                                        {% else %}
+                                                            <div class="calendar-team-logo-placeholder">
+                                                                {{ partido.equipo_local.nombre|slice:":3"|upper }}
+                                                            </div>
+                                                        {% endif %}
+                                                    </div>
+                                                    <span class="calendar-vs">vs</span>
+                                                    <div class="calendar-team">
+                                                        {% if partido.equipo_visitante.logo %}
+                                                            <img src="{{ partido.equipo_visitante.logo.url }}" alt="{{ partido.equipo_visitante.nombre }}" class="calendar-team-logo">
+                                                        {% else %}
+                                                            <div class="calendar-team-logo-placeholder">
+                                                                {{ partido.equipo_visitante.nombre|slice:":3"|upper }}
+                                                            </div>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                                <div class="calendar-game-time">
+                                                    {{ partido.fecha|date:"H:i" }}
+                                                </div>
+                                                {% if partido.estado == 'en_curso' %}
+                                                    <span class="calendar-game-live">{% trans "EN VIVO" %}</span>
+                                                {% endif %}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            </div>
         </div>
-        <div class="marcador">
-            {% if partido.estado == 'finalizado' %}
-            {{ partido.carreras_local }} - {{ partido.carreras_visitante }}
-            {% else %}
-            <span class="estado-badge estado-{{ partido.estado }}">{{ partido.get_estado_display }}</span>
-            {% endif %}
-            <p class="fecha-partido">{{ partido.fecha|date:"d/m/Y" }}</p>
-        </div>
-        <div class="equipo">
-            <p class="equipo-nombre">{{ partido.equipo_visitante.nombre }}</p>
+
+        {# Leyenda #}
+        <div class="calendar-legend">
+            <div class="calendar-legend-item">
+                <div class="calendar-legend-box calendar-legend-today"></div>
+                <span>{% trans "Hoy" %}</span>
+            </div>
+            <div class="calendar-legend-item">
+                <div class="calendar-legend-box calendar-legend-game"></div>
+                <span>{% trans "Partido programado" %}</span>
+            </div>
+            <div class="calendar-legend-item">
+                <span class="calendar-game-live" style="position: static; margin: 0;">{% trans "EN VIVO" %}</span>
+                <span>{% trans "Partido en curso" %}</span>
+            </div>
         </div>
     </div>
-    {% empty %}
-    <p>{% trans "No hay partidos pasados registrados." %}</p>
-    {% endfor %}
-</div>
+</section>
+
 {% endblock %}

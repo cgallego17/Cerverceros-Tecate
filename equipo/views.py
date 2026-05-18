@@ -143,16 +143,47 @@ def jugador_detalle(request, pk):
 
 
 def calendario(request):
-    partidos_futuros = Partido.objects.filter(
-        fecha__gte=timezone.now()
-    ).order_by('fecha')
-    partidos_pasados = Partido.objects.filter(
-        fecha__lt=timezone.now()
-    ).order_by('-fecha')
+    from datetime import datetime, timedelta
+    from collections import defaultdict
+    import calendar as cal
+    
+    # Obtener mes y año actual o de parámetros
+    now = timezone.now()
+    mes = int(request.GET.get('mes', now.month))
+    anio = int(request.GET.get('anio', now.year))
+    
+    # Calcular mes anterior y siguiente
+    fecha_actual = datetime(anio, mes, 1)
+    mes_anterior = (fecha_actual - timedelta(days=1))
+    mes_siguiente = (fecha_actual + timedelta(days=32)).replace(day=1)
+    
+    # Obtener todos los partidos del mes
+    primer_dia = datetime(anio, mes, 1)
+    ultimo_dia = datetime(anio, mes, cal.monthrange(anio, mes)[1], 23, 59, 59)
+    
+    partidos_mes = Partido.objects.filter(
+        fecha__gte=primer_dia,
+        fecha__lte=ultimo_dia
+    ).select_related('equipo_local', 'equipo_visitante').order_by('fecha')
+    
+    # Organizar partidos por día
+    partidos_por_dia = defaultdict(list)
+    for partido in partidos_mes:
+        dia = partido.fecha.day
+        partidos_por_dia[dia].append(partido)
+    
+    # Generar estructura del calendario
+    cal_obj = cal.monthcalendar(anio, mes)
     
     context = {
-        'partidos_futuros': partidos_futuros,
-        'partidos_pasados': partidos_pasados,
+        'mes': mes,
+        'anio': anio,
+        'mes_nombre': cal.month_name[mes],
+        'calendario': cal_obj,
+        'partidos_por_dia': dict(partidos_por_dia),
+        'mes_anterior': mes_anterior,
+        'mes_siguiente': mes_siguiente,
+        'hoy': now.date(),
     }
     return render(request, 'equipo/calendario.html', context)
 
