@@ -147,19 +147,47 @@ def calendario(request):
     from collections import defaultdict
     import calendar as cal
     
+    # Nombres de meses en español
+    meses_es = {
+        1: 'Enero', 2: 'Febrero', 3: 'Marzo', 4: 'Abril',
+        5: 'Mayo', 6: 'Junio', 7: 'Julio', 8: 'Agosto',
+        9: 'Septiembre', 10: 'Octubre', 11: 'Noviembre', 12: 'Diciembre'
+    }
+    
     # Obtener mes y año actual o de parámetros
     now = timezone.now()
-    mes = int(request.GET.get('mes', now.month))
-    anio = int(request.GET.get('anio', now.year))
+    try:
+        mes = int(request.GET.get('mes', now.month))
+        anio = int(request.GET.get('anio', now.year))
+    except (ValueError, TypeError):
+        mes = now.month
+        anio = now.year
+    
+    # Validar mes
+    if mes < 1 or mes > 12:
+        mes = now.month
     
     # Calcular mes anterior y siguiente
-    fecha_actual = datetime(anio, mes, 1)
-    mes_anterior = (fecha_actual - timedelta(days=1))
-    mes_siguiente = (fecha_actual + timedelta(days=32)).replace(day=1)
+    if mes == 1:
+        mes_anterior_num = 12
+        anio_anterior = anio - 1
+    else:
+        mes_anterior_num = mes - 1
+        anio_anterior = anio
+    
+    if mes == 12:
+        mes_siguiente_num = 1
+        anio_siguiente = anio + 1
+    else:
+        mes_siguiente_num = mes + 1
+        anio_siguiente = anio
     
     # Obtener todos los partidos del mes
-    primer_dia = datetime(anio, mes, 1)
-    ultimo_dia = datetime(anio, mes, cal.monthrange(anio, mes)[1], 23, 59, 59)
+    primer_dia = timezone.make_aware(datetime(anio, mes, 1))
+    ultimo_dia_num = cal.monthrange(anio, mes)[1]
+    ultimo_dia = timezone.make_aware(
+        datetime(anio, mes, ultimo_dia_num, 23, 59, 59)
+    )
     
     partidos_mes = Partido.objects.filter(
         fecha__gte=primer_dia,
@@ -178,11 +206,11 @@ def calendario(request):
     context = {
         'mes': mes,
         'anio': anio,
-        'mes_nombre': cal.month_name[mes],
+        'mes_nombre': meses_es[mes],
         'calendario': cal_obj,
         'partidos_por_dia': dict(partidos_por_dia),
-        'mes_anterior': mes_anterior,
-        'mes_siguiente': mes_siguiente,
+        'mes_anterior': {'month': mes_anterior_num, 'year': anio_anterior},
+        'mes_siguiente': {'month': mes_siguiente_num, 'year': anio_siguiente},
         'hoy': now.date(),
     }
     return render(request, 'equipo/calendario.html', context)
