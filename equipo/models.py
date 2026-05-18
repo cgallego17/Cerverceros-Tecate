@@ -496,3 +496,38 @@ class Ciudad(models.Model):
     def nombre_completo(self):
         """Retorna nombre completo con estado y país"""
         return f"{self.nombre}, {self.estado.nombre}, {self.estado.pais.nombre}"
+
+
+# ──────────────────────────────────────────────
+#  HOME – PRÓXIMO JUEGO DESTACADO
+# ──────────────────────────────────────────────
+
+class ProximoJuegoDestacado(models.Model):
+    """Sección de próximo juego destacado en la página de inicio"""
+    activo = models.BooleanField(default=True, verbose_name="Activo")
+    subtitulo = models.CharField(max_length=200, default="LO QUE ESTÁ EN TENDENCIA", verbose_name="Subtítulo")
+    titulo = models.CharField(max_length=200, default="PRÓXIMO JUEGO", verbose_name="Título")
+    partido = models.ForeignKey(Partido, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Partido")
+    texto_personalizado = models.CharField(max_length=300, blank=True, verbose_name="Texto personalizado", help_text="Opcional: texto en lugar de mostrar equipos del partido")
+    imagen_fondo = models.ImageField(upload_to='proximo_juego/', blank=True, null=True, verbose_name="Imagen de fondo")
+    opacidad_overlay = models.DecimalField(
+        max_digits=3,
+        decimal_places=2,
+        default=0.70,
+        verbose_name="Opacidad del overlay",
+        help_text="0.00 = transparente, 1.00 = completamente opaco"
+    )
+    texto_boton = models.CharField(max_length=100, default="COMPRAR BOLETOS", verbose_name="Texto del botón")
+    url_boton = models.URLField(default="https://arema.mx/e/17890", verbose_name="URL del botón")
+    mostrar_countdown = models.BooleanField(default=True, verbose_name="Mostrar contador regresivo")
+    orden = models.PositiveIntegerField(default=0, verbose_name="Orden")
+    
+    class Meta:
+        verbose_name = 'Próximo Juego Destacado'
+        verbose_name_plural = 'Próximos Juegos Destacados'
+        ordering = ['-activo', 'orden']
+    
+    def __str__(self):
+        if self.partido:
+            return f"Próximo Juego: {self.partido.equipo_local} vs {self.partido.equipo_visitante}"
+        return f"Próximo Juego: {self.titulo}"

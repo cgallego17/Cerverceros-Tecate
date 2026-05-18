@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.models import User, Group, Permission
 from django.contrib.auth.password_validation import validate_password
 from django.utils import timezone
-from .models import HeroSlide, Patrocinador, CategoriaProducto, Producto, ItemFaq, Noticia, Jugador, Transaccion, Equipo, Partido, Pais, Estado, Ciudad
+from .models import HeroSlide, Patrocinador, CategoriaProducto, Producto, ItemFaq, Noticia, Jugador, Transaccion, Equipo, Partido, Pais, Estado, Ciudad, ProximoJuegoDestacado
 
 _i = {'class': 'panel-input'}
 _ta = {'class': 'panel-textarea', 'rows': 5}
@@ -349,4 +349,32 @@ class CiudadForm(forms.ModelForm):
         widgets = {
             'estado': forms.Select(attrs=_sel),
             'nombre': forms.TextInput(attrs=_i),
+        }
+
+
+class ProximoJuegoDestacadoForm(forms.ModelForm):
+    opacidad_overlay = forms.DecimalField(
+        min_value=0.00,
+        max_value=1.00,
+        decimal_places=2,
+        widget=forms.NumberInput(attrs={**_i, 'step': '0.05', 'min': '0', 'max': '1'}),
+        label='Opacidad del overlay',
+        help_text='0.00 = transparente, 1.00 = completamente opaco'
+    )
+    
+    class Meta:
+        model = ProximoJuegoDestacado
+        fields = [
+            'activo', 'subtitulo', 'titulo', 'partido', 
+            'texto_personalizado', 'imagen_fondo', 'opacidad_overlay',
+            'texto_boton', 'url_boton', 'mostrar_countdown', 'orden'
+        ]
+        widgets = {
+            'subtitulo': forms.TextInput(attrs=_i),
+            'titulo': forms.TextInput(attrs=_i),
+            'partido': forms.Select(attrs=_sel),
+            'texto_personalizado': forms.TextInput(attrs={**_i, 'placeholder': 'Opcional: texto personalizado'}),
+            'texto_boton': forms.TextInput(attrs=_i),
+            'url_boton': forms.URLInput(attrs=_i),
+            'orden': forms.NumberInput(attrs={**_i, 'min': '0'}),
         }

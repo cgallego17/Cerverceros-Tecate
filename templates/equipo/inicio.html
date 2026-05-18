@@ -209,20 +209,26 @@
     </div>
 </section>
 
-{# ─── PRÓXIMO PARTIDO / COUNTDOWN ────────────────────────── #}
-<section class="next-match-section" {% if proximo_partido and proximo_partido.imagen_fondo %}style="background-image: url('{{ proximo_partido.imagen_fondo.url }}');"{% endif %}>
-    <div class="next-match-overlay" {% if proximo_partido and proximo_partido.opacidad_overlay %}style="background: rgba(0, 0, 0, {{ proximo_partido.opacidad_overlay }});"{% endif %}></div>
+{# ─── PRÓXIMO JUEGO DESTACADO / COUNTDOWN ────────────────────────── #}
+{% if proximo_juego_destacado %}
+<section class="next-match-section" {% if proximo_juego_destacado.imagen_fondo %}style="background-image: url('{{ proximo_juego_destacado.imagen_fondo.url }}');"{% endif %}>
+    <div class="next-match-overlay" style="background: rgba(0, 0, 0, {{ proximo_juego_destacado.opacidad_overlay }});"></div>
     <div class="container">
         <div class="next-match-content">
-            <p class="next-match-subtitle">{% trans "LO QUE ESTÁ EN TENDENCIA" %}</p>
-            <h2 class="next-match-title">{% trans "PRÓXIMO JUEGO" %}</h2>
-            {% if proximo_partido %}
+            <p class="next-match-subtitle">{{ proximo_juego_destacado.subtitulo }}</p>
+            <h2 class="next-match-title">{{ proximo_juego_destacado.titulo }}</h2>
+            {% if proximo_juego_destacado.texto_personalizado %}
             <p style="color:#fff;margin-bottom:1rem;font-size:1.1rem;">
-                {{ proximo_partido.equipo_local.nombre }} vs {{ proximo_partido.equipo_visitante.nombre }}
-                &nbsp;&middot;&nbsp; {{ proximo_partido.fecha|date:"d/m/Y H:i" }}
+                {{ proximo_juego_destacado.texto_personalizado }}
+            </p>
+            {% elif proximo_juego_destacado.partido %}
+            <p style="color:#fff;margin-bottom:1rem;font-size:1.1rem;">
+                {{ proximo_juego_destacado.partido.equipo_local.nombre }} vs {{ proximo_juego_destacado.partido.equipo_visitante.nombre }}
+                &nbsp;&middot;&nbsp; {{ proximo_juego_destacado.partido.fecha|date:"d/m/Y H:i" }}
             </p>
             {% endif %}
-            <div class="countdown-timer" {% if proximo_partido %}data-fecha="{{ proximo_partido.fecha|date:'c' }}"{% endif %}>
+            {% if proximo_juego_destacado.mostrar_countdown and proximo_juego_destacado.partido %}
+            <div class="countdown-timer" data-fecha="{{ proximo_juego_destacado.partido.fecha|date:'c' }}">
                 <div class="countdown-item">
                     <span class="countdown-number" id="days">00</span>
                     <span class="countdown-label">{% trans "DÍA" %}</span>
@@ -240,10 +246,12 @@
                     <span class="countdown-label">{% trans "SEGUNDO" %}</span>
                 </div>
             </div>
-            <a href="https://arema.mx/e/17890" class="btn-next-match" target="_blank" rel="noopener noreferrer">{% trans "COMPRAR BOLETOS" %}</a>
+            {% endif %}
+            <a href="{{ proximo_juego_destacado.url_boton }}" class="btn-next-match" target="_blank" rel="noopener noreferrer">{{ proximo_juego_destacado.texto_boton }}</a>
         </div>
     </div>
 </section>
+{% endif %}
 
 {# ─── JUGADOR DESTACADO ──────────────────────────────────── #}
 {% if jugador_destacado %}
