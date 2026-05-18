@@ -66,7 +66,18 @@
                                     {% if key == dia %}
                                         <div class="calendar-day-games">
                                             {% for p in partidos %}
-                                                <div class="calendar-game {% if p.estado == 'finalizado' %}calendar-game-finished{% endif %}">
+                                                <div class="calendar-game {% if p.estado == 'finalizado' %}calendar-game-finished{% endif %}" 
+                                                     onclick="openGameModal(this)"
+                                                     data-local="{{ p.equipo_local.nombre }}"
+                                                     data-visitante="{{ p.equipo_visitante.nombre }}"
+                                                     data-local-logo="{% if p.equipo_local.logo %}{{ p.equipo_local.logo.url }}{% endif %}"
+                                                     data-visitante-logo="{% if p.equipo_visitante.logo %}{{ p.equipo_visitante.logo.url }}{% endif %}"
+                                                     data-fecha="{{ p.fecha|date:'d/m/Y H:i' }}"
+                                                     data-estadio="{{ p.estadio|default:'' }}"
+                                                     data-estado="{{ p.get_estado_display }}"
+                                                     data-carreras-local="{{ p.carreras_local|default:'0' }}"
+                                                     data-carreras-visitante="{{ p.carreras_visitante|default:'0' }}"
+                                                     style="cursor: pointer;">
                                                     <div class="calendar-game-teams">
                                                         <div class="calendar-team">
                                                             {% if p.equipo_local.logo %}
@@ -133,5 +144,49 @@
         </div>
     </div>
 </section>
+
+{# ─── MODAL DE DETALLES DEL PARTIDO ──────────────────────── #}
+<div id="gameModal" class="game-modal">
+    <div class="game-modal-overlay" onclick="closeGameModal()"></div>
+    <div class="game-modal-content">
+        <button class="game-modal-close" onclick="closeGameModal()">
+            <i class="fas fa-times"></i>
+        </button>
+        
+        <div class="game-modal-header">
+            <h2 class="game-modal-title">Detalles del Partido</h2>
+            <span class="game-modal-status" id="modalStatus"></span>
+        </div>
+        
+        <div class="game-modal-body">
+            <div class="game-modal-teams">
+                <div class="game-modal-team">
+                    <div class="game-modal-team-logo" id="modalLocalLogo"></div>
+                    <h3 class="game-modal-team-name" id="modalLocalName"></h3>
+                    <div class="game-modal-team-score" id="modalLocalScore"></div>
+                </div>
+                
+                <div class="game-modal-vs">VS</div>
+                
+                <div class="game-modal-team">
+                    <div class="game-modal-team-logo" id="modalVisitanteLogo"></div>
+                    <h3 class="game-modal-team-name" id="modalVisitanteName"></h3>
+                    <div class="game-modal-team-score" id="modalVisitanteScore"></div>
+                </div>
+            </div>
+            
+            <div class="game-modal-info">
+                <div class="game-modal-info-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span id="modalFecha"></span>
+                </div>
+                <div class="game-modal-info-item" id="modalEstadioContainer">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span id="modalEstadio"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock %}

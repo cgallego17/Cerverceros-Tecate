@@ -431,6 +431,74 @@
                 });
             });
         });
+
+        // Game Modal functionality
+        function openGameModal(element) {
+            const modal = document.getElementById('gameModal');
+            
+            // Obtener datos del partido
+            const localName = element.getAttribute('data-local');
+            const visitanteName = element.getAttribute('data-visitante');
+            const localLogo = element.getAttribute('data-local-logo');
+            const visitanteLogo = element.getAttribute('data-visitante-logo');
+            const fecha = element.getAttribute('data-fecha');
+            const estadio = element.getAttribute('data-estadio');
+            const estado = element.getAttribute('data-estado');
+            const carrerasLocal = element.getAttribute('data-carreras-local');
+            const carrerasVisitante = element.getAttribute('data-carreras-visitante');
+            
+            // Actualizar contenido del modal
+            document.getElementById('modalLocalName').textContent = localName;
+            document.getElementById('modalVisitanteName').textContent = visitanteName;
+            document.getElementById('modalFecha').textContent = fecha;
+            document.getElementById('modalStatus').textContent = estado;
+            
+            // Logos
+            const modalLocalLogo = document.getElementById('modalLocalLogo');
+            const modalVisitanteLogo = document.getElementById('modalVisitanteLogo');
+            
+            if (localLogo) {
+                modalLocalLogo.innerHTML = `<img src="${localLogo}" alt="${localName}">`;
+            } else {
+                modalLocalLogo.innerHTML = `<div class="modal-logo-placeholder">${localName.substring(0, 3).toUpperCase()}</div>`;
+            }
+            
+            if (visitanteLogo) {
+                modalVisitanteLogo.innerHTML = `<img src="${visitanteLogo}" alt="${visitanteName}">`;
+            } else {
+                modalVisitanteLogo.innerHTML = `<div class="modal-logo-placeholder">${visitanteName.substring(0, 3).toUpperCase()}</div>`;
+            }
+            
+            // Marcadores
+            document.getElementById('modalLocalScore').textContent = carrerasLocal;
+            document.getElementById('modalVisitanteScore').textContent = carrerasVisitante;
+            
+            // Estadio
+            const estadioContainer = document.getElementById('modalEstadioContainer');
+            if (estadio) {
+                document.getElementById('modalEstadio').textContent = estadio;
+                estadioContainer.style.display = 'flex';
+            } else {
+                estadioContainer.style.display = 'none';
+            }
+            
+            // Mostrar modal
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeGameModal() {
+            const modal = document.getElementById('gameModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Cerrar modal con tecla ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeGameModal();
+            }
+        });
     </script>
 </body>
 </html>
