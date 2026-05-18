@@ -308,6 +308,61 @@
             storeProductsContainer.style.transform = `translateX(${translateX}px)`;
         }
 
+        // Roster carousel functionality
+        let rosterCurrentIndex = 0;
+        const rosterPlayersContainer = document.getElementById('rosterPlayers');
+        
+        function moveRosterCarousel(direction) {
+            if (!rosterPlayersContainer) return;
+            
+            const players = rosterPlayersContainer.querySelectorAll('.roster-player-card:not([style*="display: none"])');
+            if (players.length === 0) return;
+            
+            const playerWidth = players[0].offsetWidth;
+            const gap = 32;
+            const moveAmount = playerWidth + gap;
+            
+            rosterCurrentIndex += direction;
+            
+            const maxIndex = Math.max(0, players.length - 4);
+            if (rosterCurrentIndex < 0) {
+                rosterCurrentIndex = 0;
+            } else if (rosterCurrentIndex > maxIndex) {
+                rosterCurrentIndex = maxIndex;
+            }
+            
+            const translateX = -(rosterCurrentIndex * moveAmount);
+            rosterPlayersContainer.style.transform = `translateX(${translateX}px)`;
+        }
+
+        // Roster tabs functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const rosterTabs = document.querySelectorAll('.roster-tab');
+            const playerCards = document.querySelectorAll('.roster-player-card');
+            
+            rosterTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const position = this.getAttribute('data-position');
+                    
+                    rosterTabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    rosterCurrentIndex = 0;
+                    if (rosterPlayersContainer) {
+                        rosterPlayersContainer.style.transform = 'translateX(0)';
+                    }
+                    
+                    playerCards.forEach(card => {
+                        if (position === 'all' || card.getAttribute('data-position') === position) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        });
+
         // Accordion functionality
         document.addEventListener('DOMContentLoaded', function() {
             const accordionHeaders = document.querySelectorAll('.accordion-header');

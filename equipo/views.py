@@ -57,6 +57,9 @@ def inicio(request):
     # Overlay de Calendario
     calendario_overlay = CalendarioOverlay.objects.filter(activo=True).first()
 
+    # Jugadores para Roster
+    jugadores_roster = Jugador.objects.filter(activo=True).select_related('pais', 'estado', 'ciudad').order_by('posicion', 'numero')
+
     context = {
         'hero_slides': hero_slides,
         'patrocinadores': patrocinadores,
@@ -74,6 +77,7 @@ def inicio(request):
         'imagenes_instagram': imagenes_instagram,
         'proximo_juego_destacado': proximo_juego_destacado,
         'calendario_overlay': calendario_overlay,
+        'jugadores_roster': jugadores_roster,
     }
     return render(request, 'equipo/inicio.html', context)
 
