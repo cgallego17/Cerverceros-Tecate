@@ -340,6 +340,9 @@
             const rosterTabs = document.querySelectorAll('.roster-tab');
             const playerCards = document.querySelectorAll('.roster-player-card');
             
+            const infieldPositions = ['1B', '2B', '3B', 'SS'];
+            const outfieldPositions = ['LF', 'CF', 'RF'];
+            
             rosterTabs.forEach(tab => {
                 tab.addEventListener('click', function() {
                     const position = this.getAttribute('data-position');
@@ -353,11 +356,20 @@
                     }
                     
                     playerCards.forEach(card => {
-                        if (position === 'all' || card.getAttribute('data-position') === position) {
-                            card.style.display = 'block';
+                        const cardPosition = card.getAttribute('data-position');
+                        let shouldShow = false;
+                        
+                        if (position === 'all') {
+                            shouldShow = true;
+                        } else if (position === 'infield') {
+                            shouldShow = infieldPositions.includes(cardPosition);
+                        } else if (position === 'outfield') {
+                            shouldShow = outfieldPositions.includes(cardPosition);
                         } else {
-                            card.style.display = 'none';
+                            shouldShow = cardPosition === position;
                         }
+                        
+                        card.style.display = shouldShow ? 'block' : 'none';
                     });
                 });
             });

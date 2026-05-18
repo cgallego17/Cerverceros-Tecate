@@ -260,11 +260,11 @@
         </div>
         
         <div class="roster-tabs">
-            <button class="roster-tab active" data-position="all">LANZADORES</button>
-            <button class="roster-tab" data-position="receptor">RECEPTORES</button>
+            <button class="roster-tab active" data-position="all">TODOS</button>
+            <button class="roster-tab" data-position="P">LANZADORES</button>
+            <button class="roster-tab" data-position="C">RECEPTORES</button>
             <button class="roster-tab" data-position="infield">INFIELDS</button>
             <button class="roster-tab" data-position="outfield">OUTFIELDS</button>
-            <button class="roster-tab" data-position="tecnico">CUERPO TÉCNICO</button>
         </div>
 
         <div class="roster-carousel-wrapper">
@@ -277,7 +277,6 @@
                     {% for jugador in jugadores_roster %}
                     <div class="roster-player-card" data-position="{{ jugador.posicion }}">
                         <div class="player-card-header">
-                            <img src="{{ jugador.pais.bandera.url }}" alt="{{ jugador.pais.nombre }}" class="player-flag-icon">
                             <span class="player-number">#{{ jugador.numero }}</span>
                         </div>
                         <div class="player-card-image">
@@ -289,7 +288,7 @@
                         </div>
                         <div class="player-card-info">
                             <h3 class="player-card-name">{{ jugador.nombre|upper }}</h3>
-                            <p class="player-card-location">{{ jugador.ciudad.nombre }}, {{ jugador.estado.nombre }}</p>
+                            <p class="player-card-location">{{ jugador.get_posicion_display|upper }}</p>
                         </div>
                     </div>
                     {% empty %}
