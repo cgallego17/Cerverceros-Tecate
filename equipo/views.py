@@ -4,6 +4,7 @@ from .models import (
     Jugador, Partido, Noticia, Boleto, TablaPosiciones,
     HeroSlide, Patrocinador, Producto, CategoriaProducto, ItemFaq,
     SkillProgress, ArticuloNoticia, ImagenInstagram, ProximoJuegoDestacado,
+    CalendarioOverlay,
 )
 
 
@@ -53,6 +54,9 @@ def inicio(request):
     # Próximo Juego Destacado
     proximo_juego_destacado = ProximoJuegoDestacado.objects.filter(activo=True).first()
 
+    # Overlay de Calendario
+    calendario_overlay = CalendarioOverlay.objects.filter(activo=True).first()
+
     context = {
         'hero_slides': hero_slides,
         'patrocinadores': patrocinadores,
@@ -69,6 +73,7 @@ def inicio(request):
         'articulos_news': articulos_news,
         'imagenes_instagram': imagenes_instagram,
         'proximo_juego_destacado': proximo_juego_destacado,
+        'calendario_overlay': calendario_overlay,
     }
     return render(request, 'equipo/inicio.html', context)
 

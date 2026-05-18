@@ -104,4 +104,10 @@ urlpatterns = [
     path('proximo-juego/nuevo/', panel_views.proximo_juego_form, name='proximo_juego_nuevo'),
     path('proximo-juego/<int:pk>/editar/', panel_views.proximo_juego_form, name='proximo_juego_editar'),
     path('proximo-juego/<int:pk>/eliminar/', panel_views.proximo_juego_eliminar, name='proximo_juego_eliminar'),
+
+    # Calendario Overlay
+    path('calendario-overlay/', panel_views.calendario_overlay_lista, name='calendario_overlay_lista'),
+    path('calendario-overlay/nuevo/', panel_views.calendario_overlay_form, name='calendario_overlay_nuevo'),
+    path('calendario-overlay/<int:pk>/editar/', panel_views.calendario_overlay_form, name='calendario_overlay_editar'),
+    path('calendario-overlay/<int:pk>/eliminar/', panel_views.calendario_overlay_eliminar, name='calendario_overlay_eliminar'),
 ]

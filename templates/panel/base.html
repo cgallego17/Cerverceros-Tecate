@@ -59,6 +59,11 @@
                 <span class="panel-nav-icon"><i class="fas fa-calendar-star"></i></span> Próximo Juego
             </a>
 
+            <a href="{% url 'panel:calendario_overlay_lista' %}"
+               class="panel-nav-link {% if 'calendario_overlay' in request.resolver_match.url_name %}active{% endif %}">
+                <span class="panel-nav-icon"><i class="fas fa-calendar"></i></span> Overlay Calendario
+            </a>
+
             <a href="{% url 'panel:noticias_lista' %}"
                class="panel-nav-link {% if 'noticia' in request.resolver_match.url_name %}active{% endif %}">
                 <span class="panel-nav-icon"><i class="fas fa-newspaper"></i></span> Noticias

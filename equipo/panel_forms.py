@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.models import User, Group, Permission
 from django.contrib.auth.password_validation import validate_password
 from django.utils import timezone
-from .models import HeroSlide, Patrocinador, CategoriaProducto, Producto, ItemFaq, Noticia, Jugador, Transaccion, Equipo, Partido, Pais, Estado, Ciudad, ProximoJuegoDestacado
+from .models import HeroSlide, Patrocinador, CategoriaProducto, Producto, ItemFaq, Noticia, Jugador, Transaccion, Equipo, Partido, Pais, Estado, Ciudad, ProximoJuegoDestacado, CalendarioOverlay
 
 _i = {'class': 'panel-input'}
 _ta = {'class': 'panel-textarea', 'rows': 5}
@@ -376,5 +376,16 @@ class ProximoJuegoDestacadoForm(forms.ModelForm):
             'texto_personalizado': forms.TextInput(attrs={**_i, 'placeholder': 'Opcional: texto personalizado'}),
             'texto_boton': forms.TextInput(attrs=_i),
             'url_boton': forms.URLInput(attrs=_i),
+            'orden': forms.NumberInput(attrs={**_i, 'min': '0'}),
+        }
+
+
+class CalendarioOverlayForm(forms.ModelForm):
+    class Meta:
+        model = CalendarioOverlay
+        fields = ['activo', 'titulo', 'imagen', 'url_destino', 'orden']
+        widgets = {
+            'titulo': forms.TextInput(attrs=_i),
+            'url_destino': forms.URLInput(attrs={**_i, 'placeholder': 'Opcional: URL de destino'}),
             'orden': forms.NumberInput(attrs={**_i, 'min': '0'}),
         }

@@ -531,3 +531,24 @@ class ProximoJuegoDestacado(models.Model):
         if self.partido:
             return f"Próximo Juego: {self.partido.equipo_local} vs {self.partido.equipo_visitante}"
         return f"Próximo Juego: {self.titulo}"
+
+
+# ──────────────────────────────────────────────
+#  HOME – OVERLAY DE CALENDARIO
+# ──────────────────────────────────────────────
+
+class CalendarioOverlay(models.Model):
+    """Overlay de calendario - imagen simple sin textos"""
+    activo = models.BooleanField(default=True, verbose_name="Activo")
+    titulo = models.CharField(max_length=200, default="Calendario", verbose_name="Título", help_text="Solo para identificación en el panel")
+    imagen = models.ImageField(upload_to='calendario_overlay/', verbose_name="Imagen del overlay")
+    url_destino = models.URLField(blank=True, verbose_name="URL de destino", help_text="Opcional: URL a la que redirige al hacer clic")
+    orden = models.PositiveIntegerField(default=0, verbose_name="Orden")
+    
+    class Meta:
+        verbose_name = 'Overlay de Calendario'
+        verbose_name_plural = 'Overlays de Calendario'
+        ordering = ['-activo', 'orden']
+    
+    def __str__(self):
+        return self.titulo

@@ -8,13 +8,13 @@ from django.utils import timezone
 from itertools import groupby
 from operator import attrgetter
 
-from .models import HeroSlide, Patrocinador, CategoriaProducto, Producto, ItemFaq, Noticia, Jugador, Transaccion, Equipo, Partido, Pais, Estado, Ciudad, ProximoJuegoDestacado
+from .models import HeroSlide, Patrocinador, CategoriaProducto, Producto, ItemFaq, Noticia, Jugador, Transaccion, Equipo, Partido, Pais, Estado, Ciudad, ProximoJuegoDestacado, CalendarioOverlay
 from .panel_forms import (
     HeroSlideForm, PatrocinadorForm, CategoriaProductoForm,
     ProductoForm, ItemFaqForm, NoticiaForm, JugadorForm,
     UsuarioCrearForm, UsuarioEditarForm, RolForm, TransaccionForm,
     EquipoForm, PartidoForm, PaisForm, EstadoForm, CiudadForm,
-    ProximoJuegoDestacadoForm,
+    ProximoJuegoDestacadoForm, CalendarioOverlayForm,
 )
 
 _LOGIN = '/panel/login/'
@@ -735,4 +735,43 @@ def proximo_juego_eliminar(request, pk):
         'objeto': juego,
         'back_url': 'panel:proximo_juego_lista',
         'titulo': 'Próximo Juego Destacado',
+    })
+
+
+# ── CALENDARIO OVERLAY ──────────────────────
+
+@login_required(login_url=_LOGIN)
+def calendario_overlay_lista(request):
+    if not request.user.is_staff:
+        return redirect('panel:dashboard')
+    overlays = CalendarioOverlay.objects.all().order_by('-activo', 'orden')
+    return render(request, 'panel/calendario_overlay_lista.html', {
+        'overlays': overlays,
+    })
+
+
+@login_required(login_url=_LOGIN)
+def calendario_overlay_form(request, pk=None):
+    if not request.user.is_staff:
+        return redirect('panel:dashboard')
+    return _crud_form(
+        request, CalendarioOverlayForm, 'panel/form.html', 'panel:calendario_overlay_lista', pk,
+        msg_ok='Overlay de calendario guardado.',
+        extra_ctx={'titulo': 'Overlay de Calendario', 'back_url': 'panel:calendario_overlay_lista'},
+    )
+
+
+@login_required(login_url=_LOGIN)
+def calendario_overlay_eliminar(request, pk):
+    if not request.user.is_staff:
+        return redirect('panel:dashboard')
+    overlay = get_object_or_404(CalendarioOverlay, pk=pk)
+    if request.method == 'POST':
+        overlay.delete()
+        messages.success(request, 'Overlay de calendario eliminado correctamente.')
+        return redirect('panel:calendario_overlay_lista')
+    return render(request, 'panel/confirmar_eliminar.html', {
+        'objeto': overlay,
+        'back_url': 'panel:calendario_overlay_lista',
+        'titulo': 'Overlay de Calendario',
     })
