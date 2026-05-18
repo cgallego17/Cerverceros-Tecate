@@ -58,7 +58,7 @@ def inicio(request):
     calendario_overlay = CalendarioOverlay.objects.filter(activo=True).first()
 
     # Jugadores para Roster
-    jugadores_roster = Jugador.objects.filter(activo=True).select_related('pais', 'estado', 'ciudad').order_by('posicion', 'numero')
+    jugadores_roster = Jugador.objects.filter(activo=True).order_by('posicion', 'numero')
 
     context = {
         'hero_slides': hero_slides,
