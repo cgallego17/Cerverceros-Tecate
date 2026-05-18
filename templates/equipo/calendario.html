@@ -1,5 +1,5 @@
 {% extends 'equipo/base.html' %}
-{% load static i18n calendar_filters %}
+{% load static i18n %}
 
 {% block title %}Calendario - Cerveceros de Tecate{% endblock %}
 
@@ -42,13 +42,13 @@
         <div class="calendar-grid">
             {# Encabezados de días de la semana #}
             <div class="calendar-header">
-                <div class="calendar-day-name">{% trans "DOM" %}</div>
-                <div class="calendar-day-name">{% trans "LUN" %}</div>
-                <div class="calendar-day-name">{% trans "MAR" %}</div>
-                <div class="calendar-day-name">{% trans "MIÉ" %}</div>
-                <div class="calendar-day-name">{% trans "JUE" %}</div>
-                <div class="calendar-day-name">{% trans "VIE" %}</div>
-                <div class="calendar-day-name">{% trans "SÁB" %}</div>
+                <div class="calendar-day-name">DOM</div>
+                <div class="calendar-day-name">LUN</div>
+                <div class="calendar-day-name">MAR</div>
+                <div class="calendar-day-name">MIÉ</div>
+                <div class="calendar-day-name">JUE</div>
+                <div class="calendar-day-name">VIE</div>
+                <div class="calendar-day-name">SÁB</div>
             </div>
 
             {# Días del mes #}
@@ -62,41 +62,43 @@
                                 <div class="calendar-day-number">{{ dia }}</div>
                                 
                                 {# Partidos del día #}
-                                {% if dia in partidos_por_dia %}
-                                    <div class="calendar-day-games">
-                                        {% for partido in partidos_por_dia|get_item:dia %}
-                                            <div class="calendar-game">
-                                                <div class="calendar-game-teams">
-                                                    <div class="calendar-team">
-                                                        {% if partido.equipo_local.logo %}
-                                                            <img src="{{ partido.equipo_local.logo.url }}" alt="{{ partido.equipo_local.nombre }}" class="calendar-team-logo">
-                                                        {% else %}
-                                                            <div class="calendar-team-logo-placeholder">
-                                                                {{ partido.equipo_local.nombre|slice:":3"|upper }}
-                                                            </div>
-                                                        {% endif %}
+                                {% for key, partidos in partidos_por_dia.items %}
+                                    {% if key == dia %}
+                                        <div class="calendar-day-games">
+                                            {% for p in partidos %}
+                                                <div class="calendar-game">
+                                                    <div class="calendar-game-teams">
+                                                        <div class="calendar-team">
+                                                            {% if p.equipo_local.logo %}
+                                                                <img src="{{ p.equipo_local.logo.url }}" alt="{{ p.equipo_local.nombre }}" class="calendar-team-logo">
+                                                            {% else %}
+                                                                <div class="calendar-team-logo-placeholder">
+                                                                    {{ p.equipo_local.nombre|slice:":3"|upper }}
+                                                                </div>
+                                                            {% endif %}
+                                                        </div>
+                                                        <span class="calendar-vs">vs</span>
+                                                        <div class="calendar-team">
+                                                            {% if p.equipo_visitante.logo %}
+                                                                <img src="{{ p.equipo_visitante.logo.url }}" alt="{{ p.equipo_visitante.nombre }}" class="calendar-team-logo">
+                                                            {% else %}
+                                                                <div class="calendar-team-logo-placeholder">
+                                                                    {{ p.equipo_visitante.nombre|slice:":3"|upper }}
+                                                                </div>
+                                                            {% endif %}
+                                                        </div>
                                                     </div>
-                                                    <span class="calendar-vs">vs</span>
-                                                    <div class="calendar-team">
-                                                        {% if partido.equipo_visitante.logo %}
-                                                            <img src="{{ partido.equipo_visitante.logo.url }}" alt="{{ partido.equipo_visitante.nombre }}" class="calendar-team-logo">
-                                                        {% else %}
-                                                            <div class="calendar-team-logo-placeholder">
-                                                                {{ partido.equipo_visitante.nombre|slice:":3"|upper }}
-                                                            </div>
-                                                        {% endif %}
+                                                    <div class="calendar-game-time">
+                                                        {{ p.fecha|date:"H:i" }}
                                                     </div>
+                                                    {% if p.estado == 'en_curso' %}
+                                                        <span class="calendar-game-live">EN VIVO</span>
+                                                    {% endif %}
                                                 </div>
-                                                <div class="calendar-game-time">
-                                                    {{ partido.fecha|date:"H:i" }}
-                                                </div>
-                                                {% if partido.estado == 'en_curso' %}
-                                                    <span class="calendar-game-live">{% trans "EN VIVO" %}</span>
-                                                {% endif %}
-                                            </div>
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
                             </div>
                         {% endif %}
                     {% endfor %}
@@ -108,15 +110,15 @@
         <div class="calendar-legend">
             <div class="calendar-legend-item">
                 <div class="calendar-legend-box calendar-legend-today"></div>
-                <span>{% trans "Hoy" %}</span>
+                <span>Hoy</span>
             </div>
             <div class="calendar-legend-item">
                 <div class="calendar-legend-box calendar-legend-game"></div>
-                <span>{% trans "Partido programado" %}</span>
+                <span>Partido programado</span>
             </div>
             <div class="calendar-legend-item">
-                <span class="calendar-game-live" style="position: static; margin: 0;">{% trans "EN VIVO" %}</span>
-                <span>{% trans "Partido en curso" %}</span>
+                <span class="calendar-game-live" style="position: static; margin: 0;">EN VIVO</span>
+                <span>Partido en curso</span>
             </div>
         </div>
     </div>
