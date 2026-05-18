@@ -1,15 +1,26 @@
 {% extends 'equipo/base.html' %}
-{% load i18n %}
+{% load static i18n %}
 
 {% block title %}Calendario - Cerveceros de Tecate{% endblock %}
 
 {% block content %}
-<div class="hero">
-    <div class="hero-content">
-        <h1>{% trans "Calendario de Partidos" %}</h1>
-        <p>{% trans "Todos los partidos de la temporada" %}</p>
+
+{# ─── PAGE HEADER ─────────────────────────────────────────── #}
+<section class="page-header-section">
+    <div class="page-header-overlay"></div>
+    <div class="page-header-content">
+        <div class="page-header-breadcrumb">
+            <a href="{% url 'equipo:inicio' %}">{% trans "INICIO" %}</a>
+            <span class="breadcrumb-separator">/</span>
+            <span>{% trans "CALENDARIO" %}</span>
+        </div>
+        <h1 class="page-header-title">{% trans "CALENDARIO" %}</h1>
+        <p class="page-header-description">{% trans "Todos los partidos de la temporada" %}</p>
+        <div class="page-header-decoration">
+            <i class="fas fa-calendar-alt"></i>
+        </div>
     </div>
-</div>
+</section>
 
 <div class="container">
     <h2 class="section-title">{% trans "Próximos Partidos" %}</h2>

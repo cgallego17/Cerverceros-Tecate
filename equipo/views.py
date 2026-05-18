@@ -113,9 +113,23 @@ def producto_detalle(request, pk):
 
 
 def nuestro_equipo(request):
-    jugadores = Jugador.objects.filter(activo=True)
+    jugadores = Jugador.objects.filter(activo=True).order_by('posicion', 'numero')
+    
+    # Organizar jugadores por categoría
+    pitchers = jugadores.filter(posicion='P')
+    catchers = jugadores.filter(posicion='C')
+    infielders = jugadores.filter(posicion__in=['1B', '2B', '3B', 'SS'])
+    outfielders = jugadores.filter(posicion__in=['LF', 'CF', 'RF'])
+    designated_hitters = jugadores.filter(posicion='DH')
+    
     context = {
         'jugadores': jugadores,
+        'pitchers': pitchers,
+        'catchers': catchers,
+        'infielders': infielders,
+        'outfielders': outfielders,
+        'designated_hitters': designated_hitters,
+        'total_jugadores': jugadores.count(),
     }
     return render(request, 'equipo/nuestro_equipo.html', context)
 

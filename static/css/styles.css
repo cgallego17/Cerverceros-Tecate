@@ -3293,3 +3293,558 @@ tbody tr:hover {
         font-size: 2rem;
     }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   PÁGINA DE EQUIPO (NUESTRO EQUIPO)
+   ═══════════════════════════════════════════════════════════ */
+
+/* Hero Section */
+.team-hero-section {
+    position: relative;
+    background: linear-gradient(135deg, #000 0%, #1a1a1a 100%);
+    padding: 8rem 0 6rem;
+    overflow: hidden;
+}
+
+.team-hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="40" fill="none" stroke="rgba(227,30,36,0.05)" stroke-width="2"/></svg>');
+    opacity: 0.3;
+}
+
+.team-hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.5) 100%);
+}
+
+.team-hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.team-hero-subtitle {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: #e31e24;
+    margin-bottom: 1rem;
+}
+
+.team-hero-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: clamp(3rem, 8vw, 6rem);
+    font-weight: 700;
+    letter-spacing: 5px;
+    color: #fff;
+    margin: 0 0 1.5rem 0;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.team-hero-description {
+    font-size: 1.2rem;
+    color: #ccc;
+    margin-bottom: 3rem;
+    line-height: 1.6;
+}
+
+.team-stats {
+    display: flex;
+    justify-content: center;
+    gap: 4rem;
+    flex-wrap: wrap;
+}
+
+.team-stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.team-stat-number {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: #e31e24;
+    line-height: 1;
+}
+
+.team-stat-label {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #999;
+}
+
+/* Filter Section */
+.team-filter-section {
+    background: #fff;
+    padding: 2rem 0;
+    border-bottom: 3px solid #f5f5f5;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.team-filter-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding: 0 2rem;
+}
+
+.team-filter-tab {
+    background: #f5f5f5;
+    border: 2px solid transparent;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.team-filter-tab i {
+    font-size: 1.1rem;
+}
+
+.team-filter-tab .filter-count {
+    background: #fff;
+    color: #e31e24;
+    padding: 0.25rem 0.6rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    min-width: 30px;
+    text-align: center;
+}
+
+.team-filter-tab:hover {
+    background: #fff;
+    border-color: #e31e24;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(227, 30, 36, 0.2);
+}
+
+.team-filter-tab.active {
+    background: #e31e24;
+    border-color: #e31e24;
+    color: #fff;
+}
+
+.team-filter-tab.active .filter-count {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+}
+
+/* Players Section */
+.team-players-section {
+    background: #f8f8f8;
+    padding: 4rem 0;
+    min-height: 60vh;
+}
+
+.team-players-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+    padding: 2rem 0;
+}
+
+.team-player-card {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.team-player-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(227, 30, 36, 0.2);
+}
+
+.team-player-image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 350px;
+    overflow: hidden;
+    background: linear-gradient(180deg, #1a1a1a 0%, #2a2a2a 100%);
+}
+
+.team-player-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    transition: transform 0.5s ease;
+}
+
+.team-player-card:hover .team-player-image {
+    transform: scale(1.1);
+}
+
+.team-player-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 5rem;
+    color: rgba(255, 255, 255, 0.2);
+}
+
+.team-player-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.team-player-card:hover .team-player-overlay {
+    opacity: 1;
+}
+
+.team-player-view-btn {
+    background: #e31e24;
+    color: #fff;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    transition: all 0.3s ease;
+}
+
+.team-player-view-btn:hover {
+    background: #fff;
+    color: #e31e24;
+    transform: scale(1.05);
+}
+
+.team-player-number-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: #e31e24;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.5rem;
+    font-weight: 700;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    z-index: 10;
+}
+
+.team-player-info {
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.team-player-name {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #1a1a1a;
+    margin: 0 0 0.5rem 0;
+}
+
+.team-player-position {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: #e31e24;
+    margin: 0 0 1rem 0;
+}
+
+.team-player-stats {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #f0f0f0;
+}
+
+.team-player-stats span {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.team-player-stats i {
+    color: #e31e24;
+}
+
+/* Empty State */
+.team-empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 6rem 2rem;
+    color: #999;
+}
+
+.team-empty-state i {
+    font-size: 5rem;
+    color: #ddd;
+    margin-bottom: 2rem;
+}
+
+.team-empty-state h3 {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 2rem;
+    color: #666;
+    margin: 0 0 1rem 0;
+}
+
+.team-empty-state p {
+    font-size: 1.1rem;
+    color: #999;
+}
+
+/* CTA Section */
+.team-cta-section {
+    background: linear-gradient(135deg, #e31e24 0%, #c41e1e 100%);
+    padding: 5rem 2rem;
+    text-align: center;
+}
+
+.team-cta-content {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.team-cta-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: #fff;
+    margin: 0 0 1rem 0;
+}
+
+.team-cta-description {
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 2rem;
+}
+
+.btn-cta {
+    background: #fff;
+    color: #e31e24;
+    padding: 1rem 3rem;
+    font-size: 1.1rem;
+    border: 2px solid #fff;
+}
+
+.btn-cta:hover {
+    background: transparent;
+    color: #fff;
+    border-color: #fff;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .team-hero-section {
+        padding: 5rem 0 4rem;
+    }
+    
+    .team-stats {
+        gap: 2rem;
+    }
+    
+    .team-stat-number {
+        font-size: 2.5rem;
+    }
+    
+    .team-filter-tabs {
+        gap: 0.5rem;
+    }
+    
+    .team-filter-tab {
+        padding: 0.75rem 1.5rem;
+        font-size: 0.85rem;
+    }
+    
+    .team-filter-tab span:first-of-type {
+        display: none;
+    }
+    
+    .team-players-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1.5rem;
+    }
+    
+    .team-player-image-wrapper {
+        height: 300px;
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   PAGE HEADER (Reemplazo del hero genérico)
+   ═══════════════════════════════════════════════════════════ */
+
+.page-header-section {
+    position: relative;
+    background: linear-gradient(135deg, #1a1a1a 0%, #000 100%);
+    padding: 6rem 0 4rem;
+    overflow: hidden;
+}
+
+.page-header-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(227, 30, 36, 0.03) 35px, rgba(227, 30, 36, 0.03) 70px);
+    pointer-events: none;
+}
+
+.page-header-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at top right, rgba(227, 30, 36, 0.1) 0%, transparent 50%);
+}
+
+.page-header-content {
+    position: relative;
+    z-index: 2;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    text-align: center;
+}
+
+.page-header-breadcrumb {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #999;
+    margin-bottom: 1.5rem;
+}
+
+.page-header-breadcrumb a {
+    color: #e31e24;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.page-header-breadcrumb a:hover {
+    color: #fff;
+}
+
+.breadcrumb-separator {
+    margin: 0 0.75rem;
+    color: #666;
+}
+
+.page-header-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 700;
+    letter-spacing: 5px;
+    color: #fff;
+    margin: 0 0 1rem 0;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    position: relative;
+}
+
+.page-header-title::after {
+    content: '';
+    position: absolute;
+    bottom: -0.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: #e31e24;
+}
+
+.page-header-description {
+    font-size: 1.1rem;
+    color: #ccc;
+    margin: 1.5rem 0 0 0;
+    line-height: 1.6;
+}
+
+.page-header-decoration {
+    position: absolute;
+    top: 50%;
+    right: 2rem;
+    transform: translateY(-50%);
+    font-size: 8rem;
+    color: rgba(227, 30, 36, 0.08);
+    pointer-events: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .page-header-section {
+        padding: 4rem 0 3rem;
+    }
+    
+    .page-header-breadcrumb {
+        font-size: 0.8rem;
+        margin-bottom: 1rem;
+    }
+    
+    .page-header-title::after {
+        width: 60px;
+        height: 3px;
+    }
+    
+    .page-header-description {
+        font-size: 1rem;
+    }
+    
+    .page-header-decoration {
+        font-size: 5rem;
+        right: 1rem;
+        opacity: 0.5;
+    }
+}

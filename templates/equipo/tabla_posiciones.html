@@ -1,15 +1,26 @@
 {% extends 'equipo/base.html' %}
-{% load i18n %}
+{% load static i18n %}
 
 {% block title %}Tabla de Posiciones - Cerveceros de Tecate{% endblock %}
 
 {% block content %}
-<div class="hero">
-    <div class="hero-content">
-        <h1>{% trans "Tabla de Posiciones" %}</h1>
-        <p>{% trans "Clasificación de la temporada" %}</p>
+
+{# ─── PAGE HEADER ─────────────────────────────────────────── #}
+<section class="page-header-section">
+    <div class="page-header-overlay"></div>
+    <div class="page-header-content">
+        <div class="page-header-breadcrumb">
+            <a href="{% url 'equipo:inicio' %}">{% trans "INICIO" %}</a>
+            <span class="breadcrumb-separator">/</span>
+            <span>{% trans "TABLA DE POSICIONES" %}</span>
+        </div>
+        <h1 class="page-header-title">{% trans "TABLA DE POSICIONES" %}</h1>
+        <p class="page-header-description">{% trans "Clasificación de la temporada" %}</p>
+        <div class="page-header-decoration">
+            <i class="fas fa-list-ol"></i>
+        </div>
     </div>
-</div>
+</section>
 
 <div class="container">
     <div class="table-container">

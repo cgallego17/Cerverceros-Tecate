@@ -1,15 +1,26 @@
 {% extends 'equipo/base.html' %}
-{% load i18n %}
+{% load static i18n %}
 
 {% block title %}Resultados - Cerveceros de Tecate{% endblock %}
 
 {% block content %}
-<div class="hero">
-    <div class="hero-content">
-        <h1>{% trans "Resultados" %}</h1>
-        <p>{% trans "Resultados de los partidos finalizados" %}</p>
+
+{# ─── PAGE HEADER ─────────────────────────────────────────── #}
+<section class="page-header-section">
+    <div class="page-header-overlay"></div>
+    <div class="page-header-content">
+        <div class="page-header-breadcrumb">
+            <a href="{% url 'equipo:inicio' %}">{% trans "INICIO" %}</a>
+            <span class="breadcrumb-separator">/</span>
+            <span>{% trans "RESULTADOS" %}</span>
+        </div>
+        <h1 class="page-header-title">{% trans "RESULTADOS" %}</h1>
+        <p class="page-header-description">{% trans "Resultados de los partidos finalizados" %}</p>
+        <div class="page-header-decoration">
+            <i class="fas fa-trophy"></i>
+        </div>
     </div>
-</div>
+</section>
 
 <div class="container">
     {% for partido in partidos %}

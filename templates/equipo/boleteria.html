@@ -1,15 +1,26 @@
 {% extends 'equipo/base.html' %}
-{% load i18n %}
+{% load static i18n %}
 
 {% block title %}Boletería - Cerveceros de Tecate{% endblock %}
 
 {% block content %}
-<div class="hero">
-    <div class="hero-content">
-        <h1>{% trans "Boletaría" %}</h1>
-        <p>{% trans "Compra tus boletos para los próximos partidos" %}</p>
+
+{# ─── PAGE HEADER ─────────────────────────────────────────── #}
+<section class="page-header-section">
+    <div class="page-header-overlay"></div>
+    <div class="page-header-content">
+        <div class="page-header-breadcrumb">
+            <a href="{% url 'equipo:inicio' %}">{% trans "INICIO" %}</a>
+            <span class="breadcrumb-separator">/</span>
+            <span>{% trans "BOLETERÍA" %}</span>
+        </div>
+        <h1 class="page-header-title">{% trans "BOLETERÍA" %}</h1>
+        <p class="page-header-description">{% trans "Compra tus boletos para los próximos partidos" %}</p>
+        <div class="page-header-decoration">
+            <i class="fas fa-ticket-alt"></i>
+        </div>
     </div>
-</div>
+</section>
 
 <div class="container">
 <h2 class="section-title">{% trans "Partidos Disponibles" %}</h2>
