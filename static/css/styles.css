@@ -1575,6 +1575,7 @@ tbody tr:hover {
 
 /* Official Store Section */
 .official-store-section {
+    display: none;
     position: relative;
     background: #f5f5f5;
     padding: 8rem 0;
@@ -4665,7 +4666,7 @@ tbody tr:hover {
     padding: 4rem 0;
 }
 
-.news-grid {
+.news-section .news-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
     gap: 2rem;
@@ -4857,7 +4858,7 @@ tbody tr:hover {
 }
 
 @media (max-width: 768px) {
-    .news-grid {
+    .news-section .news-grid {
         grid-template-columns: 1fr;
         gap: 1.5rem;
     }
