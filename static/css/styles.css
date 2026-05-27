@@ -106,7 +106,7 @@ body {
 }
 
 .language-select {
-    background: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.2);
     color: #fff;
     padding: 0.3rem 0.8rem 0.3rem 2.2rem;
@@ -118,6 +118,9 @@ body {
     background-repeat: no-repeat;
     background-position: 0.7rem center;
     background-size: 1.1rem 0.85rem;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
 }
 
 .language-select--es {
@@ -129,7 +132,7 @@ body {
 }
 
 .language-select:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255, 255, 0.2);
     border-color: #e31e24;
 }
 

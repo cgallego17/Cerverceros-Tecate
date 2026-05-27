@@ -139,30 +139,26 @@
                 <div class="footer-column">
                     <h3 class="footer-title">{% trans "PRÓXIMOS JUEGOS" %}</h3>
                     <ul class="footer-fixtures">
+                        {% for juego in footer_proximos_partidos %}
                         <li class="footer-fixture-item">
                             <div class="fixture-header">
-                                <span class="fixture-date">{% trans "Vie 15 Mayo" %}</span>
+                                <span class="fixture-date">{{ juego.fecha|date:"D d M" }}</span>
+                                {% if juego.is_home %}
                                 <span class="fixture-tag">{% trans "LOCAL" %}</span>
-                            </div>
-                            <a href="{% url 'equipo:calendario' %}" class="fixture-match">{% trans "vs. Toros de Tijuana" %}</a>
-                            <span class="fixture-venue"><i class="fas fa-map-marker-alt"></i> <span>{% trans "Estadio Cerveceros" %}</span></span>
-                        </li>
-                        <li class="footer-fixture-item">
-                            <div class="fixture-header">
-                                <span class="fixture-date">{% trans "Sáb 16 Mayo" %}</span>
-                                <span class="fixture-tag">{% trans "LOCAL" %}</span>
-                            </div>
-                            <a href="{% url 'equipo:calendario' %}" class="fixture-match">{% trans "vs. Mayos de Navojoa" %}</a>
-                            <span class="fixture-venue"><i class="fas fa-map-marker-alt"></i> <span>{% trans "Estadio Cerveceros" %}</span></span>
-                        </li>
-                        <li class="footer-fixture-item">
-                            <div class="fixture-header">
-                                <span class="fixture-date">{% trans "Dom 17 Mayo" %}</span>
+                                {% else %}
                                 <span class="fixture-tag fixture-tag--away">{% trans "VISITA" %}</span>
+                                {% endif %}
                             </div>
-                            <a href="{% url 'equipo:calendario' %}" class="fixture-match">{% trans "vs. Yaquis de Obregón" %}</a>
-                            <span class="fixture-venue"><i class="fas fa-map-marker-alt"></i> <span>{% trans "Estadio Yaquis" %}</span></span>
+                            <a href="{% url 'equipo:calendario' %}" class="fixture-match">vs. {{ juego.opponent }}</a>
+                            <span class="fixture-venue"><i class="fas fa-map-marker-alt"></i> <span>{% if juego.estadio %}{{ juego.estadio }}{% else %}{% trans "Por definir" %}{% endif %}</span></span>
                         </li>
+                        {% empty %}
+                        <li class="footer-fixture-item">
+                            <div class="fixture-header">
+                                <span class="fixture-date">{% trans "Sin próximos juegos" %}</span>
+                            </div>
+                        </li>
+                        {% endfor %}
                     </ul>
                     <a href="{% url 'equipo:calendario' %}" class="footer-fixtures-more">{% trans "Ver calendario completo →" %}</a>
                 </div>
