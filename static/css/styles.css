@@ -109,12 +109,23 @@ body {
     background: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.2);
     color: #fff;
-    padding: 0.3rem 0.8rem;
+    padding: 0.3rem 0.8rem 0.3rem 2.2rem;
     border-radius: 4px;
     font-size: 0.85rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
+    background-repeat: no-repeat;
+    background-position: 0.7rem center;
+    background-size: 1.1rem 0.85rem;
+}
+
+.language-select--es {
+    background-image: url('https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/flags/4x3/mx.svg');
+}
+
+.language-select--en {
+    background-image: url('https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/flags/4x3/us.svg');
 }
 
 .language-select:hover {
