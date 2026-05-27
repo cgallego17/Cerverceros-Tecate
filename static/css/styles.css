@@ -1094,6 +1094,8 @@ tbody tr:hover {
     width: 100%;
     overflow: hidden;
     background: #000;
+    padding: 0;
+    margin: 0;
 }
 
 .calendario-overlay-link {
@@ -2580,13 +2582,13 @@ tbody tr:hover {
     }
 
     /* News grid — 2 columns on tablets */
-    .news-grid {
+    .news-grid-section .news-grid {
         grid-template-columns: 1fr 1fr;
         grid-template-rows: auto;
     }
 
-    .news-item-dark,
-    .news-item-image {
+    .news-grid-section .news-item-dark,
+    .news-grid-section .news-item-image {
         min-height: 300px;
     }
 
@@ -2759,13 +2761,13 @@ tbody tr:hover {
     }
 
     /* News grid — 2 columns, auto rows */
-    .news-grid {
+    .news-grid-section .news-grid {
         grid-template-columns: 1fr 1fr;
         grid-template-rows: auto;
     }
 
-    .news-item-dark,
-    .news-item-image {
+    .news-grid-section .news-item-dark,
+    .news-grid-section .news-item-image {
         min-height: 280px;
     }
 
@@ -2806,55 +2808,7 @@ tbody tr:hover {
     .official-store-section {
         padding: 5rem 0;
     }
-}
 
-@media (max-width: 480px) {
-    .stats-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .card-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .feature-grid {
-        grid-template-columns: 1fr;
-    }
-
-    /* News grid — single column on very small screens */
-    .news-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .news-item-dark,
-    .news-item-image {
-        min-height: 240px;
-    }
-
-    /* Hero sponsors — compact */
-    .hero-sponsors {
-        gap: 1rem;
-        bottom: 1rem;
-    }
-
-    /* Store product — fit small screens */
-    .store-product {
-        min-width: calc(100vw - 5rem);
-    }
-
-    /* Accordion image — hide on tiny screens */
-    .accordion-image {
-        display: none;
-    }
-
-    /* Featured player image — shorter */
-    .featured-player-image img {
-        max-height: 320px;
-        object-fit: cover;
-    }
-}
-
-@media (max-width: 768px) {
     .footer-brand-bar {
         padding: 1.5rem 1.5rem;
     }
@@ -2901,13 +2855,45 @@ tbody tr:hover {
     .stats-grid {
         grid-template-columns: 1fr;
     }
-
+    
     .card-grid {
         grid-template-columns: 1fr;
     }
-
+    
     .feature-grid {
         grid-template-columns: 1fr;
+    }
+
+    /* News grid — single column on very small screens */
+    .news-grid-section .news-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .news-grid-section .news-item-dark,
+    .news-grid-section .news-item-image {
+        min-height: 240px;
+    }
+
+    /* Hero sponsors — compact */
+    .hero-sponsors {
+        gap: 1rem;
+        bottom: 1rem;
+    }
+
+    /* Store product — fit small screens */
+    .store-product {
+        min-width: calc(100vw - 5rem);
+    }
+
+    /* Accordion image — hide on tiny screens */
+    .accordion-image {
+        display: none;
+    }
+
+    /* Featured player image — shorter */
+    .featured-player-image img {
+        max-height: 320px;
+        object-fit: cover;
     }
 
     .footer-grid {
