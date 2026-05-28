@@ -13,7 +13,7 @@ django.setup()
 from equipo.models import Pais, Estado, Ciudad
 
 def poblar_mexico():
-    print("🇲🇽 Poblando México con estados y ciudades...")
+    print("Poblando México con estados y ciudades...")
     
     # Crear o obtener México
     mexico, created = Pais.objects.get_or_create(
@@ -21,9 +21,9 @@ def poblar_mexico():
         defaults={'nombre': 'México', 'activo': True}
     )
     if created:
-        print(f"✅ País creado: {mexico.nombre}")
+        print(f"Pais creado: {mexico.nombre}")
     else:
-        print(f"ℹ️  País ya existe: {mexico.nombre}")
+        print(f"Pais ya existe: {mexico.nombre}")
     
     # Estados y sus ciudades principales
     estados_ciudades = {
@@ -73,7 +73,7 @@ def poblar_mexico():
         )
         if created:
             total_estados += 1
-            print(f"  ✅ Estado creado: {nombre_estado}")
+            print(f"  Estado creado: {nombre_estado}")
         
         # Crear ciudades
         for nombre_ciudad in ciudades:
@@ -85,10 +85,10 @@ def poblar_mexico():
             if created:
                 total_ciudades += 1
     
-    print(f"\n🎉 Proceso completado:")
-    print(f"   📍 {total_estados} estados creados")
-    print(f"   🏙️  {total_ciudades} ciudades creadas")
-    print(f"\n✅ México poblado exitosamente con {Estado.objects.filter(pais=mexico).count()} estados")
+    print("\nProceso completado:")
+    print(f"   {total_estados} estados creados")
+    print(f"   {total_ciudades} ciudades creadas")
+    print(f"\nMéxico poblado exitosamente con {Estado.objects.filter(pais=mexico).count()} estados")
     print(f"   y {Ciudad.objects.filter(estado__pais=mexico).count()} ciudades en total")
 
 if __name__ == '__main__':
