@@ -1406,6 +1406,7 @@ tbody tr:hover {
 
 /* Roster Section */
 .roster-section {
+    display: none;
     background: #000;
     padding: 5rem 0;
     overflow: hidden;
