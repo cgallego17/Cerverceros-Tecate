@@ -28,66 +28,70 @@
 
             {# Tipo toggle ── #}
             <div class="panel-card">
-                <div class="tf-section-title"><i class="fas fa-arrow-right-arrow-left"></i> Tipo de transacción</div>
-                <div class="tf-tipo-btns">
-                    <label class="tf-tipo-btn tf-ingreso {% if form.tipo.value == 'ingreso' or not form.tipo.value %}active{% endif %}">
-                        <input type="radio" name="{{ form.tipo.html_name }}" value="ingreso"
-                               {% if form.tipo.value == 'ingreso' or not form.tipo.value %}checked{% endif %}>
-                        <i class="fas fa-arrow-down"></i>
-                        <span>Ingreso</span>
-                        <small>Entrada de dinero</small>
-                    </label>
-                    <label class="tf-tipo-btn tf-egreso {% if form.tipo.value == 'egreso' %}active{% endif %}">
-                        <input type="radio" name="{{ form.tipo.html_name }}" value="egreso"
-                               {% if form.tipo.value == 'egreso' %}checked{% endif %}>
-                        <i class="fas fa-arrow-up"></i>
-                        <span>Egreso</span>
-                        <small>Salida de dinero</small>
-                    </label>
+                <div class="tf-card-pad">
+                    <div class="tf-section-title"><i class="fas fa-arrow-right-arrow-left"></i> Tipo de transacción</div>
+                    <div class="tf-tipo-btns">
+                        <label class="tf-tipo-btn tf-ingreso {% if form.tipo.value == 'ingreso' or not form.tipo.value %}active{% endif %}">
+                            <input type="radio" name="{{ form.tipo.html_name }}" value="ingreso"
+                                   {% if form.tipo.value == 'ingreso' or not form.tipo.value %}checked{% endif %}>
+                            <i class="fas fa-arrow-down"></i>
+                            <span>Ingreso</span>
+                            <small>Entrada de dinero</small>
+                        </label>
+                        <label class="tf-tipo-btn tf-egreso {% if form.tipo.value == 'egreso' %}active{% endif %}">
+                            <input type="radio" name="{{ form.tipo.html_name }}" value="egreso"
+                                   {% if form.tipo.value == 'egreso' %}checked{% endif %}>
+                            <i class="fas fa-arrow-up"></i>
+                            <span>Egreso</span>
+                            <small>Salida de dinero</small>
+                        </label>
+                    </div>
+                    {% if form.tipo.errors %}
+                    <div class="panel-field-error">{{ form.tipo.errors.0 }}</div>
+                    {% endif %}
                 </div>
-                {% if form.tipo.errors %}
-                <div class="panel-field-error">{{ form.tipo.errors.0 }}</div>
-                {% endif %}
             </div>
 
             {# Concepto + Monto ── #}
             <div class="panel-card">
-                <div class="tf-section-title"><i class="fas fa-file-invoice-dollar"></i> Detalle</div>
+                <div class="tf-card-pad">
+                    <div class="tf-section-title"><i class="fas fa-file-invoice-dollar"></i> Detalle</div>
 
-                <div class="panel-form-group">
-                    <label class="panel-form-label" for="{{ form.concepto.id_for_label }}">
-                        Concepto <span style="color:var(--p-accent);">*</span>
-                    </label>
-                    {{ form.concepto }}
-                    {% if form.concepto.errors %}
-                    <div class="panel-field-error">{{ form.concepto.errors.0 }}</div>
-                    {% endif %}
-                    <div class="panel-form-help">Descripción breve de la transacción</div>
-                </div>
-
-                <div class="tf-row-2">
                     <div class="panel-form-group">
-                        <label class="panel-form-label" for="{{ form.categoria.id_for_label }}">Categoría</label>
-                        {{ form.categoria }}
-                        {% if form.categoria.errors %}
-                        <div class="panel-field-error">{{ form.categoria.errors.0 }}</div>
+                        <label class="panel-form-label" for="{{ form.concepto.id_for_label }}">
+                            Concepto <span style="color:var(--p-accent);">*</span>
+                        </label>
+                        {{ form.concepto }}
+                        {% if form.concepto.errors %}
+                        <div class="panel-field-error">{{ form.concepto.errors.0 }}</div>
+                        {% endif %}
+                        <div class="panel-form-help">Descripción breve de la transacción</div>
+                    </div>
+
+                    <div class="tf-row-2">
+                        <div class="panel-form-group">
+                            <label class="panel-form-label" for="{{ form.categoria.id_for_label }}">Categoría</label>
+                            {{ form.categoria }}
+                            {% if form.categoria.errors %}
+                            <div class="panel-field-error">{{ form.categoria.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="panel-form-group">
+                            <label class="panel-form-label" for="{{ form.metodo_pago.id_for_label }}">Método de pago</label>
+                            {{ form.metodo_pago }}
+                            {% if form.metodo_pago.errors %}
+                            <div class="panel-field-error">{{ form.metodo_pago.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="panel-form-group">
+                        <label class="panel-form-label" for="{{ form.notas.id_for_label }}">Notas (opcional)</label>
+                        {{ form.notas }}
+                        {% if form.notas.errors %}
+                        <div class="panel-field-error">{{ form.notas.errors.0 }}</div>
                         {% endif %}
                     </div>
-                    <div class="panel-form-group">
-                        <label class="panel-form-label" for="{{ form.metodo_pago.id_for_label }}">Método de pago</label>
-                        {{ form.metodo_pago }}
-                        {% if form.metodo_pago.errors %}
-                        <div class="panel-field-error">{{ form.metodo_pago.errors.0 }}</div>
-                        {% endif %}
-                    </div>
-                </div>
-
-                <div class="panel-form-group">
-                    <label class="panel-form-label" for="{{ form.notas.id_for_label }}">Notas (opcional)</label>
-                    {{ form.notas }}
-                    {% if form.notas.errors %}
-                    <div class="panel-field-error">{{ form.notas.errors.0 }}</div>
-                    {% endif %}
                 </div>
             </div>
 
@@ -98,45 +102,51 @@
 
             {# Amount ── #}
             <div class="panel-card tf-amount-card">
-                <div class="tf-section-title"><i class="fas fa-peso-sign"></i> Monto</div>
-                <div class="tf-amount-wrap">
-                    <span class="tf-currency">$</span>
-                    {{ form.monto }}
+                <div class="tf-card-pad">
+                    <div class="tf-section-title"><i class="fas fa-peso-sign"></i> Monto</div>
+                    <div class="tf-amount-wrap">
+                        <span class="tf-currency">$</span>
+                        {{ form.monto }}
+                    </div>
+                    {% if form.monto.errors %}
+                    <div class="panel-field-error" style="margin-top:.5rem;">{{ form.monto.errors.0 }}</div>
+                    {% endif %}
+                    <div id="tf-monto-preview" class="tf-amount-preview"></div>
                 </div>
-                {% if form.monto.errors %}
-                <div class="panel-field-error" style="margin-top:.5rem;">{{ form.monto.errors.0 }}</div>
-                {% endif %}
-                <div id="tf-monto-preview" class="tf-amount-preview"></div>
             </div>
 
             <div class="panel-card" id="tf-currency-card">
-                <div class="tf-section-title"><i class="fas fa-coins"></i> Moneda</div>
-                <div class="panel-form-group">
-                    <label class="panel-form-label" for="{{ form.moneda.id_for_label }}">Moneda</label>
-                    {{ form.moneda }}
-                    {% if form.moneda.errors %}
-                    <div class="panel-field-error">{{ form.moneda.errors.0 }}</div>
-                    {% endif %}
-                </div>
-                <div class="panel-form-group" id="tf-tc-group" style="margin-bottom:0;">
-                    <label class="panel-form-label" for="{{ form.tipo_cambio.id_for_label }}">Tipo de cambio (MXN por 1 USD)</label>
-                    {{ form.tipo_cambio }}
-                    {% if form.tipo_cambio.errors %}
-                    <div class="panel-field-error">{{ form.tipo_cambio.errors.0 }}</div>
-                    {% endif %}
-                    <div class="panel-form-help">Requerido si registras en USD</div>
+                <div class="tf-card-pad">
+                    <div class="tf-section-title"><i class="fas fa-coins"></i> Moneda</div>
+                    <div class="panel-form-group">
+                        <label class="panel-form-label" for="{{ form.moneda.id_for_label }}">Moneda</label>
+                        {{ form.moneda }}
+                        {% if form.moneda.errors %}
+                        <div class="panel-field-error">{{ form.moneda.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="panel-form-group" id="tf-tc-group" style="margin-bottom:0;">
+                        <label class="panel-form-label" for="{{ form.tipo_cambio.id_for_label }}">Tipo de cambio (MXN por 1 USD)</label>
+                        {{ form.tipo_cambio }}
+                        {% if form.tipo_cambio.errors %}
+                        <div class="panel-field-error">{{ form.tipo_cambio.errors.0 }}</div>
+                        {% endif %}
+                        <div class="panel-form-help">Requerido si registras en USD</div>
+                    </div>
                 </div>
             </div>
 
             {# Date ── #}
             <div class="panel-card">
-                <div class="tf-section-title"><i class="fas fa-calendar-day"></i> Fecha y hora</div>
-                <div class="panel-form-group" style="margin-bottom:0;">
-                    {{ form.fecha }}
-                    {% if form.fecha.errors %}
-                    <div class="panel-field-error">{{ form.fecha.errors.0 }}</div>
-                    {% endif %}
-                    <div class="panel-form-help">Por defecto: hora actual</div>
+                <div class="tf-card-pad">
+                    <div class="tf-section-title"><i class="fas fa-calendar-day"></i> Fecha y hora</div>
+                    <div class="panel-form-group" style="margin-bottom:0;">
+                        {{ form.fecha }}
+                        {% if form.fecha.errors %}
+                        <div class="panel-field-error">{{ form.fecha.errors.0 }}</div>
+                        {% endif %}
+                        <div class="panel-form-help">Por defecto: hora actual</div>
+                    </div>
                 </div>
             </div>
 

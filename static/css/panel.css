@@ -369,6 +369,14 @@
     box-shadow: 0 1px 3px rgba(0,0,0,0.04);
 }
 
+.tf-card-pad {
+    padding: 1.25rem;
+}
+
+@media (max-width: 580px) {
+    .tf-card-pad { padding: 1rem; }
+}
+
 .panel-card-header {
     padding: 1rem 1.25rem;
     border-bottom: 1px solid var(--p-border);
