@@ -7,6 +7,8 @@ from django.db.models import Sum, Q
 from django.utils import timezone
 from decimal import Decimal
 from django.conf import settings
+from django.http import JsonResponse
+import requests
 from itertools import groupby
 from operator import attrgetter
 
@@ -436,6 +438,23 @@ def _caja_stats():
         'mes':  _agg(Transaccion.objects.filter(fecha__date__gte=mes_inicio)),
         'total': _agg(Transaccion.objects.all()),
     }
+
+
+@login_required(login_url=_LOGIN)
+def api_tipo_cambio(request):
+    """Proxy interno para consultar la API de Frankfurter y evitar errores de CORS."""
+    if not _staff_check(request):
+        return JsonResponse({'error': 'No autorizado'}, status=403)
+        
+    date_str = request.GET.get('date', 'latest')
+    try:
+        url = f"https://api.frankfurter.app/{date_str}?from=USD&to=MXN"
+        response = requests.get(url, timeout=3)
+        if response.status_code == 200:
+            return JsonResponse(response.json())
+        return JsonResponse({'error': 'No se pudo obtener el tipo de cambio'}, status=response.status_code)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
 
 
 @login_required(login_url=_LOGIN)

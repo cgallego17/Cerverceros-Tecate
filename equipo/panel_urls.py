@@ -68,6 +68,7 @@ urlpatterns = [
     path('caja/nueva/', panel_views.transaccion_crear, name='transaccion_nueva'),
     path('caja/<int:pk>/editar/', panel_views.transaccion_editar, name='transaccion_editar'),
     path('caja/<int:pk>/eliminar/', panel_views.transaccion_eliminar, name='transaccion_eliminar'),
+    path('caja/api-tipo-cambio/', panel_views.api_tipo_cambio, name='api_tipo_cambio'),
 
     # Equipos
     path('equipos/', panel_views.equipos_lista, name='equipos_lista'),
