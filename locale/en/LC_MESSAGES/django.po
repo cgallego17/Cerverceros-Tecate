@@ -63,6 +63,10 @@ msgstr "TICKETS"
 msgid "Liga Mexicana del Pacífico · Temporada 2026"
 msgstr "Mexican Pacific League · 2026 Season"
 
+#: .\templates\equipo\base.html:89
+msgid "Orgullo del norte de México · Temporada 2026"
+msgstr "Pride of Northern Mexico · 2026 Season"
+
 # Footer brand nav
 #: .\templates\equipo\base.html:94 .\templates\equipo\base.html:124
 #: .\templates\equipo\producto_detalle.html:13
@@ -109,6 +113,40 @@ msgid ""
 msgstr ""
 "Cerveceros de Tecate is the professional baseball team from Tecate, Baja "
 "California. Pride of the region and members of the Mexican Pacific League."
+
+#: .\templates\equipo\base.html:114
+msgid "Los Cerveceros de Tecate son el equipo de béisbol profesional de la ciudad de Tecate, Baja California, en el norte de México. Orgullo de la región y representantes del deporte en la frontera."
+msgstr "Cerveceros de Tecate is the professional baseball team from Tecate, Baja California, in northern Mexico. Pride of the region and representatives of the sport on the border."
+
+# inicio.html - Sponsors placeholders
+#: .\templates\equipo\inicio.html:69
+msgid "SPONSOR 1"
+msgstr "SPONSOR 1"
+
+#: .\templates\equipo\inicio.html:70
+msgid "SPONSOR 2"
+msgstr "SPONSOR 2"
+
+#: .\templates\equipo\inicio.html:71
+msgid "SPONSOR 3"
+msgstr "SPONSOR 3"
+
+#: .\templates\equipo\inicio.html:72
+msgid "SPONSOR 4"
+msgstr "SPONSOR 4"
+
+# inicio.html - Roster
+#: .\templates\equipo\inicio.html:258
+msgid "ROSTER"
+msgstr "ROSTER"
+
+#: .\templates\equipo\inicio.html:265
+msgid "INFIELDS"
+msgstr "INFIELD"
+
+#: .\templates\equipo\inicio.html:266
+msgid "OUTFIELDS"
+msgstr "OUTFIELD"
 
 # Footer navigation
 #: .\templates\equipo\base.html:122
@@ -565,21 +603,19 @@ msgstr "PLAYERS"
 #: .\templates\equipo\nuestro_equipo.html:22
 #: .\templates\equipo\nuestro_equipo.html:42
 msgid "LANZADORES"
-msgstr ""
+msgstr "PITCHERS"
 
 #: .\templates\equipo\nuestro_equipo.html:26
 msgid "FIELDERS"
 msgstr ""
 
 #: .\templates\equipo\nuestro_equipo.html:37
-#, fuzzy
-#| msgid "VER RESULTADOS"
 msgid "TODOS"
-msgstr "VIEW RESULTS"
+msgstr "ALL"
 
 #: .\templates\equipo\nuestro_equipo.html:47
 msgid "RECEPTORES"
-msgstr ""
+msgstr "CATCHERS"
 
 #: .\templates\equipo\nuestro_equipo.html:52
 msgid "INFIELDERS"
@@ -594,10 +630,8 @@ msgid "VER PERFIL"
 msgstr "VIEW PROFILE"
 
 #: .\templates\equipo\nuestro_equipo.html:103
-#, fuzzy
-#| msgid "No hay jugadores registrados en este momento."
 msgid "No hay jugadores registrados"
-msgstr "No players registered at the moment."
+msgstr "No players registered"
 
 #: .\templates\equipo\nuestro_equipo.html:104
 msgid "Pronto agregaremos el roster completo del equipo."

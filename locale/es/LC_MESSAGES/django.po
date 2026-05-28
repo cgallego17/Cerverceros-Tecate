@@ -61,6 +61,10 @@ msgstr ""
 msgid "Liga Mexicana del Pacífico · Temporada 2026"
 msgstr ""
 
+#: .\templates\equipo\base.html:89
+msgid "Orgullo del norte de México · Temporada 2026"
+msgstr ""
+
 # Footer brand nav
 #: .\templates\equipo\base.html:94 .\templates\equipo\base.html:124
 #: .\templates\equipo\producto_detalle.html:13
@@ -104,6 +108,40 @@ msgid ""
 "Los Cerveceros de Tecate son el equipo de béisbol profesional de la ciudad "
 "de Tecate, Baja California. Orgullo de la región y miembros de la Liga "
 "Mexicana del Pacífico."
+msgstr ""
+
+#: .\templates\equipo\base.html:114
+msgid "Los Cerveceros de Tecate son el equipo de béisbol profesional de la ciudad de Tecate, Baja California, en el norte de México. Orgullo de la región y representantes del deporte en la frontera."
+msgstr ""
+
+# inicio.html - Sponsors placeholders
+#: .\templates\equipo\inicio.html:69
+msgid "SPONSOR 1"
+msgstr ""
+
+#: .\templates\equipo\inicio.html:70
+msgid "SPONSOR 2"
+msgstr ""
+
+#: .\templates\equipo\inicio.html:71
+msgid "SPONSOR 3"
+msgstr ""
+
+#: .\templates\equipo\inicio.html:72
+msgid "SPONSOR 4"
+msgstr ""
+
+# inicio.html - Roster
+#: .\templates\equipo\inicio.html:258
+msgid "ROSTER"
+msgstr ""
+
+#: .\templates\equipo\inicio.html:265
+msgid "INFIELDS"
+msgstr ""
+
+#: .\templates\equipo\inicio.html:266
+msgid "OUTFIELDS"
 msgstr ""
 
 # Footer navigation

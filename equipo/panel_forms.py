@@ -256,15 +256,30 @@ class TransaccionForm(forms.ModelForm):
 
     class Meta:
         model = Transaccion
-        fields = ['concepto', 'tipo', 'categoria', 'monto', 'metodo_pago', 'fecha', 'notas']
+        fields = ['concepto', 'tipo', 'categoria', 'monto', 'moneda', 'tipo_cambio', 'metodo_pago', 'fecha', 'notas']
         widgets = {
             'concepto':   forms.TextInput(attrs=_i),
             'tipo':       forms.Select(attrs=_sel),
             'categoria':  forms.Select(attrs=_sel),
             'monto':      forms.NumberInput(attrs={**_i, 'step': '0.01', 'min': '0.01'}),
+            'moneda':     forms.Select(attrs=_sel),
+            'tipo_cambio': forms.NumberInput(attrs={**_i, 'step': '0.000001', 'min': '0.000001'}),
             'metodo_pago': forms.Select(attrs=_sel),
             'notas':      forms.Textarea(attrs={**_ta, 'rows': 3}),
         }
+
+    def clean(self):
+        cleaned = super().clean()
+        moneda = cleaned.get('moneda')
+        tipo_cambio = cleaned.get('tipo_cambio')
+
+        if moneda == 'USD' and not tipo_cambio:
+            self.add_error('tipo_cambio', 'Requerido cuando la moneda es USD.')
+
+        if tipo_cambio is not None and tipo_cambio <= 0:
+            self.add_error('tipo_cambio', 'El tipo de cambio debe ser mayor a 0.')
+
+        return cleaned
 
 
 class EquipoForm(forms.ModelForm):

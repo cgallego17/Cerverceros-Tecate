@@ -5,6 +5,7 @@ from django.contrib.auth.models import User, Group, Permission
 from django.contrib import messages
 from django.db.models import Sum, Q
 from django.utils import timezone
+from decimal import Decimal
 from itertools import groupby
 from operator import attrgetter
 
@@ -407,13 +408,24 @@ def _caja_stats():
     hoy = timezone.now().date()
     mes_inicio = hoy.replace(day=1)
 
+    def _to_mxn(t):
+        if t.moneda == 'MXN':
+            return t.monto
+        if t.moneda == 'USD' and t.tipo_cambio:
+            return t.monto * t.tipo_cambio
+        return None
+
     def _agg(qs):
-        r = qs.aggregate(
-            ingresos=Sum('monto', filter=Q(tipo='ingreso')),
-            egresos=Sum('monto',  filter=Q(tipo='egreso')),
-        )
-        ing = r['ingresos'] or 0
-        egr = r['egresos']  or 0
+        ing = Decimal('0')
+        egr = Decimal('0')
+        for t in qs:
+            mxn = _to_mxn(t)
+            if mxn is None:
+                continue
+            if t.tipo == 'ingreso':
+                ing += mxn
+            else:
+                egr += mxn
         return {'ingresos': ing, 'egresos': egr, 'balance': ing - egr}
 
     return {

@@ -383,6 +383,10 @@ class Transaccion(models.Model):
         ('ingreso', 'Ingreso'),
         ('egreso',  'Egreso'),
     ]
+    MONEDA_CHOICES = [
+        ('MXN', 'Peso mexicano (MXN)'),
+        ('USD', 'Dólar (USD)'),
+    ]
     CATEGORIA_CHOICES = [
         ('boletos',      'Boletos'),
         ('tienda',       'Tienda'),
@@ -402,6 +406,15 @@ class Transaccion(models.Model):
     tipo          = models.CharField(max_length=10, choices=TIPO_CHOICES, verbose_name='Tipo')
     categoria     = models.CharField(max_length=20, choices=CATEGORIA_CHOICES, default='otro', verbose_name='Categoría')
     monto         = models.DecimalField(max_digits=12, decimal_places=2, verbose_name='Monto')
+    moneda        = models.CharField(max_length=3, choices=MONEDA_CHOICES, default='MXN', verbose_name='Moneda')
+    tipo_cambio   = models.DecimalField(
+        max_digits=12,
+        decimal_places=6,
+        null=True,
+        blank=True,
+        verbose_name='Tipo de cambio (MXN por 1 USD)',
+        help_text='Se usa para convertir entre MXN y USD. Ejemplo: 18.5000'
+    )
     metodo_pago   = models.CharField(max_length=20, choices=METODO_CHOICES, default='efectivo', verbose_name='Método de pago')
     fecha         = models.DateTimeField(default=timezone.now, verbose_name='Fecha')
     notas         = models.TextField(blank=True, verbose_name='Notas')
@@ -417,6 +430,34 @@ class Transaccion(models.Model):
 
     def __str__(self):
         return f"{self.get_tipo_display()} – {self.concepto} (${self.monto})"
+
+    @property
+    def moneda_display(self):
+        return self.moneda or 'MXN'
+
+    def monto_en_mxn(self):
+        if self.moneda == 'MXN':
+            return self.monto
+        if self.moneda == 'USD' and self.tipo_cambio:
+            return self.monto * self.tipo_cambio
+        return None
+
+    def monto_en_usd(self):
+        if self.moneda == 'USD':
+            return self.monto
+        if self.moneda == 'MXN' and self.tipo_cambio:
+            return self.monto / self.tipo_cambio
+        return None
+
+    @property
+    def monto_contrario(self):
+        if self.moneda == 'MXN':
+            return self.monto_en_usd()
+        return self.monto_en_mxn()
+
+    @property
+    def moneda_contraria(self):
+        return 'USD' if self.moneda == 'MXN' else 'MXN'
 
 
 class UserProfile(models.Model):

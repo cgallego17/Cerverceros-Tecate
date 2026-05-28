@@ -82,6 +82,24 @@
                     </div>
                 </div>
 
+                <div class="tf-row-2">
+                    <div class="panel-form-group">
+                        <label class="panel-form-label" for="{{ form.moneda.id_for_label }}">Moneda</label>
+                        {{ form.moneda }}
+                        {% if form.moneda.errors %}
+                        <div class="panel-field-error">{{ form.moneda.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="panel-form-group" id="tf-tc-group">
+                        <label class="panel-form-label" for="{{ form.tipo_cambio.id_for_label }}">Tipo de cambio (MXN por 1 USD)</label>
+                        {{ form.tipo_cambio }}
+                        {% if form.tipo_cambio.errors %}
+                        <div class="panel-field-error">{{ form.tipo_cambio.errors.0 }}</div>
+                        {% endif %}
+                        <div class="panel-form-help">Requerido si registras en USD</div>
+                    </div>
+                </div>
+
                 <div class="panel-form-group">
                     <label class="panel-form-label" for="{{ form.notas.id_for_label }}">Notas (opcional)</label>
                     {{ form.notas }}
@@ -134,170 +152,6 @@
     </div>
 </form>
 
-<style>
-.tf-layout {
-    display: grid;
-    grid-template-columns: 1fr 240px;
-    gap: 1.25rem;
-    align-items: start;
-}
-
-@media (max-width: 768px) {
-    .tf-layout {
-        grid-template-columns: 1fr;
-    }
-    .tf-sidebar { order: -1; }
-}
-
-.tf-section-title {
-    font-size: .8125rem;
-    font-weight: 700;
-    letter-spacing: .4px;
-    text-transform: uppercase;
-    color: var(--p-text-muted);
-    margin-bottom: 1rem;
-    padding-bottom: .625rem;
-    border-bottom: 1px solid var(--p-border);
-}
-
-.tf-section-title i { margin-right: .4rem; }
-
-/* ── Tipo buttons ── */
-.tf-tipo-btns {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: .75rem;
-}
-
-.tf-tipo-btn {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: .25rem;
-    padding: 1.25rem;
-    border-radius: 8px;
-    border: 2px solid var(--p-border);
-    background: #fafafa;
-    cursor: pointer;
-    transition: all .2s;
-    text-align: center;
-}
-
-.tf-tipo-btn input[type="radio"] { display: none; }
-
-.tf-tipo-btn i {
-    font-size: 1.5rem;
-    margin-bottom: .25rem;
-    transition: transform .2s;
-}
-
-.tf-tipo-btn span {
-    font-weight: 700;
-    font-size: .9375rem;
-    font-family: 'Bebas Neue', cursive;
-    letter-spacing: 1px;
-}
-
-.tf-tipo-btn small {
-    font-size: .7rem;
-    color: var(--p-text-muted);
-}
-
-.tf-ingreso:hover,
-.tf-ingreso.active {
-    border-color: #16a34a;
-    background: #f0fdf4;
-    color: #16a34a;
-}
-
-.tf-ingreso.active i { transform: scale(1.15); }
-
-.tf-egreso:hover,
-.tf-egreso.active {
-    border-color: var(--p-accent);
-    background: #fff5f5;
-    color: var(--p-accent);
-}
-
-.tf-egreso.active i { transform: scale(1.15); }
-
-/* ── Two-col row ── */
-.tf-row-2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-}
-
-@media (max-width: 480px) {
-    .tf-row-2 { grid-template-columns: 1fr; }
-}
-
-/* ── Amount card ── */
-.tf-amount-card { position: sticky; top: 1.25rem; }
-
-.tf-amount-wrap {
-    display: flex;
-    align-items: center;
-    border: 2px solid var(--p-border);
-    border-radius: 8px;
-    overflow: hidden;
-    transition: border-color .2s;
-    background: #fff;
-}
-
-.tf-amount-wrap:focus-within { border-color: var(--p-accent); }
-
-.tf-currency {
-    font-size: 1.375rem;
-    font-weight: 900;
-    color: var(--p-text-muted);
-    padding: 0 .75rem;
-    background: #f3f4f6;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    border-right: 2px solid var(--p-border);
-    flex-shrink: 0;
-}
-
-.tf-amount-wrap .panel-input {
-    border: none !important;
-    font-size: 1.5rem;
-    font-weight: 900;
-    font-family: 'Bebas Neue', cursive;
-    letter-spacing: 1px;
-    text-align: right;
-    padding: .75rem;
-    width: 100%;
-    background: transparent;
-}
-
-.tf-amount-wrap .panel-input:focus { box-shadow: none; }
-
-.tf-amount-preview {
-    text-align: center;
-    font-size: .8125rem;
-    color: var(--p-text-muted);
-    margin-top: .5rem;
-    min-height: 1.2em;
-    font-style: italic;
-}
-
-/* ── Submit ── */
-.tf-submit-btn {
-    width: 100%;
-    justify-content: center;
-    margin-top: .75rem;
-}
-
-.tf-cancel-btn {
-    width: 100%;
-    text-align: center;
-    display: block;
-    margin-top: .5rem;
-}
-</style>
-
 <script>
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -334,17 +188,40 @@ document.addEventListener('DOMContentLoaded', () => {
     const montoInput = document.getElementById('{{ form.monto.id_for_label }}');
     const preview    = document.getElementById('tf-monto-preview');
 
-    function formatMXN(val) {
+    const monedaSelect = document.getElementById('{{ form.moneda.id_for_label }}');
+    const tcGroup = document.getElementById('tf-tc-group');
+    const tcInput = document.getElementById('{{ form.tipo_cambio.id_for_label }}');
+
+    function updateTipoCambioVisibility() {
+        if (!monedaSelect || !tcGroup || !tcInput) return;
+        const isUsd = monedaSelect.value === 'USD';
+        tcGroup.style.display = isUsd ? '' : 'none';
+        tcInput.required = isUsd;
+    }
+
+    function formatCurrency(val) {
         const n = parseFloat(val);
         if (isNaN(n)) return '';
-        return n.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' });
+        const currency = monedaSelect && monedaSelect.value ? monedaSelect.value : 'MXN';
+        const locale = currency === 'USD' ? 'en-US' : 'es-MX';
+        return n.toLocaleString(locale, { style: 'currency', currency });
     }
 
     if (montoInput && preview) {
         montoInput.addEventListener('input', () => {
-            preview.textContent = formatMXN(montoInput.value);
+            preview.textContent = formatCurrency(montoInput.value);
         });
-        preview.textContent = formatMXN(montoInput.value);
+        preview.textContent = formatCurrency(montoInput.value);
+    }
+
+    if (monedaSelect) {
+        monedaSelect.addEventListener('change', () => {
+            updateTipoCambioVisibility();
+            if (montoInput && preview) {
+                preview.textContent = formatCurrency(montoInput.value);
+            }
+        });
+        updateTipoCambioVisibility();
     }
 
     // Pre-fill datetime-local with now if empty
