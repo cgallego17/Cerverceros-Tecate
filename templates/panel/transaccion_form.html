@@ -82,24 +82,6 @@
                     </div>
                 </div>
 
-                <div class="tf-row-2" id="tf-currency-row">
-                    <div class="panel-form-group">
-                        <label class="panel-form-label" for="{{ form.moneda.id_for_label }}">Moneda</label>
-                        {{ form.moneda }}
-                        {% if form.moneda.errors %}
-                        <div class="panel-field-error">{{ form.moneda.errors.0 }}</div>
-                        {% endif %}
-                    </div>
-                    <div class="panel-form-group" id="tf-tc-group">
-                        <label class="panel-form-label" for="{{ form.tipo_cambio.id_for_label }}">Tipo de cambio (MXN por 1 USD)</label>
-                        {{ form.tipo_cambio }}
-                        {% if form.tipo_cambio.errors %}
-                        <div class="panel-field-error">{{ form.tipo_cambio.errors.0 }}</div>
-                        {% endif %}
-                        <div class="panel-form-help">Requerido si registras en USD</div>
-                    </div>
-                </div>
-
                 <div class="panel-form-group">
                     <label class="panel-form-label" for="{{ form.notas.id_for_label }}">Notas (opcional)</label>
                     {{ form.notas }}
@@ -112,7 +94,7 @@
         </div>
 
         {# ── RIGHT: Amount + Date ── #}
-        <div class="tf-sidebar">
+        <div class="tf-sidebar tf-sidebar-stack">
 
             {# Amount ── #}
             <div class="panel-card tf-amount-card">
@@ -125,6 +107,25 @@
                 <div class="panel-field-error" style="margin-top:.5rem;">{{ form.monto.errors.0 }}</div>
                 {% endif %}
                 <div id="tf-monto-preview" class="tf-amount-preview"></div>
+            </div>
+
+            <div class="panel-card" id="tf-currency-card">
+                <div class="tf-section-title"><i class="fas fa-coins"></i> Moneda</div>
+                <div class="panel-form-group">
+                    <label class="panel-form-label" for="{{ form.moneda.id_for_label }}">Moneda</label>
+                    {{ form.moneda }}
+                    {% if form.moneda.errors %}
+                    <div class="panel-field-error">{{ form.moneda.errors.0 }}</div>
+                    {% endif %}
+                </div>
+                <div class="panel-form-group" id="tf-tc-group" style="margin-bottom:0;">
+                    <label class="panel-form-label" for="{{ form.tipo_cambio.id_for_label }}">Tipo de cambio (MXN por 1 USD)</label>
+                    {{ form.tipo_cambio }}
+                    {% if form.tipo_cambio.errors %}
+                    <div class="panel-field-error">{{ form.tipo_cambio.errors.0 }}</div>
+                    {% endif %}
+                    <div class="panel-form-help">Requerido si registras en USD</div>
+                </div>
             </div>
 
             {# Date ── #}
@@ -191,16 +192,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const monedaSelect = document.getElementById('{{ form.moneda.id_for_label }}');
     const tcGroup = document.getElementById('tf-tc-group');
     const tcInput = document.getElementById('{{ form.tipo_cambio.id_for_label }}');
-    const currencyRow = document.getElementById('tf-currency-row');
 
     function updateTipoCambioVisibility() {
         if (!monedaSelect || !tcGroup || !tcInput) return;
         const isUsd = monedaSelect.value === 'USD';
         tcGroup.style.display = isUsd ? '' : 'none';
         tcInput.required = isUsd;
-        if (currencyRow) {
-            currencyRow.classList.toggle('tf-row-single', !isUsd);
-        }
     }
 
     function formatCurrency(val) {

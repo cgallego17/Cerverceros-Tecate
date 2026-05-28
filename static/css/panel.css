@@ -774,6 +774,12 @@
     align-items: start;
 }
 
+.tf-sidebar-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
 @media (max-width: 768px) {
     .tf-layout { grid-template-columns: 1fr; }
     .tf-sidebar { order: -1; }
