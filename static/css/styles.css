@@ -2937,6 +2937,10 @@ tbody tr:hover {
         gap: 1.25rem;
     }
 
+    .footer-brand-social {
+        justify-content: center;
+    }
+
     .footer-brand-nav {
         gap: 1.25rem;
     }
