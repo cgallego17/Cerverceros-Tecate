@@ -856,11 +856,19 @@
     gap: 1rem;
 }
 
+.tf-row-2.tf-row-single {
+    grid-template-columns: 1fr;
+}
+
 @media (max-width: 480px) {
     .tf-row-2 { grid-template-columns: 1fr; }
 }
 
 .tf-amount-card { position: sticky; top: 1.25rem; }
+
+@media (max-width: 768px) {
+    .tf-amount-card { position: static; }
+}
 
 .tf-amount-wrap {
     display: flex;

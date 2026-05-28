@@ -82,7 +82,7 @@
                     </div>
                 </div>
 
-                <div class="tf-row-2">
+                <div class="tf-row-2" id="tf-currency-row">
                     <div class="panel-form-group">
                         <label class="panel-form-label" for="{{ form.moneda.id_for_label }}">Moneda</label>
                         {{ form.moneda }}
@@ -191,12 +191,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const monedaSelect = document.getElementById('{{ form.moneda.id_for_label }}');
     const tcGroup = document.getElementById('tf-tc-group');
     const tcInput = document.getElementById('{{ form.tipo_cambio.id_for_label }}');
+    const currencyRow = document.getElementById('tf-currency-row');
 
     function updateTipoCambioVisibility() {
         if (!monedaSelect || !tcGroup || !tcInput) return;
         const isUsd = monedaSelect.value === 'USD';
         tcGroup.style.display = isUsd ? '' : 'none';
         tcInput.required = isUsd;
+        if (currencyRow) {
+            currencyRow.classList.toggle('tf-row-single', !isUsd);
+        }
     }
 
     function formatCurrency(val) {
