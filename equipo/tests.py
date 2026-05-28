@@ -2,6 +2,7 @@ from django.test import TestCase, Client
 from django.urls import reverse
 from django.utils import timezone
 from datetime import timedelta
+from django.contrib.auth.models import User
 from .models import Jugador, Partido, Equipo, Noticia, Ciudad, Estado, Pais
 
 
@@ -244,3 +245,67 @@ class ModelsTestCase(TestCase):
         )
         self.assertEqual(noticia.titulo, 'Test News')
         self.assertFalse(noticia.destacada)
+
+
+class PanelCajaTransaccionFormTestCase(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(
+            username='staff',
+            password='pass12345',
+            is_staff=True,
+        )
+        self.client.force_login(self.user)
+
+    def _base_payload(self):
+        now = timezone.localtime(timezone.now()).strftime('%Y-%m-%dT%H:%M')
+        return {
+            'concepto': 'Venta boletos',
+            'tipo': 'ingreso',
+            'categoria': 'boletos',
+            'monto': '100.00',
+            'metodo_pago': 'efectivo',
+            'fecha': now,
+            'notas': 'test',
+        }
+
+    def test_guardar_transaccion_mxn_sin_tipo_cambio(self):
+        payload = self._base_payload()
+        payload.update({'moneda': 'MXN', 'tipo_cambio': ''})
+
+        url = reverse('panel:transaccion_nueva')
+        resp = self.client.post(url, payload)
+        self.assertEqual(resp.status_code, 302)
+
+        from .models import Transaccion
+
+        t = Transaccion.objects.get(concepto='Venta boletos')
+        self.assertEqual(t.moneda, 'MXN')
+        self.assertIsNone(t.tipo_cambio)
+
+    def test_guardar_transaccion_usd_con_tipo_cambio(self):
+        payload = self._base_payload()
+        payload.update({'moneda': 'USD', 'tipo_cambio': '18.500000'})
+
+        url = reverse('panel:transaccion_nueva')
+        resp = self.client.post(url, payload)
+        self.assertEqual(resp.status_code, 302)
+
+        from .models import Transaccion
+
+        t = Transaccion.objects.get(concepto='Venta boletos')
+        self.assertEqual(t.moneda, 'USD')
+        self.assertIsNotNone(t.tipo_cambio)
+
+    def test_usd_sin_tipo_cambio_muestra_error(self):
+        payload = self._base_payload()
+        payload.update({'moneda': 'USD', 'tipo_cambio': ''})
+
+        url = reverse('panel:transaccion_nueva')
+        resp = self.client.post(url, payload)
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'Requerido cuando la moneda es USD.')
+
+        from .models import Transaccion
+
+        self.assertEqual(Transaccion.objects.count(), 0)
