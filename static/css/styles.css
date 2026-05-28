@@ -1830,7 +1830,7 @@ tbody tr:hover {
 /* Features Banner Section */
 .features-banner-section {
     position: relative;
-    background-image: url('../images/baseball-action.jpg');
+    background-image: url('https://images.unsplash.com/photo-1508344928928-7137b29de216?w=1920&q=80');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
