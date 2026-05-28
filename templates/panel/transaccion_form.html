@@ -202,12 +202,36 @@ document.addEventListener('DOMContentLoaded', () => {
     const monedaSelect = document.getElementById('{{ form.moneda.id_for_label }}');
     const tcGroup = document.getElementById('tf-tc-group');
     const tcInput = document.getElementById('{{ form.tipo_cambio.id_for_label }}');
+    const fechaInput = document.querySelector('input[type="datetime-local"]');
+
+    async function fetchTipoCambio() {
+        if (!tcInput) return;
+        let dateStr = 'latest';
+        if (fechaInput && fechaInput.value) {
+            dateStr = fechaInput.value.split('T')[0];
+        }
+        try {
+            const response = await fetch(`https://api.frankfurter.app/${dateStr}?from=USD&to=MXN`);
+            if (response.ok) {
+                const data = await response.json();
+                if (data.rates && data.rates.MXN) {
+                    tcInput.value = data.rates.MXN;
+                }
+            }
+        } catch (error) {
+            console.error('Error al obtener tipo de cambio:', error);
+        }
+    }
 
     function updateTipoCambioVisibility() {
         if (!monedaSelect || !tcGroup || !tcInput) return;
         const isUsd = monedaSelect.value === 'USD';
         tcGroup.style.display = isUsd ? '' : 'none';
-        tcInput.required = isUsd;
+        tcInput.required = false; // Ya no es obligatorio porque el frontend o backend lo auto-llenan
+        
+        if (isUsd && !tcInput.value) {
+            fetchTipoCambio();
+        }
     }
 
     function formatCurrency(val) {
@@ -236,11 +260,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Pre-fill datetime-local with now if empty
-    const fechaInput = document.querySelector('input[type="datetime-local"]');
-    if (fechaInput && !fechaInput.value) {
-        const now = new Date();
-        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-        fechaInput.value = now.toISOString().slice(0, 16);
+    if (fechaInput) {
+        if (!fechaInput.value) {
+            const now = new Date();
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            fechaInput.value = now.toISOString().slice(0, 16);
+        }
+        
+        // Actualizar tipo de cambio si cambia la fecha y está en USD
+        fechaInput.addEventListener('change', () => {
+            if (monedaSelect && monedaSelect.value === 'USD') {
+                fetchTipoCambio();
+            }
+        });
     }
 });
 </script>
