@@ -1,5 +1,6 @@
 from pathlib import Path
 from decouple import config, Csv
+from decimal import Decimal
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -89,6 +90,8 @@ LANGUAGES = [
 LOCALE_PATHS = [
     BASE_DIR / 'locale',
 ]
+
+CAJA_TIPO_CAMBIO_USD_MXN = config('CAJA_TIPO_CAMBIO_USD_MXN', default='18.50', cast=Decimal)
 
 TIME_ZONE = 'America/Tijuana'
 

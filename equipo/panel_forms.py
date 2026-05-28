@@ -2,6 +2,9 @@ from django import forms
 from django.contrib.auth.models import User, Group, Permission
 from django.contrib.auth.password_validation import validate_password
 from django.utils import timezone
+from django.conf import settings
+from decimal import Decimal
+import requests
 from .models import HeroSlide, Patrocinador, CategoriaProducto, Producto, ItemFaq, Noticia, Jugador, Transaccion, Equipo, Partido, Pais, Estado, Ciudad, ProximoJuegoDestacado, CalendarioOverlay
 
 _i = {'class': 'panel-input'}
@@ -272,12 +275,33 @@ class TransaccionForm(forms.ModelForm):
         cleaned = super().clean()
         moneda = cleaned.get('moneda')
         tipo_cambio = cleaned.get('tipo_cambio')
-
-        if moneda == 'USD' and not tipo_cambio:
-            self.add_error('tipo_cambio', 'Requerido cuando la moneda es USD.')
+        fecha = cleaned.get('fecha')
 
         if tipo_cambio is not None and tipo_cambio <= 0:
             self.add_error('tipo_cambio', 'El tipo de cambio debe ser mayor a 0.')
+
+        if moneda == 'USD' and not tipo_cambio and fecha:
+            # Intentar obtener tipo de cambio histórico de Frankfurter API
+            date_str = fecha.strftime('%Y-%m-%d')
+            try:
+                url = f"https://api.frankfurter.app/{date_str}?from=USD&to=MXN"
+                response = requests.get(url, timeout=3)
+                if response.status_code == 200:
+                    data = response.json()
+                    tc = data.get('rates', {}).get('MXN')
+                    if tc:
+                        cleaned['tipo_cambio'] = Decimal(str(tc))
+                        self.instance.tipo_cambio = cleaned['tipo_cambio']
+            except Exception:
+                pass
+            
+            # Si falló la API, asignar el fallback global explícitamente 
+            # para que quede registrado el valor de ese momento en la BD
+            if cleaned.get('tipo_cambio') is None:
+                fallback = getattr(settings, 'CAJA_TIPO_CAMBIO_USD_MXN', None)
+                if fallback:
+                    cleaned['tipo_cambio'] = Decimal(str(fallback))
+                    self.instance.tipo_cambio = cleaned['tipo_cambio']
 
         return cleaned
 

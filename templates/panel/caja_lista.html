@@ -143,9 +143,10 @@
                         {% if t.tipo == 'egreso' %}−{% endif %}${{ t.monto|floatformat:2 }}
                         <span class="cj-currency">{{ t.moneda_display }}</span>
                     </div>
-                    {% if t.monto_contrario and t.tipo_cambio %}
+                    {% if t.monto_contrario %}
                     <div class="cj-amount-sub">
                         ≈ ${{ t.monto_contrario|floatformat:2 }} {{ t.moneda_contraria }}
+                        {% if t.uso_tc_global %}<span class="cj-tc-note">(TC global)</span>{% endif %}
                     </div>
                     {% endif %}
                 </td>

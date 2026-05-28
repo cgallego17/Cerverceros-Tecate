@@ -297,15 +297,17 @@ class PanelCajaTransaccionFormTestCase(TestCase):
         self.assertEqual(t.moneda, 'USD')
         self.assertIsNotNone(t.tipo_cambio)
 
-    def test_usd_sin_tipo_cambio_muestra_error(self):
+    def test_usd_sin_tipo_cambio_usa_tc_global(self):
         payload = self._base_payload()
         payload.update({'moneda': 'USD', 'tipo_cambio': ''})
 
         url = reverse('panel:transaccion_nueva')
         resp = self.client.post(url, payload)
-        self.assertEqual(resp.status_code, 200)
-        self.assertContains(resp, 'Requerido cuando la moneda es USD.')
+        self.assertEqual(resp.status_code, 302)
 
         from .models import Transaccion
 
-        self.assertEqual(Transaccion.objects.count(), 0)
+        t = Transaccion.objects.get(concepto='Venta boletos')
+        self.assertEqual(t.moneda, 'USD')
+        self.assertIsNotNone(t.tipo_cambio)
+        self.assertGreater(t.tipo_cambio, 0)

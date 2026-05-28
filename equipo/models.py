@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.utils.text import slugify
+from django.conf import settings
 
 
 class Jugador(models.Model):
@@ -435,18 +436,28 @@ class Transaccion(models.Model):
     def moneda_display(self):
         return self.moneda or 'MXN'
 
+    @property
+    def tipo_cambio_efectivo(self):
+        if self.tipo_cambio:
+            return self.tipo_cambio
+        return getattr(settings, 'CAJA_TIPO_CAMBIO_USD_MXN', None)
+
+    @property
+    def uso_tc_global(self):
+        return self.tipo_cambio is None and self.tipo_cambio_efectivo is not None
+
     def monto_en_mxn(self):
         if self.moneda == 'MXN':
             return self.monto
-        if self.moneda == 'USD' and self.tipo_cambio:
-            return self.monto * self.tipo_cambio
+        if self.moneda == 'USD' and self.tipo_cambio_efectivo:
+            return self.monto * self.tipo_cambio_efectivo
         return None
 
     def monto_en_usd(self):
         if self.moneda == 'USD':
             return self.monto
-        if self.moneda == 'MXN' and self.tipo_cambio:
-            return self.monto / self.tipo_cambio
+        if self.moneda == 'MXN' and self.tipo_cambio_efectivo:
+            return self.monto / self.tipo_cambio_efectivo
         return None
 
     @property

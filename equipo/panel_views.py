@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.db.models import Sum, Q
 from django.utils import timezone
 from decimal import Decimal
+from django.conf import settings
 from itertools import groupby
 from operator import attrgetter
 
@@ -411,8 +412,10 @@ def _caja_stats():
     def _to_mxn(t):
         if t.moneda == 'MXN':
             return t.monto
-        if t.moneda == 'USD' and t.tipo_cambio:
-            return t.monto * t.tipo_cambio
+        if t.moneda == 'USD':
+            tc = t.tipo_cambio or getattr(settings, 'CAJA_TIPO_CAMBIO_USD_MXN', None)
+            if tc:
+                return t.monto * tc
         return None
 
     def _agg(qs):

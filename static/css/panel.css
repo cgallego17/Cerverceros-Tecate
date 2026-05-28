@@ -665,6 +665,13 @@
     margin-top: .15rem;
 }
 
+.cj-tc-note {
+    font-size: .68rem;
+    font-weight: 700;
+    color: rgba(107, 114, 128, 0.85);
+    margin-left: .35rem;
+}
+
 .cj-user-cell {
     font-size: .78rem;
     color: #6b7280;
