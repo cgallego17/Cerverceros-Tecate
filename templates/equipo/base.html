@@ -112,7 +112,7 @@
                 <div class="footer-column">
                     <h3 class="footer-title">{% trans "ACERCA DEL CLUB" %}</h3>
                     <p class="footer-text">{% trans "Los Cerveceros de Tecate son el equipo de béisbol profesional de la ciudad de Tecate, Baja California, en el norte de México. Orgullo de la región y representantes del deporte en la frontera." %}</p>
-                    <div class="footer-contact" style="margin-top:.75rem;display:flex;flex-direction:column;gap:.35rem;">
+                    <div class="footer-contact">
                         <p><i class="fas fa-map-marker-alt"></i> Tecate, Baja California, México</p>
                         <p><i class="fas fa-envelope"></i> contacto@cervecerosdtecate.mx</p>
                     </div>
@@ -146,26 +146,25 @@
                                 <span class="fixture-tag fixture-tag--away">{% trans "VISITA" %}</span>
                                 {% endif %}
                             </div>
-                            <div class="fixture-logos" style="display:flex;align-items:center;gap:.5rem;margin:.25rem 0 .5rem 0;">
-                                <div class="fixture-team" style="display:flex;align-items:center;gap:.5rem;">
+                            <div class="fixture-logos">
+                                <div class="fixture-team">
                                     {% if juego.local_logo %}
-                                    <img src="{{ juego.local_logo }}" alt="{{ juego.local_nombre }}" style="width:28px;height:28px;object-fit:contain;">
+                                    <img src="{{ juego.local_logo }}" alt="{{ juego.local_nombre }}" class="fixture-team-logo">
                                     {% else %}
-                                    <div style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;background:#222;color:#fff;font-weight:700;border-radius:50%;font-size:.8rem;">{{ juego.local_nombre|slice:':1'|upper }}</div>
+                                    <div class="fixture-team-initial">{{ juego.local_nombre|slice:':1'|upper }}</div>
                                     {% endif %}
-                                    <span style="font-size:.9rem;">{{ juego.local_nombre }}</span>
+                                    <span class="fixture-team-name">{{ juego.local_nombre }}</span>
                                 </div>
-                                <span style="opacity:.7;">vs</span>
-                                <div class="fixture-team" style="display:flex;align-items:center;gap:.5rem;">
+                                <span class="fixture-logos-vs">vs</span>
+                                <div class="fixture-team">
                                     {% if juego.visitante_logo %}
-                                    <img src="{{ juego.visitante_logo }}" alt="{{ juego.visitante_nombre }}" style="width:28px;height:28px;object-fit:contain;">
+                                    <img src="{{ juego.visitante_logo }}" alt="{{ juego.visitante_nombre }}" class="fixture-team-logo">
                                     {% else %}
-                                    <div style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;background:#222;color:#fff;font-weight:700;border-radius:50%;font-size:.8rem;">{{ juego.visitante_nombre|slice:':1'|upper }}</div>
+                                    <div class="fixture-team-initial">{{ juego.visitante_nombre|slice:':1'|upper }}</div>
                                     {% endif %}
-                                    <span style="font-size:.9rem;">{{ juego.visitante_nombre }}</span>
+                                    <span class="fixture-team-name">{{ juego.visitante_nombre }}</span>
                                 </div>
                             </div>
-                            <a href="{% url 'equipo:calendario' %}" class="fixture-match">vs. {{ juego.opponent }}</a>
                             <span class="fixture-venue"><i class="fas fa-map-marker-alt"></i> <span>{% if juego.estadio %}{{ juego.estadio }}{% else %}{% trans "Por definir" %}{% endif %}</span></span>
                         </li>
                         {% empty %}

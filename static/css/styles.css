@@ -785,6 +785,60 @@ body {
     margin-bottom: 0.5rem;
 }
 
+/* Footer adjustments */
+.footer .footer-column .footer-text {
+    text-align: left;
+}
+
+.footer .footer-contact {
+    margin-top: .75rem;
+    display: flex;
+    flex-direction: column;
+    gap: .35rem;
+    text-align: left;
+}
+
+/* Footer fixtures with team logos */
+.fixture-logos {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    margin: .25rem 0 .5rem 0;
+}
+
+.fixture-team {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+
+.fixture-team-initial {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #222;
+    color: #fff;
+    font-weight: 700;
+    border-radius: 50%;
+    font-size: .8rem;
+}
+
+.fixture-team-name {
+    font-size: .9rem;
+}
+
+.fixture-logos-vs {
+    opacity: .7;
+}
+
+.fixture-team-logo {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+}
+
 .noticia-destacada::after {
     content: '⭐ DESTACADA';
     position: absolute;
