@@ -34,6 +34,10 @@ def footer_fixtures(request):
                 'is_home': is_home,
                 'opponent': opponent,
                 'estadio': (partido.estadio or '').strip(),
+                'local_nombre': local_nombre,
+                'visitante_nombre': visitante_nombre,
+                'local_logo': getattr(partido.equipo_local, 'logo_src', '') or '',
+                'visitante_logo': getattr(partido.equipo_visitante, 'logo_src', '') or '',
             }
         )
 
