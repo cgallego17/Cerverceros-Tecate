@@ -22,52 +22,36 @@
     </div>
 </section>
 
-{# ─── NOTICIAS GRID ───────────────────────────────────────── #}
-<section class="news-section">
+{# ─── NOTICIAS GRID (ARCHIVO) ────────────────────────────── #}
+<section class="news-archive-section">
     <div class="container">
-        <div class="news-grid">
+        <div class="news-archive-grid">
             {% for noticia in noticias %}
-            <article class="news-card {% if noticia.destacada %}news-card-featured{% endif %}">
-                <div class="news-card-image">
+            <article class="news-archive-card {% if noticia.destacada %}is-featured{% endif %}">
+                <a href="{% url 'equipo:noticia_detalle' noticia.pk %}" class="news-archive-media">
                     {% if noticia.imagen %}
                         <img src="{{ noticia.imagen.url }}" alt="{{ noticia.titulo }}">
                     {% else %}
-                        <div class="news-card-placeholder">
-                            <i class="fas fa-newspaper"></i>
-                        </div>
+                        <div class="news-archive-placeholder"><i class="fas fa-newspaper"></i></div>
                     {% endif %}
                     {% if noticia.destacada %}
-                        <span class="news-featured-badge">
-                            <i class="fas fa-star"></i>
-                            {% trans "DESTACADA" %}
-                        </span>
+                    <span class="news-archive-badge"><i class="fas fa-star"></i> {% trans "Destacada" %}</span>
                     {% endif %}
-                </div>
-                
-                <div class="news-card-content">
-                    <div class="news-card-meta">
-                        <span class="news-date">
-                            <i class="fas fa-calendar-alt"></i>
-                            {{ noticia.fecha_publicacion|date:"d/m/Y" }}
-                        </span>
+                </a>
+                <div class="news-archive-content">
+                    <div class="news-archive-meta">
+                        <span class="news-archive-date"><i class="fas fa-calendar-alt"></i> {{ noticia.fecha_publicacion|date:"d/m/Y" }}</span>
                         {% if noticia.autor %}
-                        <span class="news-author">
-                            <i class="fas fa-user"></i>
-                            {{ noticia.autor }}
-                        </span>
+                        <span class="news-archive-author"><i class="fas fa-user"></i> {{ noticia.autor }}</span>
                         {% endif %}
                     </div>
-                    
-                    <h3 class="news-card-title">{{ noticia.titulo }}</h3>
-                    
-                    <p class="news-card-excerpt">
-                        {{ noticia.contenido|truncatewords:25 }}
-                    </p>
-                    
-                    <a href="{% url 'equipo:noticia_detalle' noticia.pk %}" class="news-card-link">
-                        {% trans "Leer más" %}
-                        <i class="fas fa-arrow-right"></i>
-                    </a>
+                    <h3 class="news-archive-title">
+                        <a href="{% url 'equipo:noticia_detalle' noticia.pk %}">{{ noticia.titulo }}</a>
+                    </h3>
+                    <p class="news-archive-excerpt">{{ noticia.contenido|striptags|truncatewords:28 }}</p>
+                    <div class="news-archive-actions">
+                        <a href="{% url 'equipo:noticia_detalle' noticia.pk %}" class="btn btn-outline">{% trans "Leer más" %} <i class="fas fa-arrow-right"></i></a>
+                    </div>
                 </div>
             </article>
             {% empty %}
@@ -79,6 +63,6 @@
             {% endfor %}
         </div>
     </div>
-</section>
+    </section>
 
 {% endblock %}
