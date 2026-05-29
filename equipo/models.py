@@ -54,6 +54,12 @@ class Equipo(models.Model):
     def __str__(self):
         return self.nombre
 
+    @property
+    def logo_src(self):
+        if self.logo and hasattr(self.logo, 'storage') and self.logo.storage.exists(self.logo.name):
+            return self.logo.url
+        return ''
+
 
 class Partido(models.Model):
     ESTADOS = [
@@ -186,7 +192,7 @@ class HeroSlide(models.Model):
     @property
     def imagen_bg(self):
         """Returns the background URL (uploaded image takes priority)."""
-        if self.imagen:
+        if self.imagen and hasattr(self.imagen, 'storage') and self.imagen.storage.exists(self.imagen.name):
             return self.imagen.url
         return self.imagen_url or ''
 
@@ -272,6 +278,12 @@ class Producto(models.Model):
     @property
     def tiene_descuento(self):
         return self.precio_anterior is not None and self.precio_anterior > self.precio
+
+    @property
+    def imagen_src(self):
+        if self.imagen and hasattr(self.imagen, 'storage') and self.imagen.storage.exists(self.imagen.name):
+            return self.imagen.url
+        return ''
 
 
 # ──────────────────────────────────────────────
@@ -370,7 +382,7 @@ class ImagenInstagram(models.Model):
     
     @property
     def imagen_src(self):
-        if self.imagen:
+        if self.imagen and hasattr(self.imagen, 'storage') and self.imagen.storage.exists(self.imagen.name):
             return self.imagen.url
         return self.imagen_url or ''
 
