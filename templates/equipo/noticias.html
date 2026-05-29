@@ -28,9 +28,9 @@
         <div class="news-archive-grid">
             {% for noticia in noticias %}
             <article class="news-archive-card {% if noticia.destacada %}is-featured{% endif %}">
-                <a href="{% url 'equipo:noticia_detalle' noticia.pk %}" class="news-archive-media">
-                    {% if noticia.imagen %}
-                        <img src="{{ noticia.imagen.url }}" alt="{{ noticia.titulo }}">
+                <a href="{% url 'equipo:noticia_detalle' noticia.pk %}" class="news-archive-media" aria-label="{{ noticia.titulo }}">
+                    {% if noticia.imagen_src %}
+                        <img src="{{ noticia.imagen_src }}" alt="{{ noticia.titulo }}" loading="lazy">
                     {% else %}
                         <div class="news-archive-placeholder"><i class="fas fa-newspaper"></i></div>
                     {% endif %}
@@ -46,7 +46,7 @@
                         {% endif %}
                     </div>
                     <h3 class="news-archive-title">
-                        <a href="{% url 'equipo:noticia_detalle' noticia.pk %}">{{ noticia.titulo }}</a>
+                        <a href="{% url 'equipo:noticia_detalle' noticia.pk %}" aria-label="{{ noticia.titulo }}">{{ noticia.titulo }}</a>
                     </h3>
                     <p class="news-archive-excerpt">{{ noticia.contenido|striptags|truncatewords:28 }}</p>
                     <div class="news-archive-actions">
@@ -62,6 +62,27 @@
             </div>
             {% endfor %}
         </div>
+        {% if is_paginated %}
+        <nav class="news-archive-pagination" aria-label="Paginación de noticias">
+            <ul class="pagination-list">
+                {% if page_obj.has_previous %}
+                <li><a class="page-link prev" href="?page={{ page_obj.previous_page_number }}" aria-label="Anterior">«</a></li>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                    {% if num == page_obj.number %}
+                        <li><span class="page-link current" aria-current="page">{{ num }}</span></li>
+                    {% elif num >= page_obj.number|add:-2 and num <= page_obj.number|add:2 %}
+                        <li><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                <li><a class="page-link next" href="?page={{ page_obj.next_page_number }}" aria-label="Siguiente">»</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
     </div>
     </section>
 

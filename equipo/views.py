@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import (
     Jugador, Partido, Noticia, Boleto, TablaPosiciones,
     HeroSlide, Patrocinador, Producto, CategoriaProducto, ItemFaq,
@@ -242,9 +243,20 @@ def tabla_posiciones(request):
 
 def noticias(request):
     todas_noticias = Noticia.objects.all()
-    
+
+    paginator = Paginator(todas_noticias, 9)
+    page = request.GET.get('page')
+    try:
+        noticias_page = paginator.page(page)
+    except PageNotAnInteger:
+        noticias_page = paginator.page(1)
+    except EmptyPage:
+        noticias_page = paginator.page(paginator.num_pages)
+
     context = {
-        'noticias': todas_noticias,
+        'noticias': noticias_page,
+        'page_obj': noticias_page,
+        'is_paginated': noticias_page.has_other_pages(),
     }
     return render(request, 'equipo/noticias.html', context)
 

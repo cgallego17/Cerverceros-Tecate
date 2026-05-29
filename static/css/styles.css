@@ -881,21 +881,9 @@ body {
     box-shadow: 0 10px 24px rgba(0,0,0,0.12);
 }
 
-/* Featured card spans 2 columns on desktop */
+/* Grid uniforme: las destacadas NO cambian el span */
 .news-archive-card.is-featured {
-    grid-column: span 2;
-}
-
-@media (max-width: 1200px) {
-    .news-archive-card.is-featured {
-        grid-column: span 2;
-    }
-}
-
-@media (max-width: 720px) {
-    .news-archive-card.is-featured {
-        grid-column: auto;
-    }
+    grid-column: auto;
 }
 
 .news-archive-media {
@@ -922,7 +910,7 @@ body {
 }
 
 .news-archive-placeholder {
-    color: #777;
+    color: #bbb;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -951,6 +939,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: .75rem;
+    flex: 1 1 auto;
 }
 
 .news-archive-meta {
@@ -996,7 +985,7 @@ body {
 }
 
 .news-archive-actions {
-    margin-top: .5rem;
+    margin-top: auto;
 }
 
 .btn-outline {
@@ -1008,6 +997,53 @@ body {
 .btn-outline:hover {
     background: var(--black);
     color: var(--white);
+}
+
+/* Pagination for news archive */
+.news-archive-pagination {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+}
+
+.news-archive-pagination .pagination-list {
+    list-style: none;
+    display: inline-flex;
+    gap: .5rem;
+    padding: 0;
+    margin: 0;
+}
+
+.news-archive-pagination .page-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--light-gray);
+    border-radius: 6px;
+    background: #fff;
+    color: var(--black);
+    text-decoration: none;
+    font-weight: 600;
+    transition: all .2s ease;
+}
+
+.news-archive-pagination .page-link:hover {
+    border-color: var(--black);
+}
+
+.news-archive-pagination .page-link.current {
+    background: var(--black);
+    color: #fff;
+    border-color: var(--black);
+}
+
+.news-empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: #666;
+    padding: 3rem 1rem;
 }
 
 .noticia-destacada::after {

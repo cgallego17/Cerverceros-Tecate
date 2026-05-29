@@ -118,6 +118,15 @@ class Noticia(models.Model):
     def __str__(self):
         return self.titulo
 
+    @property
+    def imagen_src(self):
+        try:
+            if self.imagen and hasattr(self.imagen, 'storage') and self.imagen.storage.exists(self.imagen.name):
+                return self.imagen.url
+        except Exception:
+            return ''
+        return ''
+
 
 class Boleto(models.Model):
     TIPOS = [
