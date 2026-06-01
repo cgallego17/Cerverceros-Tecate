@@ -1,0 +1,5 @@
+=== FALTANTES EN .PO ===
+  [inicio.html]  Aún no hay noticias publicadas. Crea noticias desde el panel de administración.
+  [noticias.html]  Destacada
+
+Total: 2
