@@ -54,7 +54,7 @@ def inicio(request):
     # Imágenes de Instagram desde RSS
     imagenes_instagram = []
     if getattr(settings, 'INSTAGRAM_RSS_ENABLED', True):
-        imagenes_instagram = fetch_instagram_rss_items(getattr(settings, 'INSTAGRAM_RSS_URL', None), max_items=4)
+        imagenes_instagram = fetch_instagram_rss_items(max_items=4)
     if not imagenes_instagram:
         imagenes_instagram = ImagenInstagram.objects.filter(activo=True).order_by('orden')[:4]
 

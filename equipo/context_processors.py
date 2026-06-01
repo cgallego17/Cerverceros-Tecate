@@ -1,9 +1,9 @@
 import re
 import time
+import threading
 import urllib.request
 import xml.etree.ElementTree as ET
 import hashlib
-import os
 from pathlib import Path
 
 from django.conf import settings
@@ -14,15 +14,18 @@ from .models import Partido
 
 # ==================== CONFIGURACIÓN ====================
 RSS_URL = 'https://rss.app/feeds/hS2my7AUGemCdQkI.xml'
-RSS_CACHE_TTL = 300  # segundos
+RSS_CACHE_TTL = 120   # segundos entre refrescos del RSS
+MAX_INSTAGRAM_ITEMS = 6
 
 _rss_cache = {
     'timestamp': 0,
     'items': [],
 }
+_refresh_lock = threading.Lock()
+_refresh_thread = None
 
 
-# ==================== FUNCIONES DE DESCARGA ====================
+# ==================== DESCARGA DE IMÁGENES ====================
 
 _DOWNLOAD_HEADERS = {
     'User-Agent': (
@@ -36,20 +39,25 @@ _DOWNLOAD_HEADERS = {
 }
 
 
+def _get_instagram_dir():
+    """Directorio local donde se guardan las imágenes descargadas."""
+    static_dirs = getattr(settings, 'STATICFILES_DIRS', [])
+    base = Path(static_dirs[0]) if static_dirs else Path(settings.STATIC_ROOT)
+    d = base / 'images' / 'instagram'
+    d.mkdir(parents=True, exist_ok=True)
+    return d
+
+
 def download_instagram_image(image_url, post_url=''):
     """
-    Descarga una imagen de Instagram y la guarda localmente.
-    Usa post_url como clave de caché (estable) en lugar de image_url
-    (que es una URL de CDN con firma que cambia en cada llamada al RSS).
+    Descarga una imagen del CDN y la guarda en static/images/instagram/.
+    Usa la URL del POST (estable) como clave de caché, no la URL del CDN
+    (que cambia en cada llamada al RSS porque tiene firma con expiración).
     """
     if not image_url:
         return None
-
     try:
-        instagram_dir = Path(settings.STATIC_ROOT) / 'images' / 'instagram'
-        instagram_dir.mkdir(parents=True, exist_ok=True)
-
-        # Clave estable: URL del post (no la CDN que cambia cada vez)
+        instagram_dir = _get_instagram_dir()
         cache_key = post_url if post_url else image_url
         filename = hashlib.md5(cache_key.encode()).hexdigest() + '.jpg'
         filepath = instagram_dir / filename
@@ -64,58 +72,96 @@ def download_instagram_image(image_url, post_url=''):
         if not image_data:
             return None
 
-        with open(filepath, 'wb') as f:
-            f.write(image_data)
-
+        filepath.write_bytes(image_data)
         return f'/static/images/instagram/{filename}'
 
     except Exception:
         return None
 
 
-# ==================== FUNCIONES DE RSS ====================
+# ==================== LÓGICA RSS ====================
 
-def fetch_instagram_rss_items(rss_url=None, max_items=6):
-    if not getattr(settings, 'INSTAGRAM_RSS_ENABLED', True):
-        return []
-
-    rss_url = rss_url or getattr(settings, 'INSTAGRAM_RSS_URL', RSS_URL)
-    now = time.time()
-    if _rss_cache['items'] and now - _rss_cache['timestamp'] < RSS_CACHE_TTL:
-        return _rss_cache['items'][:max_items]
+def _do_fetch(rss_url):
+    """Descarga el RSS, procesa imágenes y actualiza el caché en memoria."""
+    global _rss_cache
 
     try:
-        with urllib.request.urlopen(rss_url, timeout=10) as response:
+        req = urllib.request.Request(rss_url, headers=_DOWNLOAD_HEADERS)
+        with urllib.request.urlopen(req, timeout=10) as response:
             xml_content = response.read()
-    except Exception:
-        return _rss_cache['items'][:max_items]  # devuelve caché anterior si falla
-
-    try:
         root = ET.fromstring(xml_content)
-    except ET.ParseError:
-        return _rss_cache['items'][:max_items]
+    except Exception:
+        return  # mantiene el caché anterior intacto
 
     items = []
-    all_items = root.findall('.//item')
-    for item in all_items:
-        if len(items) >= max_items:
+    for item in root.findall('.//item'):
+        if len(items) >= MAX_INSTAGRAM_ITEMS:
             break
-
         enlace = item.findtext('link') or '#'
         description = item.findtext('description') or ''
         match = re.search(r'<img[^>]+src=["\']([^"\']+)["\']', description)
-        imagen_url = match.group(1) if match else ''
-
-        if imagen_url:
-            # Pasar enlace del post como clave de caché estable
-            local_src = download_instagram_image(imagen_url, post_url=enlace)
-            if local_src:
-                items.append({'imagen_src': local_src, 'enlace': enlace})
+        if not match:
+            continue
+        local_src = download_instagram_image(match.group(1), post_url=enlace)
+        if local_src:
+            items.append({'imagen_src': local_src, 'enlace': enlace})
 
     if items:
-        _rss_cache['timestamp'] = now
         _rss_cache['items'] = items
-    return items[:max_items]
+        _rss_cache['timestamp'] = time.time()
+
+
+def _refresh_in_background(rss_url):
+    """Hilo de fondo: refresca el caché sin bloquear el request."""
+    global _refresh_thread
+    try:
+        _do_fetch(rss_url)
+    finally:
+        with _refresh_lock:
+            _refresh_thread = None
+
+
+def fetch_instagram_rss_items(max_items=MAX_INSTAGRAM_ITEMS):
+    """
+    Devuelve hasta max_items posts de Instagram.
+    - Si el caché es fresco: respuesta instantánea.
+    - Si el caché expiró Y hay datos anteriores: devuelve los anteriores
+      mientras lanza un hilo de fondo para actualizar.
+    - Si no hay caché (primer arranque): descarga sincrónicamente una vez.
+    """
+    global _refresh_thread
+
+    if not getattr(settings, 'INSTAGRAM_RSS_ENABLED', True):
+        return []
+
+    rss_url = getattr(settings, 'INSTAGRAM_RSS_URL', RSS_URL)
+    now = time.time()
+    cache_fresh = _rss_cache['items'] and (now - _rss_cache['timestamp'] < RSS_CACHE_TTL)
+
+    if cache_fresh:
+        return _rss_cache['items'][:max_items]
+
+    if _rss_cache['items']:
+        # Hay datos anteriores: devolver mientras se actualiza en fondo
+        with _refresh_lock:
+            if _refresh_thread is None or not _refresh_thread.is_alive():
+                _refresh_thread = threading.Thread(
+                    target=_refresh_in_background,
+                    args=(rss_url,),
+                    daemon=True,
+                )
+                _refresh_thread.start()
+        return _rss_cache['items'][:max_items]
+
+    # Primera carga: bloquear hasta tener datos
+    _do_fetch(rss_url)
+    return _rss_cache['items'][:max_items]
+
+
+def warm_cache():
+    """Llama al arrancar el servidor para pre-cargar imágenes en segundo plano."""
+    threading.Thread(target=fetch_instagram_rss_items, daemon=True).start()
+
 
 # ==================== CONTEXT PROCESSORS ====================
 
@@ -124,9 +170,9 @@ def instagram_footer_items(request):
         return {'footer_instagram_items': []}
 
     IG_LINK = 'https://www.instagram.com/club_cervecerostecate/'
-    TARGET = 6
+    TARGET = MAX_INSTAGRAM_ITEMS
 
-    items = fetch_instagram_rss_items(max_items=TARGET)
+    items = list(fetch_instagram_rss_items(max_items=TARGET))
 
     # Completar con imágenes del modelo ImagenInstagram si el RSS no alcanza 6
     if len(items) < TARGET:
@@ -182,19 +228,15 @@ def footer_fixtures(request):
             is_home = True
             opponent = visitante_nombre
 
-        fixtures.append(
-            {
-                'fecha': partido.fecha,
-                'is_home': is_home,
-                'opponent': opponent,
-                'estadio': (partido.estadio or '').strip(),
-                'local_nombre': local_nombre,
-                'visitante_nombre': visitante_nombre,
-                'local_logo': getattr(partido.equipo_local, 'logo_src', '') or '',
-                'visitante_logo': getattr(partido.equipo_visitante, 'logo_src', '') or '',
-            }
-        )
+        fixtures.append({
+            'fecha': partido.fecha,
+            'is_home': is_home,
+            'opponent': opponent,
+            'estadio': (partido.estadio or '').strip(),
+            'local_nombre': local_nombre,
+            'visitante_nombre': visitante_nombre,
+            'local_logo': getattr(partido.equipo_local, 'logo_src', '') or '',
+            'visitante_logo': getattr(partido.equipo_visitante, 'logo_src', '') or '',
+        })
 
-    return {
-        'footer_proximos_partidos': fixtures,
-    }
+    return {'footer_proximos_partidos': fixtures}
