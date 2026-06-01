@@ -3044,11 +3044,25 @@ tbody tr:hover {
         padding: 2.5rem 1.5rem;
     }
 
-    /* Hero Slides - mobile: usa las imágenes del admin con posición top */
-    .hero-slide {
-        background-position: top center;
+    /* Hero Slides - imágenes específicas para mobile */
+    .hero-slide:nth-child(1) {
+        background-image: linear-gradient(to right, rgba(0,0,0,0%), rgba(0,0,0,0%)), url('../images/hero-mobile-puerto-penasco.jpg') !important;
+        background-size: cover;
+        background-position: center;
     }
-    
+
+    .hero-slide:nth-child(2) {
+        background-image: linear-gradient(to right, rgba(0,0,0,0%), rgba(0,0,0,0%)), url('../images/hero-mobile-regresamos-casa.jpg') !important;
+        background-size: cover;
+        background-position: center;
+    }
+
+    .hero-slide:nth-child(3) {
+        background-image: linear-gradient(to right, rgba(0,0,0,0%), rgba(0,0,0,0%)), url('../images/hero-mobile-puerto-penasco.jpg') !important;
+        background-size: cover;
+        background-position: center;
+    }
+
     .partido-card {
         grid-template-columns: 1fr;
         text-align: center;
@@ -3265,10 +3279,23 @@ tbody tr:hover {
         letter-spacing: 2px;
     }
 
-    /* Hero Slides - mobile: usa las imágenes del admin con posición top */
-    .hero-slide {
+    /* Hero Slides - imágenes específicas para mobile */
+    .hero-slide:nth-child(1) {
+        background-image: linear-gradient(to right, rgba(0,0,0,0%), rgba(0,0,0,0%)), url('../images/hero-mobile-puerto-penasco.jpg') !important;
         background-size: cover;
-        background-position: top center;
+        background-position: center;
+    }
+
+    .hero-slide:nth-child(2) {
+        background-image: linear-gradient(to right, rgba(0,0,0,0%), rgba(0,0,0,0%)), url('../images/hero-mobile-regresamos-casa.jpg') !important;
+        background-size: cover;
+        background-position: center;
+    }
+
+    .hero-slide:nth-child(3) {
+        background-image: linear-gradient(to right, rgba(0,0,0,0%), rgba(0,0,0,0%)), url('../images/hero-mobile-puerto-penasco.jpg') !important;
+        background-size: cover;
+        background-position: center;
     }
 
     .roster-tabs {
