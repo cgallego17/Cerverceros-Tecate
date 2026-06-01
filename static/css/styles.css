@@ -2920,6 +2920,10 @@ tbody tr:hover {
         min-height: 300px;
     }
 
+    .news-grid-section .news-item-image {
+        height: 300px;
+    }
+
     /* Featured player — stack on tablets */
     .featured-player-content {
         grid-template-columns: 1fr;
@@ -3040,17 +3044,9 @@ tbody tr:hover {
         padding: 2.5rem 1.5rem;
     }
 
-    /* Hero Slides - Imágenes para mobile (768px) */
-    .hero-slide:nth-child(1) {
-        background-image: linear-gradient(to right, rgba(0,0,0,0%), rgba(0,0,0,0%)), url('/static/images/hero-mobile-puerto-penasco.jpg') !important;
-    }
-
-    .hero-slide:nth-child(2) {
-        background-image: linear-gradient(to right, rgba(0,0,0,0%), rgba(0,0,0,0%)), url('/static/images/hero-mobile-regresamos-casa.jpg') !important;
-    }
-
-    .hero-slide:nth-child(3) {
-        background-image: linear-gradient(to right, rgba(0,0,0,0%), rgba(0,0,0,0%)), url('/static/images/hero-mobile-puerto-penasco.jpg') !important;
+    /* Hero Slides - mobile: usa las imágenes del admin con posición top */
+    .hero-slide {
+        background-position: top center;
     }
     
     .partido-card {
@@ -3168,6 +3164,10 @@ tbody tr:hover {
         min-height: 280px;
     }
 
+    .news-grid-section .news-item-image {
+        height: 280px;
+    }
+
     /* Accordion — stack vertically */
     .accordion-grid {
         grid-template-columns: 1fr;
@@ -3265,23 +3265,10 @@ tbody tr:hover {
         letter-spacing: 2px;
     }
 
-    /* Hero Slides - Imágenes para mobile */
-    .hero-slide:nth-child(1) {
-        background-image: linear-gradient(to right, rgba(0,0,0,0%), rgba(0,0,0,0%)), url('/static/images/hero-mobile-puerto-penasco.jpg') !important;
+    /* Hero Slides - mobile: usa las imágenes del admin con posición top */
+    .hero-slide {
         background-size: cover;
-        background-position: center;
-    }
-
-    .hero-slide:nth-child(2) {
-        background-image: linear-gradient(to right, rgba(0,0,0,0%), rgba(0,0,0,0%)), url('/static/images/hero-mobile-regresamos-casa.jpg') !important;
-        background-size: cover;
-        background-position: center;
-    }
-
-    .hero-slide:nth-child(3) {
-        background-image: linear-gradient(to right, rgba(0,0,0,0%), rgba(0,0,0,0%)), url('/static/images/hero-mobile-puerto-penasco.jpg') !important;
-        background-size: cover;
-        background-position: center;
+        background-position: top center;
     }
 
     .roster-tabs {
@@ -3331,6 +3318,10 @@ tbody tr:hover {
     .news-grid-section .news-item-dark,
     .news-grid-section .news-item-image {
         min-height: 240px;
+    }
+
+    .news-grid-section .news-item-image {
+        height: 240px;
     }
 
     .scores-section {
