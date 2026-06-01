@@ -1,5 +1,7 @@
+from django.conf import settings
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
+from .context_processors import fetch_instagram_rss_items
 from .models import (
     Jugador, Partido, Noticia, Boleto, TablaPosiciones,
     HeroSlide, Patrocinador, Producto, CategoriaProducto, ItemFaq,
@@ -37,8 +39,12 @@ def inicio(request):
     # Artículos de Noticias (News Grid)
     articulos_news = ArticuloNoticia.objects.filter(activo=True, destacado_grid=True).order_by('orden')
 
-    # Imágenes de Instagram
-    imagenes_instagram = ImagenInstagram.objects.filter(activo=True).order_by('orden')[:4]
+    # Imágenes de Instagram desde RSS
+    imagenes_instagram = []
+    if getattr(settings, 'INSTAGRAM_RSS_ENABLED', True):
+        imagenes_instagram = fetch_instagram_rss_items(getattr(settings, 'INSTAGRAM_RSS_URL', None), max_items=4)
+    if not imagenes_instagram:
+        imagenes_instagram = ImagenInstagram.objects.filter(activo=True).order_by('orden')[:4]
 
     context = {
         'hero_slides': hero_slides,

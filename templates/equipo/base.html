@@ -166,32 +166,41 @@
                 <div class="footer-column">
                     <h3 class="footer-title">{% trans "SÍGUENOS EN INSTAGRAM" %}</h3>
                     <div class="footer-instagram">
-                        <a href="#" class="footer-ig-item">
-                            <img src="{% static 'images/ig-footer-1.jpg' %}" alt="Instagram post 1">
-                            <span class="footer-ig-overlay"><i class="fab fa-instagram"></i></span>
-                        </a>
-                        <a href="#" class="footer-ig-item">
-                            <img src="{% static 'images/ig-footer-2.jpg' %}" alt="Instagram post 2">
-                            <span class="footer-ig-overlay"><i class="fab fa-instagram"></i></span>
-                        </a>
-                        <a href="#" class="footer-ig-item">
-                            <img src="{% static 'images/ig-footer-3.jpg' %}" alt="Instagram post 3">
-                            <span class="footer-ig-overlay"><i class="fab fa-instagram"></i></span>
-                        </a>
-                        <a href="#" class="footer-ig-item">
-                            <img src="{% static 'images/ig-footer-4.jpg' %}" alt="Instagram post 4">
-                            <span class="footer-ig-overlay"><i class="fab fa-instagram"></i></span>
-                        </a>
-                        <a href="#" class="footer-ig-item">
-                            <img src="{% static 'images/ig-footer-5.jpg' %}" alt="Instagram post 5">
-                            <span class="footer-ig-overlay"><i class="fab fa-instagram"></i></span>
-                        </a>
-                        <a href="#" class="footer-ig-item">
-                            <img src="{% static 'images/ig-footer-6.jpg' %}" alt="Instagram post 6">
-                            <span class="footer-ig-overlay"><i class="fab fa-instagram"></i></span>
-                        </a>
+                        {% if footer_instagram_items %}
+                            {% for img in footer_instagram_items %}
+                            <a href="{{ img.enlace|default:'#' }}" class="footer-ig-item" target="_blank">
+                                <img src="{{ img.imagen_src }}" alt="Instagram post {{ forloop.counter }}">
+                                <span class="footer-ig-overlay"><i class="fab fa-instagram"></i></span>
+                            </a>
+                            {% endfor %}
+                        {% else %}
+                            <a href="#" class="footer-ig-item">
+                                <img src="{% static 'images/ig-footer-1.jpg' %}" alt="Instagram post 1">
+                                <span class="footer-ig-overlay"><i class="fab fa-instagram"></i></span>
+                            </a>
+                            <a href="#" class="footer-ig-item">
+                                <img src="{% static 'images/ig-footer-2.jpg' %}" alt="Instagram post 2">
+                                <span class="footer-ig-overlay"><i class="fab fa-instagram"></i></span>
+                            </a>
+                            <a href="#" class="footer-ig-item">
+                                <img src="{% static 'images/ig-footer-3.jpg' %}" alt="Instagram post 3">
+                                <span class="footer-ig-overlay"><i class="fab fa-instagram"></i></span>
+                            </a>
+                            <a href="#" class="footer-ig-item">
+                                <img src="{% static 'images/ig-footer-4.jpg' %}" alt="Instagram post 4">
+                                <span class="footer-ig-overlay"><i class="fab fa-instagram"></i></span>
+                            </a>
+                            <a href="#" class="footer-ig-item">
+                                <img src="{% static 'images/ig-footer-5.jpg' %}" alt="Instagram post 5">
+                                <span class="footer-ig-overlay"><i class="fab fa-instagram"></i></span>
+                            </a>
+                            <a href="#" class="footer-ig-item">
+                                <img src="{% static 'images/ig-footer-6.jpg' %}" alt="Instagram post 6">
+                                <span class="footer-ig-overlay"><i class="fab fa-instagram"></i></span>
+                            </a>
+                        {% endif %}
                     </div>
-                    <a href="#" class="footer-ig-cta">@cervecerosdtecate</a>
+                    <a href="https://www.instagram.com/cervecerosdtecate/" class="footer-ig-cta" target="_blank">@cervecerosdtecate</a>
                 </div>
 
             </div>

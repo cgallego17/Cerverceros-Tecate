@@ -9,6 +9,8 @@ SECRET_KEY = config('SECRET_KEY', default='django-insecure-change-this-in-produc
 DEBUG = config('DEBUG', default=True, cast=bool)
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=Csv())
+INSTAGRAM_RSS_ENABLED = config('INSTAGRAM_RSS_ENABLED', default=True, cast=bool)
+INSTAGRAM_RSS_URL = config('INSTAGRAM_RSS_URL', default='https://rss.app/feeds/hS2my7AUGemCdQkI.xml')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -46,6 +48,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.i18n',
+                'equipo.context_processors.instagram_footer_items',
             ],
         },
     },
