@@ -3046,19 +3046,19 @@ tbody tr:hover {
 
     /* Hero Slides - imágenes específicas para mobile */
     .hero-slide:nth-child(1) {
-        background-image: linear-gradient(to right, rgba(0,0,0,0%), rgba(0,0,0,0%)), url('../images/hero-mobile-puerto-penasco.jpg') !important;
+        background-image: linear-gradient(to right, rgba(0,0,0,0%), rgba(0,0,0,0%)), url('../images/hero-mobile-penasco.jpg') !important;
         background-size: cover;
         background-position: center;
     }
 
     .hero-slide:nth-child(2) {
-        background-image: linear-gradient(to right, rgba(0,0,0,0%), rgba(0,0,0,0%)), url('../images/hero-mobile-regresamos-casa.jpg') !important;
+        background-image: linear-gradient(to right, rgba(0,0,0,0%), rgba(0,0,0,0%)), url('../images/hero-mobile-penasco-tecate.jpg') !important;
         background-size: cover;
         background-position: center;
     }
 
     .hero-slide:nth-child(3) {
-        background-image: linear-gradient(to right, rgba(0,0,0,0%), rgba(0,0,0,0%)), url('../images/hero-mobile-puerto-penasco.jpg') !important;
+        background-image: linear-gradient(to right, rgba(0,0,0,0%), rgba(0,0,0,0%)), url('../images/hero-mobile-penasco.jpg') !important;
         background-size: cover;
         background-position: center;
     }
@@ -3088,7 +3088,11 @@ tbody tr:hover {
         text-align: center;
         gap: 1rem;
     }
-    
+
+    .scores-header::before {
+        display: none;
+    }
+
     .score-card {
         grid-template-columns: 1fr;
         padding: 2rem 1.5rem;
@@ -3264,19 +3268,19 @@ tbody tr:hover {
 
     /* Hero Slides - imágenes específicas para mobile */
     .hero-slide:nth-child(1) {
-        background-image: linear-gradient(to right, rgba(0,0,0,0%), rgba(0,0,0,0%)), url('../images/hero-mobile-puerto-penasco.jpg') !important;
+        background-image: linear-gradient(to right, rgba(0,0,0,0%), rgba(0,0,0,0%)), url('../images/hero-mobile-penasco.jpg') !important;
         background-size: cover;
         background-position: center;
     }
 
     .hero-slide:nth-child(2) {
-        background-image: linear-gradient(to right, rgba(0,0,0,0%), rgba(0,0,0,0%)), url('../images/hero-mobile-regresamos-casa.jpg') !important;
+        background-image: linear-gradient(to right, rgba(0,0,0,0%), rgba(0,0,0,0%)), url('../images/hero-mobile-penasco-tecate.jpg') !important;
         background-size: cover;
         background-position: center;
     }
 
     .hero-slide:nth-child(3) {
-        background-image: linear-gradient(to right, rgba(0,0,0,0%), rgba(0,0,0,0%)), url('../images/hero-mobile-puerto-penasco.jpg') !important;
+        background-image: linear-gradient(to right, rgba(0,0,0,0%), rgba(0,0,0,0%)), url('../images/hero-mobile-penasco.jpg') !important;
         background-size: cover;
         background-position: center;
     }
@@ -3336,6 +3340,10 @@ tbody tr:hover {
 
     .scores-section {
         padding: 3.5rem 0;
+    }
+
+    .scores-header::before {
+        display: none;
     }
 
     .score-card {
