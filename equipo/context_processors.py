@@ -23,46 +23,57 @@ _rss_cache = {
 
 
 # ==================== FUNCIONES DE DESCARGA ====================
-def download_instagram_image(image_url):
-    """Descarga imagen de Instagram y la guarda localmente"""
+
+_DOWNLOAD_HEADERS = {
+    'User-Agent': (
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
+        'AppleWebKit/537.36 (KHTML, like Gecko) '
+        'Chrome/124.0.0.0 Safari/537.36'
+    ),
+    'Accept': 'image/webp,image/apng,image/*,*/*;q=0.8',
+    'Accept-Language': 'en-US,en;q=0.9',
+    'Referer': 'https://www.instagram.com/',
+}
+
+
+def download_instagram_image(image_url, post_url=''):
+    """
+    Descarga una imagen de Instagram y la guarda localmente.
+    Usa post_url como clave de caché (estable) en lugar de image_url
+    (que es una URL de CDN con firma que cambia en cada llamada al RSS).
+    """
     if not image_url:
         return None
-    
+
     try:
-        # Crear directorio de imágenes de Instagram si no existe
         instagram_dir = Path(settings.STATIC_ROOT) / 'images' / 'instagram'
         instagram_dir.mkdir(parents=True, exist_ok=True)
-        
-        # Generar nombre único basado en hash de URL
-        url_hash = hashlib.md5(image_url.encode()).hexdigest()
-        filename = f"{url_hash}.jpg"
+
+        # Clave estable: URL del post (no la CDN que cambia cada vez)
+        cache_key = post_url if post_url else image_url
+        filename = hashlib.md5(cache_key.encode()).hexdigest() + '.jpg'
         filepath = instagram_dir / filename
-        
-        # Si ya existe, retornar la URL local
-        if filepath.exists():
+
+        if filepath.exists() and filepath.stat().st_size > 0:
             return f'/static/images/instagram/{filename}'
-        
-        # Descargar imagen con headers para evitar bloqueos
-        req = urllib.request.Request(
-            image_url,
-            headers={
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-            }
-        )
-        
-        with urllib.request.urlopen(req, timeout=10) as response:
+
+        req = urllib.request.Request(image_url, headers=_DOWNLOAD_HEADERS)
+        with urllib.request.urlopen(req, timeout=12) as response:
             image_data = response.read()
-        
-        # Guardar imagen localmente
+
+        if not image_data:
+            return None
+
         with open(filepath, 'wb') as f:
             f.write(image_data)
-        
+
         return f'/static/images/instagram/{filename}'
-    
+
     except Exception:
-# ==================== FUNCIONES DE RSS ====================
         return None
 
+
+# ==================== FUNCIONES DE RSS ====================
 
 def fetch_instagram_rss_items(rss_url=None, max_items=6):
     if not getattr(settings, 'INSTAGRAM_RSS_ENABLED', True):
@@ -77,33 +88,33 @@ def fetch_instagram_rss_items(rss_url=None, max_items=6):
         with urllib.request.urlopen(rss_url, timeout=10) as response:
             xml_content = response.read()
     except Exception:
-        return []
+        return _rss_cache['items'][:max_items]  # devuelve caché anterior si falla
 
     try:
         root = ET.fromstring(xml_content)
     except ET.ParseError:
-        return []
+        return _rss_cache['items'][:max_items]
 
     items = []
-    # Buscar más items del RSS para asegurar obtener max_items con imagen
     all_items = root.findall('.//item')
     for item in all_items:
         if len(items) >= max_items:
             break
-            
+
         enlace = item.findtext('link') or '#'
         description = item.findtext('description') or ''
         match = re.search(r'<img[^>]+src=["\']([^"\']+)["\']', description)
         imagen_url = match.group(1) if match else ''
-        
-        if imagen_url:
-            # Descargar y guardar localmente
-            local_imagen_src = download_instagram_image(imagen_url)
-            if local_imagen_src:
-                items.append({'imagen_src': local_imagen_src, 'enlace': enlace})
 
-    _rss_cache['timestamp'] = now
-    _rss_cache['items'] = items
+        if imagen_url:
+            # Pasar enlace del post como clave de caché estable
+            local_src = download_instagram_image(imagen_url, post_url=enlace)
+            if local_src:
+                items.append({'imagen_src': local_src, 'enlace': enlace})
+
+    if items:
+        _rss_cache['timestamp'] = now
+        _rss_cache['items'] = items
     return items[:max_items]
 
 # ==================== CONTEXT PROCESSORS ====================
