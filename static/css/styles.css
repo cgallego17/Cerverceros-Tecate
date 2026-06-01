@@ -3039,6 +3039,19 @@ tbody tr:hover {
     .hero-content {
         padding: 2.5rem 1.5rem;
     }
+
+    /* Hero Slides - Imágenes para mobile (768px) */
+    .hero-slide:nth-child(1) {
+        background-image: linear-gradient(to right, rgba(0,0,0,0%), rgba(0,0,0,0%)), url('/static/images/hero-mobile-puerto-penasco.jpg') !important;
+    }
+
+    .hero-slide:nth-child(2) {
+        background-image: linear-gradient(to right, rgba(0,0,0,0%), rgba(0,0,0,0%)), url('/static/images/hero-mobile-regresamos-casa.jpg') !important;
+    }
+
+    .hero-slide:nth-child(3) {
+        background-image: linear-gradient(to right, rgba(0,0,0,0%), rgba(0,0,0,0%)), url('/static/images/hero-mobile-puerto-penasco.jpg') !important;
+    }
     
     .partido-card {
         grid-template-columns: 1fr;
@@ -3250,6 +3263,25 @@ tbody tr:hover {
 
     .hero h1 {
         letter-spacing: 2px;
+    }
+
+    /* Hero Slides - Imágenes para mobile */
+    .hero-slide:nth-child(1) {
+        background-image: linear-gradient(to right, rgba(0,0,0,0%), rgba(0,0,0,0%)), url('/static/images/hero-mobile-puerto-penasco.jpg') !important;
+        background-size: cover;
+        background-position: center;
+    }
+
+    .hero-slide:nth-child(2) {
+        background-image: linear-gradient(to right, rgba(0,0,0,0%), rgba(0,0,0,0%)), url('/static/images/hero-mobile-regresamos-casa.jpg') !important;
+        background-size: cover;
+        background-position: center;
+    }
+
+    .hero-slide:nth-child(3) {
+        background-image: linear-gradient(to right, rgba(0,0,0,0%), rgba(0,0,0,0%)), url('/static/images/hero-mobile-puerto-penasco.jpg') !important;
+        background-size: cover;
+        background-position: center;
     }
 
     .roster-tabs {
