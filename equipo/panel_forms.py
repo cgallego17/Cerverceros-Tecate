@@ -2,7 +2,10 @@ from django import forms
 from django.contrib.auth.models import User, Group, Permission
 from django.contrib.auth.password_validation import validate_password
 from django.utils import timezone
-from .models import HeroSlide, Patrocinador, CategoriaProducto, Producto, ItemFaq, Noticia, Jugador, Transaccion
+from django.conf import settings
+from decimal import Decimal
+import requests
+from .models import HeroSlide, Patrocinador, CategoriaProducto, Producto, ItemFaq, Noticia, Jugador, Transaccion, Equipo, Partido, Pais, Estado, Ciudad, ProximoJuegoDestacado, CalendarioOverlay
 
 _i = {'class': 'panel-input'}
 _ta = {'class': 'panel-textarea', 'rows': 5}
@@ -122,6 +125,12 @@ class UsuarioCrearForm(forms.ModelForm):
         label='Confirmar contraseña',
         widget=forms.PasswordInput(attrs=_i),
     )
+    
+    avatar = forms.ImageField(
+        label='Foto de perfil',
+        required=False,
+        widget=forms.FileInput(attrs={'class': 'panel-input', 'accept': 'image/*'}),
+    )
 
     groups = forms.ModelMultipleChoiceField(
         queryset=Group.objects.all(),
@@ -145,14 +154,24 @@ class UsuarioCrearForm(forms.ModelForm):
         p2 = self.cleaned_data.get('password2', '')
         if p1 != p2:
             raise forms.ValidationError('Las contraseñas no coinciden.')
-        validate_password(p1)
+        if p1:
+            validate_password(p1)
         return p2
 
     def save(self, commit=True):
+        from .models import UserProfile
         user = super().save(commit=False)
         user.set_password(self.cleaned_data['password1'])
         if commit:
             user.save()
+            user.groups.set(self.cleaned_data.get('groups', []))
+            
+            # Crear perfil con avatar si se proporcionó
+            avatar = self.cleaned_data.get('avatar')
+            if avatar:
+                UserProfile.objects.create(user=user, avatar=avatar)
+            else:
+                UserProfile.objects.create(user=user)
         return user
 
 
@@ -240,13 +259,172 @@ class TransaccionForm(forms.ModelForm):
 
     class Meta:
         model = Transaccion
-        fields = ['concepto', 'tipo', 'categoria', 'monto', 'metodo_pago', 'fecha', 'notas']
+        fields = ['concepto', 'tipo', 'categoria', 'monto', 'moneda', 'tipo_cambio', 'metodo_pago', 'fecha', 'notas']
         widgets = {
             'concepto':   forms.TextInput(attrs=_i),
             'tipo':       forms.Select(attrs=_sel),
             'categoria':  forms.Select(attrs=_sel),
             'monto':      forms.NumberInput(attrs={**_i, 'step': '0.01', 'min': '0.01'}),
+            'moneda':     forms.Select(attrs=_sel),
+            'tipo_cambio': forms.NumberInput(attrs={**_i, 'step': '0.000001', 'min': '0.000001'}),
             'metodo_pago': forms.Select(attrs=_sel),
             'notas':      forms.Textarea(attrs={**_ta, 'rows': 3}),
         }
 
+    def clean(self):
+        cleaned = super().clean()
+        moneda = cleaned.get('moneda')
+        tipo_cambio = cleaned.get('tipo_cambio')
+        fecha = cleaned.get('fecha')
+
+        if tipo_cambio is not None and tipo_cambio <= 0:
+            self.add_error('tipo_cambio', 'El tipo de cambio debe ser mayor a 0.')
+
+        if moneda == 'USD' and not tipo_cambio and fecha:
+            # Intentar obtener tipo de cambio histórico de Frankfurter API
+            date_str = fecha.strftime('%Y-%m-%d')
+            try:
+                url = f"https://api.frankfurter.app/{date_str}?from=USD&to=MXN"
+                response = requests.get(url, timeout=3)
+                if response.status_code == 200:
+                    data = response.json()
+                    tc = data.get('rates', {}).get('MXN')
+                    if tc:
+                        cleaned['tipo_cambio'] = Decimal(str(tc))
+                        self.instance.tipo_cambio = cleaned['tipo_cambio']
+            except Exception:
+                pass
+            
+            # Si falló la API, asignar el fallback global explícitamente 
+            # para que quede registrado el valor de ese momento en la BD
+            if cleaned.get('tipo_cambio') is None:
+                fallback = getattr(settings, 'CAJA_TIPO_CAMBIO_USD_MXN', None)
+                if fallback:
+                    cleaned['tipo_cambio'] = Decimal(str(fallback))
+                    self.instance.tipo_cambio = cleaned['tipo_cambio']
+
+        return cleaned
+
+
+class EquipoForm(forms.ModelForm):
+    ciudad = forms.ModelChoiceField(
+        queryset=Ciudad.objects.select_related('estado__pais').filter(activo=True).order_by('estado__pais__nombre', 'estado__nombre', 'nombre'),
+        required=False,
+        label='Ciudad',
+        widget=forms.Select(attrs={**_sel, 'class': 'panel-select ciudad-autocomplete'}),
+        empty_label='-- Selecciona una ciudad --'
+    )
+    
+    class Meta:
+        model = Equipo
+        fields = ['nombre', 'ciudad', 'logo']
+        widgets = {
+            'nombre': forms.TextInput(attrs=_i),
+        }
+
+
+class PartidoForm(forms.ModelForm):
+    fecha = forms.DateTimeField(
+        widget=forms.DateTimeInput(attrs={**_i, 'type': 'datetime-local'}),
+        label='Fecha y hora',
+        input_formats=['%Y-%m-%dT%H:%M']
+    )
+    
+    opacidad_overlay = forms.DecimalField(
+        min_value=0.00,
+        max_value=1.00,
+        decimal_places=2,
+        widget=forms.NumberInput(attrs={**_i, 'step': '0.05', 'min': '0', 'max': '1'}),
+        label='Opacidad del overlay',
+        help_text='0.00 = transparente, 1.00 = completamente opaco'
+    )
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance and self.instance.pk and self.instance.fecha:
+            # Convertir a zona horaria local y formatear para datetime-local
+            fecha_local = timezone.localtime(self.instance.fecha)
+            self.initial['fecha'] = fecha_local.strftime('%Y-%m-%dT%H:%M')
+    
+    class Meta:
+        model = Partido
+        fields = ['fecha', 'equipo_local', 'equipo_visitante', 'carreras_local', 'carreras_visitante', 'estado', 'estadio', 'temporada', 'destacado', 'imagen_fondo', 'opacidad_overlay']
+        widgets = {
+            'equipo_local': forms.Select(attrs=_sel),
+            'equipo_visitante': forms.Select(attrs=_sel),
+            'carreras_local': forms.NumberInput(attrs={**_i, 'min': '0'}),
+            'carreras_visitante': forms.NumberInput(attrs={**_i, 'min': '0'}),
+            'estado': forms.Select(attrs=_sel),
+            'estadio': forms.TextInput(attrs=_i),
+            'temporada': forms.TextInput(attrs=_i),
+        }
+
+
+class PaisForm(forms.ModelForm):
+    class Meta:
+        model = Pais
+        fields = ['nombre', 'codigo', 'activo']
+        widgets = {
+            'nombre': forms.TextInput(attrs=_i),
+            'codigo': forms.TextInput(attrs={**_i, 'placeholder': 'Ej: MEX, USA'}),
+        }
+
+
+class EstadoForm(forms.ModelForm):
+    class Meta:
+        model = Estado
+        fields = ['pais', 'nombre', 'codigo', 'activo']
+        widgets = {
+            'pais': forms.Select(attrs=_sel),
+            'nombre': forms.TextInput(attrs=_i),
+            'codigo': forms.TextInput(attrs={**_i, 'placeholder': 'Ej: BC, NL'}),
+        }
+
+
+class CiudadForm(forms.ModelForm):
+    class Meta:
+        model = Ciudad
+        fields = ['estado', 'nombre', 'activo']
+        widgets = {
+            'estado': forms.Select(attrs=_sel),
+            'nombre': forms.TextInput(attrs=_i),
+        }
+
+
+class ProximoJuegoDestacadoForm(forms.ModelForm):
+    opacidad_overlay = forms.DecimalField(
+        min_value=0.00,
+        max_value=1.00,
+        decimal_places=2,
+        widget=forms.NumberInput(attrs={**_i, 'step': '0.05', 'min': '0', 'max': '1'}),
+        label='Opacidad del overlay',
+        help_text='0.00 = transparente, 1.00 = completamente opaco'
+    )
+    
+    class Meta:
+        model = ProximoJuegoDestacado
+        fields = [
+            'activo', 'subtitulo', 'titulo', 'partido', 
+            'texto_personalizado', 'imagen_fondo', 'opacidad_overlay',
+            'texto_boton', 'url_boton', 'mostrar_countdown', 'orden'
+        ]
+        widgets = {
+            'subtitulo': forms.TextInput(attrs=_i),
+            'titulo': forms.TextInput(attrs=_i),
+            'partido': forms.Select(attrs=_sel),
+            'texto_personalizado': forms.TextInput(attrs={**_i, 'placeholder': 'Opcional: texto personalizado'}),
+            'texto_boton': forms.TextInput(attrs=_i),
+            'url_boton': forms.URLInput(attrs=_i),
+            'orden': forms.NumberInput(attrs={**_i, 'min': '0'}),
+        }
+
+
+class CalendarioOverlayForm(forms.ModelForm):
+    class Meta:
+        model = CalendarioOverlay
+        fields = ['activo', 'titulo', 'imagen', 'url_destino', 'orden']
+        widgets = {
+            'titulo': forms.TextInput(attrs=_i),
+            'url_destino': forms.URLInput(attrs={**_i, 'placeholder': 'Opcional: URL de destino'}),
+            'orden': forms.NumberInput(attrs={**_i, 'min': '0'}),
+        }

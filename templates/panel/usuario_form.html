@@ -1,6 +1,6 @@
 {% extends 'panel/base.html' %}
 
-{% block page_title %}{% if objeto %}Editar Usuario{% else %}Nuevo Usuario{% endblock %}
+{% block page_title %}{% if objeto %}Editar Usuario{% else %}Nuevo Usuario{% endif %}{% endblock %}
 
 {% block content %}
 <div class="panel-page-header">
@@ -11,7 +11,7 @@
     <a href="{% url 'panel:usuarios_lista' %}" class="panel-btn panel-btn-secondary">← Volver a usuarios</a>
 </div>
 
-<form method="post" novalidate id="usuarioForm">
+<form method="post" enctype="multipart/form-data" novalidate id="usuarioForm">
     {% csrf_token %}
 
     <div class="uf-layout">
@@ -30,6 +30,17 @@
                 {% if objeto %}
                 <div style="font-size:.75rem; color:var(--p-text-muted); margin-top:.25rem;">
                     Miembro desde {{ objeto.date_joined|date:"d/m/Y" }}
+                </div>
+                {% endif %}
+                
+                {# Campo de subida de avatar #}
+                {% if not objeto %}
+                <div style="margin-top: 1rem;">
+                    <label class="panel-form-label" for="{{ form.avatar.id_for_label }}" style="font-size: .75rem;">Foto de perfil</label>
+                    {{ form.avatar }}
+                    {% for error in form.avatar.errors %}
+                    <span class="panel-field-error"><i class="fas fa-triangle-exclamation"></i> {{ error }}</span>
+                    {% endfor %}
                 </div>
                 {% endif %}
             </div>

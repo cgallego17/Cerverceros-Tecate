@@ -1,0 +1,59 @@
+{% extends 'panel/base.html' %}
+
+{% block page_title %}Países{% endblock %}
+
+{% block content %}
+<div class="panel-page-header">
+    <div class="panel-page-title">
+        Países
+        <small>Administra los países del sistema</small>
+    </div>
+    <a href="{% url 'panel:pais_nuevo' %}" class="panel-btn panel-btn-primary">+ Nuevo País</a>
+</div>
+
+{% if paises %}
+<div class="panel-card">
+    <table class="panel-table">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Código</th>
+                <th>Estados</th>
+                <th>Estado</th>
+                <th class="text-right">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pais in paises %}
+            <tr>
+                <td><strong>{{ pais.nombre }}</strong></td>
+                <td><span class="panel-badge panel-badge-secondary">{{ pais.codigo }}</span></td>
+                <td>{{ pais.estados.count }} estado{{ pais.estados.count|pluralize }}</td>
+                <td>
+                    {% if pais.activo %}
+                    <span class="panel-badge panel-badge-success">Activo</span>
+                    {% else %}
+                    <span class="panel-badge panel-badge-secondary">Inactivo</span>
+                    {% endif %}
+                </td>
+                <td class="text-right">
+                    <a href="{% url 'panel:pais_editar' pais.pk %}" class="panel-btn-icon" title="Editar">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <a href="{% url 'panel:pais_eliminar' pais.pk %}" class="panel-btn-icon panel-btn-danger" title="Eliminar">
+                        <i class="fas fa-trash"></i>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="panel-empty-state">
+    <i class="fas fa-globe"></i>
+    <p>No hay países registrados</p>
+    <a href="{% url 'panel:pais_nuevo' %}" class="panel-btn panel-btn-primary">Crear primer país</a>
+</div>
+{% endif %}
+{% endblock %}

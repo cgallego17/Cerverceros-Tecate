@@ -1,0 +1,93 @@
+{% extends 'panel/base.html' %}
+{% load static %}
+
+{% block page_title %}Ciudades{% endblock %}
+
+{% block content %}
+<div class="panel-page-header">
+    <div class="panel-page-title">
+        Ciudades
+        <small>Administra las ciudades por estado</small>
+    </div>
+    <a href="{% url 'panel:ciudad_nueva' %}" class="panel-btn panel-btn-primary">+ Nueva Ciudad</a>
+</div>
+
+{% if ciudades %}
+<div class="panel-card">
+    <!-- Buscador y Filtros -->
+    <div class="panel-table-filters">
+        <div class="panel-search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="tableSearch" class="panel-search-input" placeholder="Buscar por ciudad, estado o país...">
+        </div>
+        <div class="panel-filter-group">
+            <select id="filterEstado" class="panel-select panel-filter-select">
+                <option value="">Todos los estados</option>
+                {% for ciudad in ciudades %}
+                <option value="{{ ciudad.estado.nombre }}">{{ ciudad.estado.nombre }}</option>
+                {% endfor %}
+            </select>
+            <select id="filterActivo" class="panel-select panel-filter-select">
+                <option value="">Todos los estados</option>
+                <option value="activo">Activos</option>
+                <option value="inactivo">Inactivos</option>
+            </select>
+            <button id="clearFilters" class="panel-btn panel-btn-secondary" style="display: none;">
+                <i class="fas fa-times"></i> Limpiar
+            </button>
+        </div>
+    </div>
+
+    <table class="panel-table" id="dataTable">
+        <thead>
+            <tr>
+                <th>Ciudad</th>
+                <th>Estado</th>
+                <th>País</th>
+                <th>Estado</th>
+                <th class="text-right">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ciudad in ciudades %}
+            <tr data-ciudad="{{ ciudad.nombre|lower }}" data-estado="{{ ciudad.estado.nombre|lower }}" data-pais="{{ ciudad.estado.pais.nombre|lower }}" data-activo="{% if ciudad.activo %}activo{% else %}inactivo{% endif %}">
+                <td><strong>{{ ciudad.nombre }}</strong></td>
+                <td>{{ ciudad.estado.nombre }}</td>
+                <td>{{ ciudad.estado.pais.nombre }}</td>
+                <td>
+                    {% if ciudad.activo %}
+                    <span class="panel-badge panel-badge-success">Activo</span>
+                    {% else %}
+                    <span class="panel-badge panel-badge-secondary">Inactivo</span>
+                    {% endif %}
+                </td>
+                <td class="text-right">
+                    <a href="{% url 'panel:ciudad_editar' ciudad.pk %}" class="panel-btn-icon" title="Editar">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <a href="{% url 'panel:ciudad_eliminar' ciudad.pk %}" class="panel-btn-icon panel-btn-danger" title="Eliminar">
+                        <i class="fas fa-trash"></i>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <div id="noResults" class="panel-empty-state" style="display: none; margin-top: 2rem;">
+        <i class="fas fa-search"></i>
+        <p>No se encontraron resultados</p>
+    </div>
+</div>
+{% else %}
+<div class="panel-empty-state">
+    <i class="fas fa-city"></i>
+    <p>No hay ciudades registradas</p>
+    <a href="{% url 'panel:ciudad_nueva' %}" class="panel-btn panel-btn-primary">Crear primera ciudad</a>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/table-filters.js' %}"></script>
+{% endblock %}

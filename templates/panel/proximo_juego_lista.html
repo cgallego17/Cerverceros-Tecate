@@ -1,0 +1,71 @@
+{% extends 'panel/base.html' %}
+
+{% block page_title %}Próximo Juego Destacado{% endblock %}
+
+{% block content %}
+<div class="panel-page-header">
+    <div class="panel-page-title">
+        Próximo Juego Destacado
+        <small>Administra la sección de próximo juego en la página de inicio</small>
+    </div>
+    <a href="{% url 'panel:proximo_juego_nuevo' %}" class="panel-btn panel-btn-primary">+ Nuevo</a>
+</div>
+
+{% if juegos %}
+<div class="panel-card">
+    <table class="panel-table">
+        <thead>
+            <tr>
+                <th>Estado</th>
+                <th>Título</th>
+                <th>Partido</th>
+                <th>Orden</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for juego in juegos %}
+            <tr {% if juego.activo %}style="background-color: #f0fdf4;"{% endif %}>
+                <td>
+                    {% if juego.activo %}
+                    <span class="panel-badge panel-badge-success">Activo</span>
+                    {% else %}
+                    <span class="panel-badge panel-badge-secondary">Inactivo</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <strong>{{ juego.titulo }}</strong><br>
+                    <small style="color: #6b7280;">{{ juego.subtitulo }}</small>
+                </td>
+                <td>
+                    {% if juego.partido %}
+                    {{ juego.partido.equipo_local.nombre }} vs {{ juego.partido.equipo_visitante.nombre }}<br>
+                    <small style="color: #6b7280;">{{ juego.partido.fecha|date:"d/m/Y H:i" }}</small>
+                    {% elif juego.texto_personalizado %}
+                    <em>{{ juego.texto_personalizado|truncatechars:50 }}</em>
+                    {% else %}
+                    <span style="color: #9ca3af;">—</span>
+                    {% endif %}
+                </td>
+                <td>{{ juego.orden }}</td>
+                <td class="text-right">
+                    <a href="{% url 'panel:proximo_juego_editar' juego.pk %}" class="panel-btn-icon" title="Editar">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <a href="{% url 'panel:proximo_juego_eliminar' juego.pk %}" class="panel-btn-icon panel-btn-danger" title="Eliminar">
+                        <i class="fas fa-trash"></i>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="panel-empty-state">
+    <i class="fas fa-calendar-star"></i>
+    <p>No hay próximos juegos destacados configurados</p>
+    <a href="{% url 'panel:proximo_juego_nuevo' %}" class="panel-btn panel-btn-primary">Crear primero</a>
+</div>
+{% endif %}
+{% endblock %}

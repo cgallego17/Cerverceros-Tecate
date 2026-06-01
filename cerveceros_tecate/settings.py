@@ -1,6 +1,6 @@
 from pathlib import Path
-import os
 from decouple import config, Csv
+from decimal import Decimal
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -49,6 +49,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.i18n',
                 'equipo.context_processors.instagram_footer_items',
+                'equipo.context_processors.footer_fixtures',
             ],
         },
     },
@@ -92,6 +93,8 @@ LANGUAGES = [
 LOCALE_PATHS = [
     BASE_DIR / 'locale',
 ]
+
+CAJA_TIPO_CAMBIO_USD_MXN = config('CAJA_TIPO_CAMBIO_USD_MXN', default='18.50', cast=Decimal)
 
 TIME_ZONE = 'America/Tijuana'
 

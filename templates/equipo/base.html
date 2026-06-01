@@ -8,13 +8,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/news-detail.css' %}">
 </head>
 <body>
     <!-- Top Bar -->
     <div class="top-bar">
         <div class="top-bar-container">
             <div class="top-bar-left">
-                <a href="{% url 'equipo:boleteria' %}" class="top-bar-link">
+                <a href="https://arema.mx/e/17890" class="top-bar-link" target="_blank" rel="noopener noreferrer">
                     <span class="top-bar-icon">🎫</span> {% trans "COMPRAR BOLETOS" %}
                 </a>
                 <span class="top-bar-separator">|</span>
@@ -22,12 +23,18 @@
                 <a href="{% url 'equipo:noticias' %}" class="top-bar-link">{% trans "NOTICIAS" %}</a>
             </div>
             <div class="top-bar-right">
-                <form action="{% url 'set_language' %}" method="post" class="lang-toggle-form">
+                <form action="{% url 'set_language' %}" method="post" class="language-form">
                     {% csrf_token %}
-                    <input name="next" type="hidden" value="{{ request.get_full_path }}">
-                    <button type="submit" name="language" value="es" class="lang-btn{% if LANGUAGE_CODE == 'es' %} active{% endif %}"><span class="fi fi-mx"></span> ES</button>
-                    <span class="top-bar-separator">|</span>
-                    <button type="submit" name="language" value="en" class="lang-btn{% if LANGUAGE_CODE == 'en' %} active{% endif %}"><span class="fi fi-us"></span> EN</button>
+                    <input name="next" type="hidden" value="{{ request.path }}">
+                    {% get_current_language as LANGUAGE_CODE %}
+                    <select name="language" onchange="this.form.submit()" class="language-select {% if LANGUAGE_CODE == 'es' %}language-select--es{% else %}language-select--en{% endif %}">
+                        {% get_available_languages as LANGUAGES %}
+                        {% for lang_code, lang_name in LANGUAGES %}
+                            <option value="{{ lang_code }}" {% if lang_code == LANGUAGE_CODE %}selected{% endif %}>
+                                {% if lang_code == 'es' %}ES{% else %}EN{% endif %}
+                            </option>
+                        {% endfor %}
+                    </select>
                 </form>
                 <span class="top-bar-separator">|</span>
                 <span class="top-bar-text">{% trans "SÍGUENOS:" %}</span>
@@ -43,7 +50,7 @@
     <nav class="navbar">
         <div class="navbar-container">
             <ul class="navbar-menu navbar-menu-left">
-                <li><a href="{% url 'equipo:inicio' %}" class="navbar-link">{% trans "HOME" %}</a></li>
+                <li><a href="{% url 'equipo:inicio' %}" class="navbar-link">{% trans "INICIO" %}</a></li>
                 <li><a href="{% url 'equipo:nuestro_equipo' %}" class="navbar-link">{% trans "EQUIPO" %}</a></li>
                 <li><a href="{% url 'equipo:calendario' %}" class="navbar-link">{% trans "CALENDARIO" %}</a></li>
             </ul>
@@ -55,8 +62,7 @@
             <ul class="navbar-menu navbar-menu-right">
                 <li><a href="{% url 'equipo:resultados' %}" class="navbar-link">{% trans "RESULTADOS" %}</a></li>
                 <li><a href="{% url 'equipo:noticias' %}" class="navbar-link">{% trans "NOTICIAS" %}</a></li>
-                <li><a href="{% url 'equipo:tienda' %}" class="navbar-link">{% trans "TIENDA" %}</a></li>
-                <li><a href="{% url 'equipo:boleteria' %}" class="navbar-link">{% trans "BOLETOS" %}</a></li>
+                <li><a href="https://arema.mx/e/17890" class="navbar-link" target="_blank" rel="noopener noreferrer">{% trans "BOLETOS" %}</a></li>
             </ul>
             
             <button class="navbar-toggle" id="navbarToggle" aria-label="Toggle navigation">
@@ -80,12 +86,10 @@
                     <img src="{% static 'images/logo.png' %}" alt="Cerveceros de Tecate" class="footer-brand-logo">
                     <div class="footer-brand-text">
                         <span class="footer-brand-name">CERVECEROS DE TECATE</span>
-                        <span class="footer-brand-league">{% trans "Liga Mexicana del Pacífico · Temporada 2026" %}</span>
+                        <span class="footer-brand-league">{% trans "Orgullo del norte de México · Temporada 2026" %}</span>
                         <div class="footer-brand-social">
                             <a href="#" class="footer-social-link" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
                             <a href="#" class="footer-social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                            <a href="#" class="footer-social-link" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-                            <a href="#" class="footer-social-link" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
                         </div>
                     </div>
                 </div>
@@ -95,8 +99,7 @@
                     <a href="{% url 'equipo:calendario' %}">{% trans "Calendario" %}</a>
                     <a href="{% url 'equipo:resultados' %}">{% trans "Resultados" %}</a>
                     <a href="{% url 'equipo:noticias' %}">{% trans "Noticias" %}</a>
-                    <a href="{% url 'equipo:tienda' %}">{% trans "Tienda" %}</a>
-                    <a href="{% url 'equipo:boleteria' %}">{% trans "Boletos" %}</a>
+                    <a href="https://arema.mx/e/17890" target="_blank" rel="noopener noreferrer">{% trans "Boletos" %}</a>
                 </nav>
             </div>
         </div>
@@ -108,11 +111,10 @@
                 <!-- Acerca del club -->
                 <div class="footer-column">
                     <h3 class="footer-title">{% trans "ACERCA DEL CLUB" %}</h3>
-                    <p class="footer-text">{% trans "Los Cerveceros de Tecate son el equipo de béisbol profesional de la ciudad de Tecate, Baja California. Orgullo de la región y miembros de la Liga Mexicana del Pacífico." %}</p>
+                    <p class="footer-text">{% trans "Los Cerveceros de Tecate son el equipo de béisbol profesional de la ciudad de Tecate, Baja California, en el norte de México. Orgullo de la región y representantes del deporte en la frontera." %}</p>
                     <div class="footer-contact">
                         <p><i class="fas fa-map-marker-alt"></i> Tecate, Baja California, México</p>
                         <p><i class="fas fa-envelope"></i> contacto@cervecerosdtecate.mx</p>
-                        <p><i class="fas fa-phone"></i> +52 (665) 654-0000</p>
                     </div>
                 </div>
 
@@ -126,38 +128,52 @@
                         <li><a href="{% url 'equipo:resultados' %}">{% trans "Resultados" %}</a></li>
                         <li><a href="{% url 'equipo:tabla_posiciones' %}">{% trans "Tabla de Posiciones" %}</a></li>
                         <li><a href="{% url 'equipo:noticias' %}">{% trans "Noticias" %}</a></li>
-                        <li><a href="{% url 'equipo:boleteria' %}">{% trans "Boletería" %}</a></li>
+                        <li><a href="https://arema.mx/e/17890" target="_blank" rel="noopener noreferrer">{% trans "Boletería" %}</a></li>
                     </ul>
                 </div>
 
                 <!-- Próximos Partidos -->
                 <div class="footer-column">
-                    <h3 class="footer-title">{% trans "PRÓXIMOS PARTIDOS" %}</h3>
+                    <h3 class="footer-title">{% trans "PRÓXIMOS JUEGOS" %}</h3>
                     <ul class="footer-fixtures">
+                        {% for juego in footer_proximos_partidos %}
                         <li class="footer-fixture-item">
                             <div class="fixture-header">
-                                <span class="fixture-date">{% trans "Vie 15 Mayo" %}</span>
+                                <span class="fixture-date">{{ juego.fecha|date:"D d M" }}</span>
+                                {% if juego.is_home %}
                                 <span class="fixture-tag">{% trans "LOCAL" %}</span>
-                            </div>
-                            <a href="{% url 'equipo:calendario' %}" class="fixture-match">{% trans "vs. Toros de Tijuana" %}</a>
-                            <span class="fixture-venue"><i class="fas fa-map-marker-alt"></i> <span>{% trans "Estadio Cerveceros" %}</span></span>
-                        </li>
-                        <li class="footer-fixture-item">
-                            <div class="fixture-header">
-                                <span class="fixture-date">{% trans "Sáb 16 Mayo" %}</span>
-                                <span class="fixture-tag">{% trans "LOCAL" %}</span>
-                            </div>
-                            <a href="{% url 'equipo:calendario' %}" class="fixture-match">{% trans "vs. Mayos de Navojoa" %}</a>
-                            <span class="fixture-venue"><i class="fas fa-map-marker-alt"></i> <span>{% trans "Estadio Cerveceros" %}</span></span>
-                        </li>
-                        <li class="footer-fixture-item">
-                            <div class="fixture-header">
-                                <span class="fixture-date">{% trans "Dom 17 Mayo" %}</span>
+                                {% else %}
                                 <span class="fixture-tag fixture-tag--away">{% trans "VISITA" %}</span>
+                                {% endif %}
                             </div>
-                            <a href="{% url 'equipo:calendario' %}" class="fixture-match">{% trans "vs. Yaquis de Obregón" %}</a>
-                            <span class="fixture-venue"><i class="fas fa-map-marker-alt"></i> <span>{% trans "Estadio Yaquis" %}</span></span>
+                            <div class="fixture-logos">
+                                <div class="fixture-team">
+                                    {% if juego.local_logo %}
+                                    <img src="{{ juego.local_logo }}" alt="{{ juego.local_nombre }}" class="fixture-team-logo">
+                                    {% else %}
+                                    <div class="fixture-team-initial">{{ juego.local_nombre|slice:':1'|upper }}</div>
+                                    {% endif %}
+                                    <span class="fixture-team-name">{{ juego.local_nombre }}</span>
+                                </div>
+                                <span class="fixture-logos-vs">vs</span>
+                                <div class="fixture-team">
+                                    {% if juego.visitante_logo %}
+                                    <img src="{{ juego.visitante_logo }}" alt="{{ juego.visitante_nombre }}" class="fixture-team-logo">
+                                    {% else %}
+                                    <div class="fixture-team-initial">{{ juego.visitante_nombre|slice:':1'|upper }}</div>
+                                    {% endif %}
+                                    <span class="fixture-team-name">{{ juego.visitante_nombre }}</span>
+                                </div>
+                            </div>
+                            <span class="fixture-venue"><i class="fas fa-map-marker-alt"></i> <span>{% if juego.estadio %}{{ juego.estadio }}{% else %}{% trans "Por definir" %}{% endif %}</span></span>
                         </li>
+                        {% empty %}
+                        <li class="footer-fixture-item">
+                            <div class="fixture-header">
+                                <span class="fixture-date">{% trans "Sin próximos juegos" %}</span>
+                            </div>
+                        </li>
+                        {% endfor %}
                     </ul>
                     <a href="{% url 'equipo:calendario' %}" class="footer-fixtures-more">{% trans "Ver calendario completo →" %}</a>
                 </div>
@@ -316,6 +332,106 @@
             storeProductsContainer.style.transform = `translateX(${translateX}px)`;
         }
 
+        // Roster carousel functionality
+        let rosterCurrentIndex = 0;
+        const rosterPlayersContainer = document.getElementById('rosterPlayers');
+        
+        function moveRosterCarousel(direction) {
+            if (!rosterPlayersContainer) return;
+            
+            const players = rosterPlayersContainer.querySelectorAll('.roster-player-card:not([style*="display: none"])');
+            if (players.length === 0) return;
+            
+            const playerWidth = players[0].offsetWidth;
+            const gap = 32;
+            const moveAmount = playerWidth + gap;
+            
+            rosterCurrentIndex += direction;
+            
+            const maxIndex = Math.max(0, players.length - 4);
+            if (rosterCurrentIndex < 0) {
+                rosterCurrentIndex = 0;
+            } else if (rosterCurrentIndex > maxIndex) {
+                rosterCurrentIndex = maxIndex;
+            }
+            
+            const translateX = -(rosterCurrentIndex * moveAmount);
+            rosterPlayersContainer.style.transform = `translateX(${translateX}px)`;
+        }
+
+        // Roster tabs functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const rosterTabs = document.querySelectorAll('.roster-tab');
+            const playerCards = document.querySelectorAll('.roster-player-card');
+            
+            const infieldPositions = ['1B', '2B', '3B', 'SS'];
+            const outfieldPositions = ['LF', 'CF', 'RF'];
+            
+            rosterTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const position = this.getAttribute('data-position');
+                    
+                    rosterTabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    rosterCurrentIndex = 0;
+                    if (rosterPlayersContainer) {
+                        rosterPlayersContainer.style.transform = 'translateX(0)';
+                    }
+                    
+                    playerCards.forEach(card => {
+                        const cardPosition = card.getAttribute('data-position');
+                        let shouldShow = false;
+                        
+                        if (position === 'all') {
+                            shouldShow = true;
+                        } else if (position === 'infield') {
+                            shouldShow = infieldPositions.includes(cardPosition);
+                        } else if (position === 'outfield') {
+                            shouldShow = outfieldPositions.includes(cardPosition);
+                        } else {
+                            shouldShow = cardPosition === position;
+                        }
+                        
+                        card.style.display = shouldShow ? 'block' : 'none';
+                    });
+                });
+            });
+        });
+
+        // Team page filter functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterTabs = document.querySelectorAll('.team-filter-tab');
+            const playerCards = document.querySelectorAll('.team-player-card');
+            
+            filterTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const filter = this.getAttribute('data-filter');
+                    
+                    filterTabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    playerCards.forEach(card => {
+                        const category = card.getAttribute('data-category');
+                        
+                        if (filter === 'all' || category === filter) {
+                            card.style.display = 'block';
+                            setTimeout(() => {
+                                card.style.opacity = '1';
+                                card.style.transform = 'translateY(0)';
+                            }, 10);
+                        } else {
+                            card.style.opacity = '0';
+                            card.style.transform = 'translateY(20px)';
+                            setTimeout(() => {
+                                card.style.display = 'none';
+                            }, 300);
+                        }
+                    });
+                });
+            });
+        });
+
         // Accordion functionality
         document.addEventListener('DOMContentLoaded', function() {
             const accordionHeaders = document.querySelectorAll('.accordion-header');
@@ -338,6 +454,74 @@
                     }
                 });
             });
+        });
+
+        // Game Modal functionality
+        function openGameModal(element) {
+            const modal = document.getElementById('gameModal');
+            
+            // Obtener datos del partido
+            const localName = element.getAttribute('data-local');
+            const visitanteName = element.getAttribute('data-visitante');
+            const localLogo = element.getAttribute('data-local-logo');
+            const visitanteLogo = element.getAttribute('data-visitante-logo');
+            const fecha = element.getAttribute('data-fecha');
+            const estadio = element.getAttribute('data-estadio');
+            const estado = element.getAttribute('data-estado');
+            const carrerasLocal = element.getAttribute('data-carreras-local');
+            const carrerasVisitante = element.getAttribute('data-carreras-visitante');
+            
+            // Actualizar contenido del modal
+            document.getElementById('modalLocalName').textContent = localName;
+            document.getElementById('modalVisitanteName').textContent = visitanteName;
+            document.getElementById('modalFecha').textContent = fecha;
+            document.getElementById('modalStatus').textContent = estado;
+            
+            // Logos
+            const modalLocalLogo = document.getElementById('modalLocalLogo');
+            const modalVisitanteLogo = document.getElementById('modalVisitanteLogo');
+            
+            if (localLogo) {
+                modalLocalLogo.innerHTML = `<img src="${localLogo}" alt="${localName}">`;
+            } else {
+                modalLocalLogo.innerHTML = `<div class="modal-logo-placeholder">${localName.substring(0, 3).toUpperCase()}</div>`;
+            }
+            
+            if (visitanteLogo) {
+                modalVisitanteLogo.innerHTML = `<img src="${visitanteLogo}" alt="${visitanteName}">`;
+            } else {
+                modalVisitanteLogo.innerHTML = `<div class="modal-logo-placeholder">${visitanteName.substring(0, 3).toUpperCase()}</div>`;
+            }
+            
+            // Marcadores
+            document.getElementById('modalLocalScore').textContent = carrerasLocal;
+            document.getElementById('modalVisitanteScore').textContent = carrerasVisitante;
+            
+            // Estadio
+            const estadioContainer = document.getElementById('modalEstadioContainer');
+            if (estadio) {
+                document.getElementById('modalEstadio').textContent = estadio;
+                estadioContainer.style.display = 'flex';
+            } else {
+                estadioContainer.style.display = 'none';
+            }
+            
+            // Mostrar modal
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeGameModal() {
+            const modal = document.getElementById('gameModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Cerrar modal con tecla ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeGameModal();
+            }
         });
     </script>
 </body>

@@ -1,0 +1,139 @@
+{% extends 'panel/base.html' %}
+
+{% block page_title %}{% if objeto %}Editar Juego{% else %}Nuevo Juego{% endif %}{% endblock %}
+
+{% block content %}
+<div class="panel-page-header">
+    <div class="panel-page-title">
+        {% if objeto %}Editar Juego{% else %}Nuevo Juego{% endif %}
+        <small>{% if objeto %}Modifica los datos del juego{% else %}Registra un nuevo juego{% endif %}</small>
+    </div>
+    <a href="{% url 'panel:partidos_lista' %}" class="panel-btn panel-btn-secondary">← Volver a juegos</a>
+</div>
+
+<form method="post" novalidate>
+    {% csrf_token %}
+    <div class="panel-card">
+        <div class="panel-form-grid">
+            <div class="panel-form-group">
+                <label class="panel-form-label" for="{{ form.fecha.id_for_label }}">Fecha y hora *</label>
+                {{ form.fecha }}
+                {% for error in form.fecha.errors %}
+                <span class="panel-field-error"><i class="fas fa-triangle-exclamation"></i> {{ error }}</span>
+                {% endfor %}
+                <span class="panel-form-help">Formato: YYYY-MM-DD HH:MM</span>
+            </div>
+
+            <div class="panel-form-group">
+                <label class="panel-form-label" for="{{ form.temporada.id_for_label }}">Temporada *</label>
+                {{ form.temporada }}
+                {% for error in form.temporada.errors %}
+                <span class="panel-field-error"><i class="fas fa-triangle-exclamation"></i> {{ error }}</span>
+                {% endfor %}
+            </div>
+
+            <div class="panel-form-group">
+                <label class="panel-form-label" for="{{ form.equipo_local.id_for_label }}">Equipo Local *</label>
+                {{ form.equipo_local }}
+                {% for error in form.equipo_local.errors %}
+                <span class="panel-field-error"><i class="fas fa-triangle-exclamation"></i> {{ error }}</span>
+                {% endfor %}
+            </div>
+
+            <div class="panel-form-group">
+                <label class="panel-form-label" for="{{ form.equipo_visitante.id_for_label }}">Equipo Visitante *</label>
+                {{ form.equipo_visitante }}
+                {% for error in form.equipo_visitante.errors %}
+                <span class="panel-field-error"><i class="fas fa-triangle-exclamation"></i> {{ error }}</span>
+                {% endfor %}
+            </div>
+
+            <div class="panel-form-group">
+                <label class="panel-form-label" for="{{ form.carreras_local.id_for_label }}">Carreras Local</label>
+                {{ form.carreras_local }}
+                {% for error in form.carreras_local.errors %}
+                <span class="panel-field-error"><i class="fas fa-triangle-exclamation"></i> {{ error }}</span>
+                {% endfor %}
+            </div>
+
+            <div class="panel-form-group">
+                <label class="panel-form-label" for="{{ form.carreras_visitante.id_for_label }}">Carreras Visitante</label>
+                {{ form.carreras_visitante }}
+                {% for error in form.carreras_visitante.errors %}
+                <span class="panel-field-error"><i class="fas fa-triangle-exclamation"></i> {{ error }}</span>
+                {% endfor %}
+            </div>
+
+            <div class="panel-form-group">
+                <label class="panel-form-label" for="{{ form.estado.id_for_label }}">Estado *</label>
+                {{ form.estado }}
+                {% for error in form.estado.errors %}
+                <span class="panel-field-error"><i class="fas fa-triangle-exclamation"></i> {{ error }}</span>
+                {% endfor %}
+            </div>
+
+            <div class="panel-form-group">
+                <label class="panel-form-label" for="{{ form.estadio.id_for_label }}">Estadio</label>
+                {{ form.estadio }}
+                {% for error in form.estadio.errors %}
+                <span class="panel-field-error"><i class="fas fa-triangle-exclamation"></i> {{ error }}</span>
+                {% endfor %}
+            </div>
+
+            <div class="panel-form-group span-2">
+                <label class="panel-form-label" style="display: flex; align-items: center; gap: 0.5rem;">
+                    {{ form.destacado }}
+                    <span>Próximo juego destacado</span>
+                </label>
+                <span class="panel-form-help">Marcar este juego como el próximo juego destacado en la página de inicio (sección "PRÓXIMO JUEGO")</span>
+                {% for error in form.destacado.errors %}
+                <span class="panel-field-error"><i class="fas fa-triangle-exclamation"></i> {{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="panel-form-section" style="margin-top: 1.5rem;">
+            <h3 style="font-size: 1rem; font-weight: 600; margin-bottom: 1rem; color: #374151;">Configuración de Próximo Juego</h3>
+            <div class="panel-form-grid">
+                <div class="panel-form-group span-2">
+                    <label class="panel-form-label" for="{{ form.imagen_fondo.id_for_label }}">Imagen de fondo</label>
+                    {% if objeto and objeto.imagen_fondo %}
+                    <div style="margin-bottom: 0.5rem;">
+                        <img src="{{ objeto.imagen_fondo.url }}" alt="Imagen de fondo" style="max-height: 120px; border-radius: 4px;">
+                    </div>
+                    {% endif %}
+                    {{ form.imagen_fondo }}
+                    {% for error in form.imagen_fondo.errors %}
+                    <span class="panel-field-error"><i class="fas fa-triangle-exclamation"></i> {{ error }}</span>
+                    {% endfor %}
+                    <span class="panel-form-help">Imagen de fondo para la sección "PRÓXIMO JUEGO" cuando este juego esté destacado</span>
+                </div>
+
+                <div class="panel-form-group">
+                    <label class="panel-form-label" for="{{ form.opacidad_overlay.id_for_label }}">Opacidad del overlay</label>
+                    {{ form.opacidad_overlay }}
+                    {% for error in form.opacidad_overlay.errors %}
+                    <span class="panel-field-error"><i class="fas fa-triangle-exclamation"></i> {{ error }}</span>
+                    {% endfor %}
+                    <span class="panel-form-help">{{ form.opacidad_overlay.help_text }}</span>
+                </div>
+            </div>
+        </div>
+
+        {% if form.non_field_errors %}
+        <div class="panel-message panel-message-error">
+            <i class="fas fa-triangle-exclamation"></i>
+            {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="panel-form-actions">
+            <button type="submit" class="panel-btn panel-btn-primary panel-btn-lg">
+                <i class="fas fa-floppy-disk"></i>
+                {% if objeto %}Guardar cambios{% else %}Crear juego{% endif %}
+            </button>
+            <a href="{% url 'panel:partidos_lista' %}" class="panel-btn panel-btn-secondary panel-btn-lg">Cancelar</a>
+        </div>
+    </div>
+</form>
+{% endblock %}

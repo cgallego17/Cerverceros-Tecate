@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.utils.text import slugify
+from django.conf import settings
 
 
 class Jugador(models.Model):
@@ -44,7 +45,7 @@ class Jugador(models.Model):
 
 class Equipo(models.Model):
     nombre = models.CharField(max_length=100)
-    ciudad = models.CharField(max_length=100)
+    ciudad = models.ForeignKey('Ciudad', on_delete=models.SET_NULL, null=True, blank=True, related_name='equipos', verbose_name='Ciudad')
     logo = models.ImageField(upload_to='equipos/', blank=True, null=True)
     
     class Meta:
@@ -52,6 +53,12 @@ class Equipo(models.Model):
     
     def __str__(self):
         return self.nombre
+
+    @property
+    def logo_src(self):
+        if self.logo and hasattr(self.logo, 'storage') and self.logo.storage.exists(self.logo.name):
+            return self.logo.url
+        return ''
 
 
 class Partido(models.Model):
@@ -71,10 +78,18 @@ class Partido(models.Model):
     estado = models.CharField(max_length=20, choices=ESTADOS, default='programado')
     estadio = models.CharField(max_length=200, blank=True)
     temporada = models.CharField(max_length=20)
+    destacado = models.BooleanField(default=False, verbose_name='Próximo partido destacado', help_text='Marcar como el próximo partido a mostrar en la página de inicio')
+    imagen_fondo = models.ImageField(upload_to='partidos/', blank=True, null=True, verbose_name='Imagen de fondo', help_text='Imagen de fondo para la sección de próximo partido')
+    opacidad_overlay = models.DecimalField(max_digits=3, decimal_places=2, default=0.60, verbose_name='Opacidad del overlay', help_text='Opacidad del overlay oscuro (0.00 = transparente, 1.00 = opaco)')
     
     class Meta:
         verbose_name_plural = "Partidos"
         ordering = ['-fecha']
+    
+    def save(self, *args, **kwargs):
+        if self.destacado:
+            Partido.objects.filter(destacado=True).exclude(pk=self.pk).update(destacado=False)
+        super().save(*args, **kwargs)
     
     def __str__(self):
         return f"{self.equipo_local} vs {self.equipo_visitante} - {self.fecha.strftime('%d/%m/%Y')}"
@@ -82,18 +97,35 @@ class Partido(models.Model):
 
 class Noticia(models.Model):
     titulo = models.CharField(max_length=200)
+    slug = models.SlugField(max_length=200, blank=True)
     contenido = models.TextField()
     imagen = models.ImageField(upload_to='noticias/', blank=True, null=True)
     fecha_publicacion = models.DateTimeField(default=timezone.now)
     autor = models.CharField(max_length=100, blank=True)
     destacada = models.BooleanField(default=False)
+    activo = models.BooleanField(default=True)
     
     class Meta:
         verbose_name_plural = "Noticias"
         ordering = ['-fecha_publicacion']
     
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            from django.utils.text import slugify
+            self.slug = slugify(self.titulo)
+        super().save(*args, **kwargs)
+    
     def __str__(self):
         return self.titulo
+
+    @property
+    def imagen_src(self):
+        try:
+            if self.imagen and hasattr(self.imagen, 'storage') and self.imagen.storage.exists(self.imagen.name):
+                return self.imagen.url
+        except Exception:
+            return ''
+        return ''
 
 
 class Boleto(models.Model):
@@ -146,10 +178,10 @@ class TablaPosiciones(models.Model):
 # ──────────────────────────────────────────────
 
 class HeroSlide(models.Model):
-    subtitulo = models.CharField(max_length=200, verbose_name="Subtítulo")
-    titulo_linea1 = models.CharField(max_length=200, verbose_name="Título línea 1")
+    subtitulo = models.CharField(max_length=200, blank=True, verbose_name="Subtítulo")
+    titulo_linea1 = models.CharField(max_length=200, blank=True, verbose_name="Título línea 1")
     titulo_linea2 = models.CharField(max_length=200, blank=True, verbose_name="Título línea 2")
-    imagen = models.ImageField(upload_to='hero/', blank=True, null=True, verbose_name="Imagen (sube aquí)")
+    imagen = models.ImageField(upload_to='hero/', verbose_name="Imagen (sube aquí)")
     imagen_url = models.URLField(blank=True, verbose_name="URL de imagen externa", help_text="Se usa si no subes imagen")
     btn1_texto = models.CharField(max_length=100, blank=True, verbose_name="Botón 1 texto")
     btn1_url = models.CharField(max_length=200, blank=True, verbose_name="Botón 1 enlace")
@@ -169,7 +201,7 @@ class HeroSlide(models.Model):
     @property
     def imagen_bg(self):
         """Returns the background URL (uploaded image takes priority)."""
-        if self.imagen:
+        if self.imagen and hasattr(self.imagen, 'storage') and self.imagen.storage.exists(self.imagen.name):
             return self.imagen.url
         return self.imagen_url or ''
 
@@ -255,6 +287,12 @@ class Producto(models.Model):
     @property
     def tiene_descuento(self):
         return self.precio_anterior is not None and self.precio_anterior > self.precio
+
+    @property
+    def imagen_src(self):
+        if self.imagen and hasattr(self.imagen, 'storage') and self.imagen.storage.exists(self.imagen.name):
+            return self.imagen.url
+        return ''
 
 
 # ──────────────────────────────────────────────
@@ -353,7 +391,7 @@ class ImagenInstagram(models.Model):
     
     @property
     def imagen_src(self):
-        if self.imagen:
+        if self.imagen and hasattr(self.imagen, 'storage') and self.imagen.storage.exists(self.imagen.name):
             return self.imagen.url
         return self.imagen_url or ''
 
@@ -366,6 +404,10 @@ class Transaccion(models.Model):
     TIPO_CHOICES = [
         ('ingreso', 'Ingreso'),
         ('egreso',  'Egreso'),
+    ]
+    MONEDA_CHOICES = [
+        ('MXN', 'Peso mexicano (MXN)'),
+        ('USD', 'Dólar (USD)'),
     ]
     CATEGORIA_CHOICES = [
         ('boletos',      'Boletos'),
@@ -386,6 +428,15 @@ class Transaccion(models.Model):
     tipo          = models.CharField(max_length=10, choices=TIPO_CHOICES, verbose_name='Tipo')
     categoria     = models.CharField(max_length=20, choices=CATEGORIA_CHOICES, default='otro', verbose_name='Categoría')
     monto         = models.DecimalField(max_digits=12, decimal_places=2, verbose_name='Monto')
+    moneda        = models.CharField(max_length=3, choices=MONEDA_CHOICES, default='MXN', verbose_name='Moneda')
+    tipo_cambio   = models.DecimalField(
+        max_digits=12,
+        decimal_places=6,
+        null=True,
+        blank=True,
+        verbose_name='Tipo de cambio (MXN por 1 USD)',
+        help_text='Se usa para convertir entre MXN y USD. Ejemplo: 18.5000'
+    )
     metodo_pago   = models.CharField(max_length=20, choices=METODO_CHOICES, default='efectivo', verbose_name='Método de pago')
     fecha         = models.DateTimeField(default=timezone.now, verbose_name='Fecha')
     notas         = models.TextField(blank=True, verbose_name='Notas')
@@ -402,3 +453,175 @@ class Transaccion(models.Model):
     def __str__(self):
         return f"{self.get_tipo_display()} – {self.concepto} (${self.monto})"
 
+    @property
+    def moneda_display(self):
+        return self.moneda or 'MXN'
+
+    @property
+    def tipo_cambio_efectivo(self):
+        if self.tipo_cambio:
+            return self.tipo_cambio
+        return getattr(settings, 'CAJA_TIPO_CAMBIO_USD_MXN', None)
+
+    @property
+    def uso_tc_global(self):
+        return self.tipo_cambio is None and self.tipo_cambio_efectivo is not None
+
+    def monto_en_mxn(self):
+        if self.moneda == 'MXN':
+            return self.monto
+        if self.moneda == 'USD' and self.tipo_cambio_efectivo:
+            return self.monto * self.tipo_cambio_efectivo
+        return None
+
+    def monto_en_usd(self):
+        if self.moneda == 'USD':
+            return self.monto
+        if self.moneda == 'MXN' and self.tipo_cambio_efectivo:
+            return self.monto / self.tipo_cambio_efectivo
+        return None
+
+    @property
+    def monto_contrario(self):
+        if self.moneda == 'MXN':
+            return self.monto_en_usd()
+        return self.monto_en_mxn()
+
+    @property
+    def moneda_contraria(self):
+        return 'USD' if self.moneda == 'MXN' else 'MXN'
+
+
+class UserProfile(models.Model):
+    """Perfil extendido de usuario con imagen"""
+    from django.contrib.auth.models import User
+    
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    avatar = models.ImageField(upload_to='usuarios/', blank=True, null=True)
+    
+    class Meta:
+        verbose_name = 'Perfil de Usuario'
+        verbose_name_plural = 'Perfiles de Usuario'
+    
+    def __str__(self):
+        return f"Perfil de {self.user.username}"
+    
+    @property
+    def avatar_url(self):
+        """Retorna la URL del avatar o un placeholder"""
+        if self.avatar:
+            return self.avatar.url
+        return None
+
+
+# ──────────────────────────────────────────────
+#  LOCALIZACIONES
+# ──────────────────────────────────────────────
+
+class Pais(models.Model):
+    """País para sistema de localizaciones"""
+    nombre = models.CharField(max_length=100, unique=True)
+    codigo = models.CharField(max_length=3, unique=True, help_text="Código ISO (ej: MEX, USA)")
+    activo = models.BooleanField(default=True)
+    
+    class Meta:
+        verbose_name = 'País'
+        verbose_name_plural = 'Países'
+        ordering = ['nombre']
+    
+    def __str__(self):
+        return self.nombre
+
+
+class Estado(models.Model):
+    """Estado o provincia"""
+    pais = models.ForeignKey(Pais, on_delete=models.CASCADE, related_name='estados')
+    nombre = models.CharField(max_length=100)
+    codigo = models.CharField(max_length=10, blank=True, help_text="Código del estado (ej: BC, NL)")
+    activo = models.BooleanField(default=True)
+    
+    class Meta:
+        verbose_name = 'Estado'
+        verbose_name_plural = 'Estados'
+        ordering = ['pais', 'nombre']
+        unique_together = [['pais', 'nombre']]
+    
+    def __str__(self):
+        return f"{self.nombre}, {self.pais.nombre}"
+
+
+class Ciudad(models.Model):
+    """Ciudad o municipio"""
+    estado = models.ForeignKey(Estado, on_delete=models.CASCADE, related_name='ciudades')
+    nombre = models.CharField(max_length=100)
+    activo = models.BooleanField(default=True)
+    
+    class Meta:
+        verbose_name = 'Ciudad'
+        verbose_name_plural = 'Ciudades'
+        ordering = ['estado', 'nombre']
+        unique_together = [['estado', 'nombre']]
+    
+    def __str__(self):
+        return f"{self.nombre}, {self.estado.nombre}"
+    
+    @property
+    def nombre_completo(self):
+        """Retorna nombre completo con estado y país"""
+        return f"{self.nombre}, {self.estado.nombre}, {self.estado.pais.nombre}"
+
+
+# ──────────────────────────────────────────────
+#  HOME – PRÓXIMO JUEGO DESTACADO
+# ──────────────────────────────────────────────
+
+class ProximoJuegoDestacado(models.Model):
+    """Sección de próximo juego destacado en la página de inicio"""
+    activo = models.BooleanField(default=True, verbose_name="Activo")
+    subtitulo = models.CharField(max_length=200, default="LO QUE ESTÁ EN TENDENCIA", verbose_name="Subtítulo")
+    titulo = models.CharField(max_length=200, default="PRÓXIMO JUEGO", verbose_name="Título")
+    partido = models.ForeignKey(Partido, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Partido")
+    texto_personalizado = models.CharField(max_length=300, blank=True, verbose_name="Texto personalizado", help_text="Opcional: texto en lugar de mostrar equipos del partido")
+    imagen_fondo = models.ImageField(upload_to='proximo_juego/', blank=True, null=True, verbose_name="Imagen de fondo")
+    opacidad_overlay = models.DecimalField(
+        max_digits=3,
+        decimal_places=2,
+        default=0.70,
+        verbose_name="Opacidad del overlay",
+        help_text="0.00 = transparente, 1.00 = completamente opaco"
+    )
+    texto_boton = models.CharField(max_length=100, default="COMPRAR BOLETOS", verbose_name="Texto del botón")
+    url_boton = models.URLField(default="https://arema.mx/e/17890", verbose_name="URL del botón")
+    mostrar_countdown = models.BooleanField(default=True, verbose_name="Mostrar contador regresivo")
+    orden = models.PositiveIntegerField(default=0, verbose_name="Orden")
+    
+    class Meta:
+        verbose_name = 'Próximo Juego Destacado'
+        verbose_name_plural = 'Próximos Juegos Destacados'
+        ordering = ['-activo', 'orden']
+    
+    def __str__(self):
+        if self.partido:
+            return f"Próximo Juego: {self.partido.equipo_local} vs {self.partido.equipo_visitante}"
+        return f"Próximo Juego: {self.titulo}"
+
+
+# ──────────────────────────────────────────────
+#  HOME – OVERLAY DE CALENDARIO
+# ──────────────────────────────────────────────
+
+class CalendarioOverlay(models.Model):
+    """Overlay de calendario - imagen simple sin textos"""
+    activo = models.BooleanField(default=True, verbose_name="Activo")
+    titulo = models.CharField(max_length=200, default="Calendario", verbose_name="Título", help_text="Solo para identificación en el panel")
+    imagen = models.ImageField(upload_to='calendario_overlay/', verbose_name="Imagen del overlay")
+    url_destino = models.URLField(blank=True, verbose_name="URL de destino", help_text="Opcional: URL a la que redirige al hacer clic")
+    orden = models.PositiveIntegerField(default=0, verbose_name="Orden")
+    
+    class Meta:
+        verbose_name = 'Overlay de Calendario'
+        verbose_name_plural = 'Overlays de Calendario'
+        ordering = ['-activo', 'orden']
+    
+    def __str__(self):
+        return self.titulo

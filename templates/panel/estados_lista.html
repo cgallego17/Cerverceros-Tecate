@@ -1,0 +1,61 @@
+{% extends 'panel/base.html' %}
+
+{% block page_title %}Estados{% endblock %}
+
+{% block content %}
+<div class="panel-page-header">
+    <div class="panel-page-title">
+        Estados
+        <small>Administra los estados por país</small>
+    </div>
+    <a href="{% url 'panel:estado_nuevo' %}" class="panel-btn panel-btn-primary">+ Nuevo Estado</a>
+</div>
+
+{% if estados %}
+<div class="panel-card">
+    <table class="panel-table">
+        <thead>
+            <tr>
+                <th>Estado</th>
+                <th>País</th>
+                <th>Código</th>
+                <th>Ciudades</th>
+                <th>Estado</th>
+                <th class="text-right">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for estado in estados %}
+            <tr>
+                <td><strong>{{ estado.nombre }}</strong></td>
+                <td>{{ estado.pais.nombre }}</td>
+                <td>{% if estado.codigo %}<span class="panel-badge panel-badge-secondary">{{ estado.codigo }}</span>{% else %}—{% endif %}</td>
+                <td>{{ estado.ciudades.count }} ciudad{{ estado.ciudades.count|pluralize:"es" }}</td>
+                <td>
+                    {% if estado.activo %}
+                    <span class="panel-badge panel-badge-success">Activo</span>
+                    {% else %}
+                    <span class="panel-badge panel-badge-secondary">Inactivo</span>
+                    {% endif %}
+                </td>
+                <td class="text-right">
+                    <a href="{% url 'panel:estado_editar' estado.pk %}" class="panel-btn-icon" title="Editar">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <a href="{% url 'panel:estado_eliminar' estado.pk %}" class="panel-btn-icon panel-btn-danger" title="Eliminar">
+                        <i class="fas fa-trash"></i>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="panel-empty-state">
+    <i class="fas fa-map"></i>
+    <p>No hay estados registrados</p>
+    <a href="{% url 'panel:estado_nuevo' %}" class="panel-btn panel-btn-primary">Crear primer estado</a>
+</div>
+{% endif %}
+{% endblock %}

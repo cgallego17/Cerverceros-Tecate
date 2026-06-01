@@ -1,11 +1,13 @@
 from django.conf import settings
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .context_processors import fetch_instagram_rss_items
 from .models import (
     Jugador, Partido, Noticia, Boleto, TablaPosiciones,
     HeroSlide, Patrocinador, Producto, CategoriaProducto, ItemFaq,
-    SkillProgress, ArticuloNoticia, ImagenInstagram,
+    SkillProgress, ArticuloNoticia, ImagenInstagram, ProximoJuegoDestacado,
+    CalendarioOverlay,
 )
 
 
@@ -19,6 +21,16 @@ def inicio(request):
         fecha__gte=timezone.now(), estado='programado'
     ).order_by('fecha')[:3]
     proximo_partido = proximos_partidos.first()
+    
+    # Partidos anteriores con marcador (para scores-section)
+    partidos_anteriores = Partido.objects.filter(
+        fecha__lt=timezone.now(), estado='finalizado'
+    ).exclude(carreras_local__isnull=True).exclude(carreras_visitante__isnull=True).order_by('-fecha')[:3]
+    
+    # Partidos en curso (para scores-section)
+    partidos_en_curso = Partido.objects.filter(
+        estado='en_curso'
+    ).order_by('fecha')[:3]
 
     # Jugador destacado
     jugador_destacado = Jugador.objects.filter(activo=True, destacado_inicio=True).first()
@@ -36,8 +48,8 @@ def inicio(request):
     # Skills Progress
     skills = SkillProgress.objects.filter(activo=True).order_by('orden')
 
-    # Artículos de Noticias (News Grid)
-    articulos_news = ArticuloNoticia.objects.filter(activo=True, destacado_grid=True).order_by('orden')
+    # Artículos de Noticias (News Grid) - Usando noticias del panel
+    articulos_news = Noticia.objects.filter(activo=True).order_by('-fecha_publicacion')[:6]
 
     # Imágenes de Instagram desde RSS
     imagenes_instagram = []
@@ -46,11 +58,22 @@ def inicio(request):
     if not imagenes_instagram:
         imagenes_instagram = ImagenInstagram.objects.filter(activo=True).order_by('orden')[:4]
 
+    # Próximo Juego Destacado
+    proximo_juego_destacado = ProximoJuegoDestacado.objects.filter(activo=True).first()
+
+    # Overlay de Calendario
+    calendario_overlay = CalendarioOverlay.objects.filter(activo=True).first()
+
+    # Jugadores para Roster
+    jugadores_roster = Jugador.objects.filter(activo=True).order_by('posicion', 'numero')
+
     context = {
         'hero_slides': hero_slides,
         'patrocinadores': patrocinadores,
         'proximos_partidos': proximos_partidos,
         'proximo_partido': proximo_partido,
+        'partidos_anteriores': partidos_anteriores,
+        'partidos_en_curso': partidos_en_curso,
         'jugador_destacado': jugador_destacado,
         'noticias_inicio': noticias_inicio,
         'noticias_destacadas': noticias_destacadas,
@@ -59,6 +82,9 @@ def inicio(request):
         'skills': skills,
         'articulos_news': articulos_news,
         'imagenes_instagram': imagenes_instagram,
+        'proximo_juego_destacado': proximo_juego_destacado,
+        'calendario_overlay': calendario_overlay,
+        'jugadores_roster': jugadores_roster,
     }
     return render(request, 'equipo/inicio.html', context)
 
@@ -94,9 +120,23 @@ def producto_detalle(request, pk):
 
 
 def nuestro_equipo(request):
-    jugadores = Jugador.objects.filter(activo=True)
+    jugadores = Jugador.objects.filter(activo=True).order_by('posicion', 'numero')
+    
+    # Organizar jugadores por categoría
+    pitchers = jugadores.filter(posicion='P')
+    catchers = jugadores.filter(posicion='C')
+    infielders = jugadores.filter(posicion__in=['1B', '2B', '3B', 'SS'])
+    outfielders = jugadores.filter(posicion__in=['LF', 'CF', 'RF'])
+    designated_hitters = jugadores.filter(posicion='DH')
+    
     context = {
         'jugadores': jugadores,
+        'pitchers': pitchers,
+        'catchers': catchers,
+        'infielders': infielders,
+        'outfielders': outfielders,
+        'designated_hitters': designated_hitters,
+        'total_jugadores': jugadores.count(),
     }
     return render(request, 'equipo/nuestro_equipo.html', context)
 
@@ -110,16 +150,79 @@ def jugador_detalle(request, pk):
 
 
 def calendario(request):
-    partidos_futuros = Partido.objects.filter(
-        fecha__gte=timezone.now()
-    ).order_by('fecha')
-    partidos_pasados = Partido.objects.filter(
-        fecha__lt=timezone.now()
-    ).order_by('-fecha')
+    from datetime import datetime
+    from collections import defaultdict
+    import calendar as cal
+    
+    # Nombres de meses en español
+    meses_es = [
+        '', 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+        'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    ]
+    
+    # Obtener mes y año actual o de parámetros
+    now = timezone.now()
+    try:
+        mes = int(request.GET.get('mes', now.month))
+        anio = int(request.GET.get('anio', now.year))
+    except (ValueError, TypeError):
+        mes = now.month
+        anio = now.year
+    
+    # Validar mes
+    if mes < 1 or mes > 12:
+        mes = now.month
+    
+    # Calcular mes anterior y siguiente
+    if mes == 1:
+        mes_anterior_num = 12
+        anio_anterior = anio - 1
+    else:
+        mes_anterior_num = mes - 1
+        anio_anterior = anio
+    
+    if mes == 12:
+        mes_siguiente_num = 1
+        anio_siguiente = anio + 1
+    else:
+        mes_siguiente_num = mes + 1
+        anio_siguiente = anio
+    
+    # Obtener todos los partidos del mes
+    try:
+        primer_dia = timezone.make_aware(datetime(anio, mes, 1))
+        ultimo_dia_num = cal.monthrange(anio, mes)[1]
+        ultimo_dia = timezone.make_aware(
+            datetime(anio, mes, ultimo_dia_num, 23, 59, 59)
+        )
+        
+        partidos_mes = Partido.objects.filter(
+            fecha__gte=primer_dia,
+            fecha__lte=ultimo_dia
+        ).select_related('equipo_local', 'equipo_visitante').order_by('fecha')
+    except Exception:
+        partidos_mes = []
+    
+    # Organizar partidos por día
+    partidos_por_dia = {}
+    for partido in partidos_mes:
+        dia = partido.fecha.day
+        if dia not in partidos_por_dia:
+            partidos_por_dia[dia] = []
+        partidos_por_dia[dia].append(partido)
+    
+    # Generar estructura del calendario
+    cal_obj = cal.monthcalendar(anio, mes)
     
     context = {
-        'partidos_futuros': partidos_futuros,
-        'partidos_pasados': partidos_pasados,
+        'mes': mes,
+        'anio': anio,
+        'mes_nombre': meses_es[mes],
+        'calendario': cal_obj,
+        'partidos_por_dia': partidos_por_dia,
+        'mes_anterior': {'month': mes_anterior_num, 'year': anio_anterior},
+        'mes_siguiente': {'month': mes_siguiente_num, 'year': anio_siguiente},
+        'hoy': now.date(),
     }
     return render(request, 'equipo/calendario.html', context)
 
@@ -146,17 +249,41 @@ def tabla_posiciones(request):
 
 def noticias(request):
     todas_noticias = Noticia.objects.all()
-    
+
+    paginator = Paginator(todas_noticias, 9)
+    page = request.GET.get('page')
+    try:
+        noticias_page = paginator.page(page)
+    except PageNotAnInteger:
+        noticias_page = paginator.page(1)
+    except EmptyPage:
+        noticias_page = paginator.page(paginator.num_pages)
+
     context = {
-        'noticias': todas_noticias,
+        'noticias': noticias_page,
+        'page_obj': noticias_page,
+        'is_paginated': noticias_page.has_other_pages(),
     }
     return render(request, 'equipo/noticias.html', context)
 
 
 def noticia_detalle(request, pk):
     noticia = get_object_or_404(Noticia, pk=pk)
+    
+    # Noticias relacionadas (excluir la actual)
+    noticias_relacionadas = Noticia.objects.filter(
+        activo=True
+    ).exclude(pk=pk).order_by('-fecha_publicacion')[:4]
+    
+    # Próximos partidos
+    proximos_partidos = Partido.objects.filter(
+        fecha__gte=timezone.now(), estado='programado'
+    ).order_by('fecha')[:3]
+    
     context = {
         'noticia': noticia,
+        'noticias_relacionadas': noticias_relacionadas,
+        'proximos_partidos': proximos_partidos,
     }
     return render(request, 'equipo/noticia_detalle.html', context)
 

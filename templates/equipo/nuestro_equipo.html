@@ -1,33 +1,120 @@
 {% extends 'equipo/base.html' %}
-{% load i18n %}
+{% load static i18n %}
 
 {% block title %}Nuestro Equipo - Cerveceros de Tecate{% endblock %}
 
 {% block content %}
-<div class="hero">
-    <div class="hero-content">
-        <h1>{% trans "Nuestro Equipo" %}</h1>
-        <p>{% trans "Conoce a los jugadores de Cerveceros de Tecate" %}</p>
-    </div>
-</div>
 
-<div class="container">
-    <div class="card-grid">
-        {% for jugador in jugadores %}
-        <div class="card jugador-card">
-            {% if jugador.foto %}
-            <img src="{{ jugador.foto.url }}" alt="{{ jugador.nombre }}" class="card-image">
-            {% endif %}
-            <div class="card-content">
-                <div class="jugador-numero">#{{ jugador.numero }}</div>
-                <h3 class="jugador-nombre">{{ jugador.nombre }}</h3>
-                <p class="jugador-posicion">{{ jugador.get_posicion_display }}</p>
-                <a href="{% url 'equipo:jugador_detalle' jugador.pk %}" class="btn">{% trans "Ver Perfil" %}</a>
+{# ─── HERO SECTION ────────────────────────────────────────── #}
+<section class="team-hero-section">
+    <div class="team-hero-overlay"></div>
+    <div class="team-hero-content">
+        <p class="team-hero-subtitle">{% trans "TEMPORADA 2024" %}</p>
+        <h1 class="team-hero-title">{% trans "NUESTRO EQUIPO" %}</h1>
+        <p class="team-hero-description">{% trans "Conoce a los jugadores que representan el orgullo de Tecate" %}</p>
+        <div class="team-stats">
+            <div class="team-stat-item">
+                <span class="team-stat-number">{{ total_jugadores }}</span>
+                <span class="team-stat-label">{% trans "JUGADORES" %}</span>
+            </div>
+            <div class="team-stat-item">
+                <span class="team-stat-number">{{ pitchers.count }}</span>
+                <span class="team-stat-label">{% trans "LANZADORES" %}</span>
+            </div>
+            <div class="team-stat-item">
+                <span class="team-stat-number">{{ infielders.count|add:outfielders.count }}</span>
+                <span class="team-stat-label">{% trans "FIELDERS" %}</span>
             </div>
         </div>
-        {% empty %}
-        <p>{% trans "No hay jugadores registrados en este momento." %}</p>
-        {% endfor %}
     </div>
-</div>
+</section>
+
+{# ─── FILTROS DE POSICIÓN ─────────────────────────────────── #}
+<section class="team-filter-section">
+    <div class="team-filter-tabs">
+        <button class="team-filter-tab active" data-filter="all">
+            <i class="fas fa-users"></i>
+            <span>{% trans "TODOS" %}</span>
+            <span class="filter-count">{{ total_jugadores }}</span>
+        </button>
+        <button class="team-filter-tab" data-filter="pitcher">
+            <i class="fas fa-baseball-ball"></i>
+            <span>{% trans "LANZADORES" %}</span>
+            <span class="filter-count">{{ pitchers.count }}</span>
+        </button>
+        <button class="team-filter-tab" data-filter="catcher">
+            <i class="fas fa-baseball"></i>
+            <span>{% trans "RECEPTORES" %}</span>
+            <span class="filter-count">{{ catchers.count }}</span>
+        </button>
+        <button class="team-filter-tab" data-filter="infielder">
+            <i class="fas fa-running"></i>
+            <span>{% trans "INFIELDERS" %}</span>
+            <span class="filter-count">{{ infielders.count }}</span>
+        </button>
+        <button class="team-filter-tab" data-filter="outfielder">
+            <i class="fas fa-person-running"></i>
+            <span>{% trans "OUTFIELDERS" %}</span>
+            <span class="filter-count">{{ outfielders.count }}</span>
+        </button>
+    </div>
+</section>
+
+{# ─── GRID DE JUGADORES ───────────────────────────────────── #}
+<section class="team-players-section">
+    <div class="container">
+        <div class="team-players-grid">
+            {% for jugador in jugadores %}
+            <div class="team-player-card" 
+                 data-position="{{ jugador.posicion }}"
+                 data-category="{% if jugador.posicion == 'P' %}pitcher{% elif jugador.posicion == 'C' %}catcher{% elif jugador.posicion in '1B,2B,3B,SS' %}infielder{% elif jugador.posicion in 'LF,CF,RF' %}outfielder{% endif %}">
+                
+                <div class="team-player-image-wrapper">
+                    {% if jugador.foto %}
+                    <img src="{{ jugador.foto.url }}" alt="{{ jugador.nombre }}" class="team-player-image">
+                    {% else %}
+                    <div class="team-player-placeholder">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    {% endif %}
+                    <div class="team-player-overlay">
+                        <a href="{% url 'equipo:jugador_detalle' jugador.pk %}" class="team-player-view-btn">
+                            <i class="fas fa-eye"></i>
+                            <span>{% trans "VER PERFIL" %}</span>
+                        </a>
+                    </div>
+                    <div class="team-player-number-badge">#{{ jugador.numero }}</div>
+                </div>
+                
+                <div class="team-player-info">
+                    <h3 class="team-player-name">{{ jugador.nombre|upper }}</h3>
+                    <p class="team-player-position">{{ jugador.get_posicion_display|upper }}</p>
+                    {% if jugador.altura or jugador.peso %}
+                    <div class="team-player-stats">
+                        {% if jugador.altura %}<span><i class="fas fa-ruler-vertical"></i> {{ jugador.altura }}</span>{% endif %}
+                        {% if jugador.peso %}<span><i class="fas fa-weight"></i> {{ jugador.peso }}</span>{% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% empty %}
+            <div class="team-empty-state">
+                <i class="fas fa-users-slash"></i>
+                <h3>{% trans "No hay jugadores registrados" %}</h3>
+                <p>{% trans "Pronto agregaremos el roster completo del equipo." %}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{# ─── CALL TO ACTION ──────────────────────────────────────── #}
+<section class="team-cta-section">
+    <div class="team-cta-content">
+        <h2 class="team-cta-title">{% trans "¿QUIERES SER PARTE DEL EQUIPO?" %}</h2>
+        <p class="team-cta-description">{% trans "Únete a nosotros y vive la pasión del béisbol" %}</p>
+        <a href="{% url 'equipo:inicio' %}#contact" class="btn btn-cta">{% trans "CONTÁCTANOS" %}</a>
+    </div>
+</section>
+
 {% endblock %}

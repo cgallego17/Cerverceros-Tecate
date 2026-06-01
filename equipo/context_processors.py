@@ -4,6 +4,9 @@ import urllib.request
 import xml.etree.ElementTree as ET
 
 from django.conf import settings
+from django.utils import timezone
+
+from .models import Partido
 
 RSS_URL = 'https://rss.app/feeds/hS2my7AUGemCdQkI.xml'
 RSS_CACHE_TTL = 300  # segundos
@@ -64,4 +67,47 @@ def instagram_footer_items(request):
         ]
     return {
         'footer_instagram_items': items,
+    }
+
+
+def footer_fixtures(request):
+    proximos = (
+        Partido.objects.filter(fecha__gte=timezone.now(), estado='programado')
+        .select_related('equipo_local', 'equipo_visitante')
+        .order_by('fecha')[:3]
+    )
+
+    fixtures = []
+    for partido in proximos:
+        local_nombre = (partido.equipo_local.nombre or '').strip()
+        visitante_nombre = (partido.equipo_visitante.nombre or '').strip()
+
+        local_is_cerveceros = 'cerveceros' in local_nombre.lower()
+        visitante_is_cerveceros = 'cerveceros' in visitante_nombre.lower()
+
+        if local_is_cerveceros and not visitante_is_cerveceros:
+            is_home = True
+            opponent = visitante_nombre
+        elif visitante_is_cerveceros and not local_is_cerveceros:
+            is_home = False
+            opponent = local_nombre
+        else:
+            is_home = True
+            opponent = visitante_nombre
+
+        fixtures.append(
+            {
+                'fecha': partido.fecha,
+                'is_home': is_home,
+                'opponent': opponent,
+                'estadio': (partido.estadio or '').strip(),
+                'local_nombre': local_nombre,
+                'visitante_nombre': visitante_nombre,
+                'local_logo': getattr(partido.equipo_local, 'logo_src', '') or '',
+                'visitante_logo': getattr(partido.equipo_visitante, 'logo_src', '') or '',
+            }
+        )
+
+    return {
+        'footer_proximos_partidos': fixtures,
     }

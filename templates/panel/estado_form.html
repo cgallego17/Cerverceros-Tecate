@@ -1,0 +1,70 @@
+{% extends 'panel/base.html' %}
+
+{% block page_title %}{% if objeto %}Editar Estado{% else %}Nuevo Estado{% endif %}{% endblock %}
+
+{% block content %}
+<div class="panel-page-header">
+    <div class="panel-page-title">
+        {% if objeto %}Editar Estado{% else %}Nuevo Estado{% endif %}
+        <small>{% if objeto %}Modifica los datos del estado{% else %}Registra un nuevo estado{% endif %}</small>
+    </div>
+    <a href="{% url 'panel:estados_lista' %}" class="panel-btn panel-btn-secondary">← Volver a estados</a>
+</div>
+
+<form method="post" novalidate>
+    {% csrf_token %}
+    <div class="panel-card">
+        <div class="panel-form-grid">
+            <div class="panel-form-group">
+                <label class="panel-form-label" for="{{ form.pais.id_for_label }}">País *</label>
+                {{ form.pais }}
+                {% for error in form.pais.errors %}
+                <span class="panel-field-error"><i class="fas fa-triangle-exclamation"></i> {{ error }}</span>
+                {% endfor %}
+            </div>
+
+            <div class="panel-form-group">
+                <label class="panel-form-label" for="{{ form.nombre.id_for_label }}">Nombre del estado *</label>
+                {{ form.nombre }}
+                {% for error in form.nombre.errors %}
+                <span class="panel-field-error"><i class="fas fa-triangle-exclamation"></i> {{ error }}</span>
+                {% endfor %}
+            </div>
+
+            <div class="panel-form-group">
+                <label class="panel-form-label" for="{{ form.codigo.id_for_label }}">Código</label>
+                {{ form.codigo }}
+                {% for error in form.codigo.errors %}
+                <span class="panel-field-error"><i class="fas fa-triangle-exclamation"></i> {{ error }}</span>
+                {% endfor %}
+                <span class="panel-form-help">Código del estado (ej: BC, NL, JAL)</span>
+            </div>
+
+            <div class="panel-form-group">
+                <label class="panel-form-label" style="display: flex; align-items: center; gap: 0.5rem;">
+                    {{ form.activo }}
+                    <span>Estado activo</span>
+                </label>
+                {% for error in form.activo.errors %}
+                <span class="panel-field-error"><i class="fas fa-triangle-exclamation"></i> {{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+
+        {% if form.non_field_errors %}
+        <div class="panel-message panel-message-error">
+            <i class="fas fa-triangle-exclamation"></i>
+            {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="panel-form-actions">
+            <button type="submit" class="panel-btn panel-btn-primary panel-btn-lg">
+                <i class="fas fa-floppy-disk"></i>
+                {% if objeto %}Guardar cambios{% else %}Crear estado{% endif %}
+            </button>
+            <a href="{% url 'panel:estados_lista' %}" class="panel-btn panel-btn-secondary panel-btn-lg">Cancelar</a>
+        </div>
+    </div>
+</form>
+{% endblock %}

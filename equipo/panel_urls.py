@@ -68,4 +68,47 @@ urlpatterns = [
     path('caja/nueva/', panel_views.transaccion_crear, name='transaccion_nueva'),
     path('caja/<int:pk>/editar/', panel_views.transaccion_editar, name='transaccion_editar'),
     path('caja/<int:pk>/eliminar/', panel_views.transaccion_eliminar, name='transaccion_eliminar'),
+    path('caja/api-tipo-cambio/', panel_views.api_tipo_cambio, name='api_tipo_cambio'),
+
+    # Equipos
+    path('equipos/', panel_views.equipos_lista, name='equipos_lista'),
+    path('equipos/nuevo/', panel_views.equipo_form, name='equipo_nuevo'),
+    path('equipos/<int:pk>/editar/', panel_views.equipo_form, name='equipo_editar'),
+    path('equipos/<int:pk>/eliminar/', panel_views.equipo_eliminar, name='equipo_eliminar'),
+
+    # Partidos
+    path('partidos/', panel_views.partidos_lista, name='partidos_lista'),
+    path('partidos/nuevo/', panel_views.partido_form, name='partido_nuevo'),
+    path('partidos/<int:pk>/editar/', panel_views.partido_form, name='partido_editar'),
+    path('partidos/<int:pk>/eliminar/', panel_views.partido_eliminar, name='partido_eliminar'),
+
+    # Localizaciones - Países
+    path('paises/', panel_views.paises_lista, name='paises_lista'),
+    path('paises/nuevo/', panel_views.pais_form, name='pais_nuevo'),
+    path('paises/<int:pk>/editar/', panel_views.pais_form, name='pais_editar'),
+    path('paises/<int:pk>/eliminar/', panel_views.pais_eliminar, name='pais_eliminar'),
+
+    # Localizaciones - Estados
+    path('estados/', panel_views.estados_lista, name='estados_lista'),
+    path('estados/nuevo/', panel_views.estado_form, name='estado_nuevo'),
+    path('estados/<int:pk>/editar/', panel_views.estado_form, name='estado_editar'),
+    path('estados/<int:pk>/eliminar/', panel_views.estado_eliminar, name='estado_eliminar'),
+
+    # Localizaciones - Ciudades
+    path('ciudades/', panel_views.ciudades_lista, name='ciudades_lista'),
+    path('ciudades/nueva/', panel_views.ciudad_form, name='ciudad_nueva'),
+    path('ciudades/<int:pk>/editar/', panel_views.ciudad_form, name='ciudad_editar'),
+    path('ciudades/<int:pk>/eliminar/', panel_views.ciudad_eliminar, name='ciudad_eliminar'),
+
+    # Próximo Juego Destacado
+    path('proximo-juego/', panel_views.proximo_juego_lista, name='proximo_juego_lista'),
+    path('proximo-juego/nuevo/', panel_views.proximo_juego_form, name='proximo_juego_nuevo'),
+    path('proximo-juego/<int:pk>/editar/', panel_views.proximo_juego_form, name='proximo_juego_editar'),
+    path('proximo-juego/<int:pk>/eliminar/', panel_views.proximo_juego_eliminar, name='proximo_juego_eliminar'),
+
+    # Calendario Overlay
+    path('calendario-overlay/', panel_views.calendario_overlay_lista, name='calendario_overlay_lista'),
+    path('calendario-overlay/nuevo/', panel_views.calendario_overlay_form, name='calendario_overlay_nuevo'),
+    path('calendario-overlay/<int:pk>/editar/', panel_views.calendario_overlay_form, name='calendario_overlay_editar'),
+    path('calendario-overlay/<int:pk>/eliminar/', panel_views.calendario_overlay_eliminar, name='calendario_overlay_eliminar'),
 ]

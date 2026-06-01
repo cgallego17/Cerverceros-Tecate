@@ -1,35 +1,93 @@
 {% extends 'equipo/base.html' %}
-{% load i18n %}
+{% load static i18n %}
 
 {% block title %}Resultados - Cerveceros de Tecate{% endblock %}
 
 {% block content %}
-<div class="hero">
-    <div class="hero-content">
-        <h1>{% trans "Resultados" %}</h1>
-        <p>{% trans "Resultados de los partidos finalizados" %}</p>
-    </div>
-</div>
 
-<div class="container">
-    {% for partido in partidos %}
-    <div class="partido-card">
-        <div class="equipo">
-            <p class="equipo-nombre">{{ partido.equipo_local.nombre }}</p>
+{# ─── PAGE HEADER ─────────────────────────────────────────── #}
+<section class="page-header-section">
+    <div class="page-header-overlay"></div>
+    <div class="page-header-content">
+        <div class="page-header-breadcrumb">
+            <a href="{% url 'equipo:inicio' %}">{% trans "INICIO" %}</a>
+            <span class="breadcrumb-separator">/</span>
+            <span>{% trans "RESULTADOS" %}</span>
         </div>
-        <div class="marcador">
-            {{ partido.carreras_local }} - {{ partido.carreras_visitante }}
-            <p class="fecha-partido">{{ partido.fecha|date:"d/m/Y" }}</p>
-            {% if partido.estadio %}
-            <p class="fecha-partido">{{ partido.estadio }}</p>
-            {% endif %}
-        </div>
-        <div class="equipo">
-            <p class="equipo-nombre">{{ partido.equipo_visitante.nombre }}</p>
+        <h1 class="page-header-title">{% trans "RESULTADOS" %}</h1>
+        <p class="page-header-description">{% trans "Resultados de los partidos finalizados" %}</p>
+        <div class="page-header-decoration">
+            <i class="fas fa-trophy"></i>
         </div>
     </div>
-    {% empty %}
-    <p>{% trans "No hay resultados disponibles en este momento." %}</p>
-    {% endfor %}
-</div>
+</section>
+
+{# ─── RESULTADOS DE PARTIDOS ──────────────────────────────── #}
+<section class="results-section">
+    <div class="container">
+        <div class="results-grid">
+            {% for partido in partidos %}
+            <div class="result-card">
+                <div class="result-card-header">
+                    <span class="result-date">
+                        <i class="fas fa-calendar-alt"></i>
+                        {{ partido.fecha|date:"d/m/Y" }}
+                    </span>
+                    <span class="result-badge">{% trans "FINAL" %}</span>
+                </div>
+                
+                <div class="result-card-body">
+                    <div class="result-team result-team-local">
+                        <div class="result-team-logo">
+                            {% if partido.equipo_local.logo %}
+                                <img src="{{ partido.equipo_local.logo.url }}" alt="{{ partido.equipo_local.nombre }}">
+                            {% else %}
+                                <div class="result-logo-placeholder">
+                                    {{ partido.equipo_local.nombre|slice:":3"|upper }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <h3 class="result-team-name">{{ partido.equipo_local.nombre|upper }}</h3>
+                        <div class="result-score {% if partido.carreras_local > partido.carreras_visitante %}result-score-winner{% endif %}">
+                            {{ partido.carreras_local }}
+                        </div>
+                    </div>
+                    
+                    <div class="result-vs">VS</div>
+                    
+                    <div class="result-team result-team-visitante">
+                        <div class="result-team-logo">
+                            {% if partido.equipo_visitante.logo %}
+                                <img src="{{ partido.equipo_visitante.logo.url }}" alt="{{ partido.equipo_visitante.nombre }}">
+                            {% else %}
+                                <div class="result-logo-placeholder">
+                                    {{ partido.equipo_visitante.nombre|slice:":3"|upper }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <h3 class="result-team-name">{{ partido.equipo_visitante.nombre|upper }}</h3>
+                        <div class="result-score {% if partido.carreras_visitante > partido.carreras_local %}result-score-winner{% endif %}">
+                            {{ partido.carreras_visitante }}
+                        </div>
+                    </div>
+                </div>
+                
+                {% if partido.estadio %}
+                <div class="result-card-footer">
+                    <i class="fas fa-map-marker-alt"></i>
+                    {{ partido.estadio }}
+                </div>
+                {% endif %}
+            </div>
+            {% empty %}
+            <div class="results-empty">
+                <i class="fas fa-trophy"></i>
+                <h3>{% trans "No hay resultados disponibles" %}</h3>
+                <p>{% trans "Los resultados de los partidos aparecerán aquí una vez finalizados." %}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
 {% endblock %}

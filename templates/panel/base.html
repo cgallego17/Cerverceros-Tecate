@@ -1,6 +1,6 @@
-{% load static %}
+{% load static i18n %}
 <!DOCTYPE html>
-<html lang="es">
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,11 +30,43 @@
                 <span class="panel-nav-icon"><i class="fas fa-gauge"></i></span> Dashboard
             </a>
 
-            <div class="panel-nav-section">INICIO</div>
+            <div class="panel-nav-section">⚾ EQUIPO & JUEGOS</div>
+
+            <a href="{% url 'panel:equipos_lista' %}"
+               class="panel-nav-link {% if 'equipo' in request.resolver_match.url_name %}active{% endif %}">
+                <span class="panel-nav-icon"><i class="fas fa-shield-halved"></i></span> Equipos
+            </a>
+
+            <a href="{% url 'panel:partidos_lista' %}"
+               class="panel-nav-link {% if 'partido' in request.resolver_match.url_name %}active{% endif %}">
+                <span class="panel-nav-icon"><i class="fas fa-baseball"></i></span> Juegos
+            </a>
+
+            <a href="{% url 'panel:jugadores_lista' %}"
+               class="panel-nav-link {% if 'jugador' in request.resolver_match.url_name %}active{% endif %}">
+                <span class="panel-nav-icon"><i class="fas fa-users"></i></span> Jugadores
+            </a>
+
+            <div class="panel-nav-section">🌐 SITIO WEB</div>
 
             <a href="{% url 'panel:hero_lista' %}"
                class="panel-nav-link {% if 'hero' in request.resolver_match.url_name %}active{% endif %}">
-                <span class="panel-nav-icon"><i class="fas fa-image"></i></span> Hero Slides
+                <span class="panel-nav-icon"><i class="fas fa-images"></i></span> Hero Slides
+            </a>
+
+            <a href="{% url 'panel:proximo_juego_lista' %}"
+               class="panel-nav-link {% if 'proximo_juego' in request.resolver_match.url_name %}active{% endif %}">
+                <span class="panel-nav-icon"><i class="fas fa-calendar-star"></i></span> Próximo Juego
+            </a>
+
+            <a href="{% url 'panel:calendario_overlay_lista' %}"
+               class="panel-nav-link {% if 'calendario_overlay' in request.resolver_match.url_name %}active{% endif %}">
+                <span class="panel-nav-icon"><i class="fas fa-calendar"></i></span> Overlay Calendario
+            </a>
+
+            <a href="{% url 'panel:noticias_lista' %}"
+               class="panel-nav-link {% if 'noticia' in request.resolver_match.url_name %}active{% endif %}">
+                <span class="panel-nav-icon"><i class="fas fa-newspaper"></i></span> Noticias
             </a>
 
             <a href="{% url 'panel:patrocinadores_lista' %}"
@@ -44,10 +76,10 @@
 
             <a href="{% url 'panel:faq_lista' %}"
                class="panel-nav-link {% if 'faq' in request.resolver_match.url_name %}active{% endif %}">
-                <span class="panel-nav-icon"><i class="fas fa-circle-question"></i></span> FAQ / Acordeón
+                <span class="panel-nav-icon"><i class="fas fa-circle-question"></i></span> FAQ
             </a>
 
-            <div class="panel-nav-section">TIENDA</div>
+            <div class="panel-nav-section">🛍️ TIENDA</div>
 
             <a href="{% url 'panel:categorias_lista' %}"
                class="panel-nav-link {% if 'categoria' in request.resolver_match.url_name %}active{% endif %}">
@@ -59,19 +91,22 @@
                 <span class="panel-nav-icon"><i class="fas fa-bag-shopping"></i></span> Productos
             </a>
 
-            <div class="panel-nav-section">CONTENIDO</div>
+            <div class="panel-nav-section">📍 CONFIGURACIÓN</div>
 
-            <a href="{% url 'panel:noticias_lista' %}"
-               class="panel-nav-link {% if 'noticia' in request.resolver_match.url_name %}active{% endif %}">
-                <span class="panel-nav-icon"><i class="fas fa-newspaper"></i></span> Noticias
+            <a href="{% url 'panel:paises_lista' %}"
+               class="panel-nav-link {% if 'pais' in request.resolver_match.url_name %}active{% endif %}">
+                <span class="panel-nav-icon"><i class="fas fa-globe"></i></span> Países
             </a>
 
-            <a href="{% url 'panel:jugadores_lista' %}"
-               class="panel-nav-link {% if 'jugador' in request.resolver_match.url_name %}active{% endif %}">
-                <span class="panel-nav-icon"><i class="fas fa-users"></i></span> Jugadores
+            <a href="{% url 'panel:estados_lista' %}"
+               class="panel-nav-link {% if 'estado' in request.resolver_match.url_name %}active{% endif %}">
+                <span class="panel-nav-icon"><i class="fas fa-map"></i></span> Estados
             </a>
 
-            <div class="panel-nav-section">ADMINISTRACIÓN</div>
+            <a href="{% url 'panel:ciudades_lista' %}"
+               class="panel-nav-link {% if 'ciudad' in request.resolver_match.url_name %}active{% endif %}">
+                <span class="panel-nav-icon"><i class="fas fa-city"></i></span> Ciudades
+            </a>
 
             {% if request.user.is_superuser %}
             <a href="{% url 'panel:usuarios_lista' %}"
@@ -84,7 +119,7 @@
             </a>
             {% endif %}
 
-            <div class="panel-nav-section">CAJA</div>
+            <div class="panel-nav-section">💰 FINANZAS</div>
 
             {% if request.user.is_staff or request.user.is_superuser %}
             <a href="{% url 'panel:caja_lista' %}"
@@ -108,8 +143,18 @@
         <header class="panel-topbar">
             <button class="panel-toggle-btn" id="sidebarToggle" aria-label="Toggle sidebar"><i class="fas fa-bars"></i></button>
             <div class="panel-topbar-right">
-                <span class="panel-topbar-user">Hola, <strong>{{ request.user.username }}</strong></span>
-                <a href="{% url 'panel:logout' %}" class="panel-logout-link"><i class="fas fa-right-from-bracket"></i> Salir</a>
+                <a href="{% url 'equipo:inicio' %}" class="panel-home-btn" title="Ir al sitio web" target="_blank">
+                    <i class="fas fa-home"></i>
+                    <span>Sitio Web</span>
+                </a>
+                <form action="{% url 'set_language' %}" method="post" style="display: inline-block; margin-right: 15px;">
+                    {% csrf_token %}
+                    <input name="next" type="hidden" value="{{ request.get_full_path }}">
+                    <button type="submit" name="language" value="es" style="background: {% if LANGUAGE_CODE == 'es' %}#e31e24{% else %}transparent{% endif %}; border: 1px solid #ddd; padding: 5px 10px; cursor: pointer; border-radius: 3px; color: {% if LANGUAGE_CODE == 'es' %}white{% else %}#666{% endif %}; font-size: 12px; margin-right: 5px;">ES</button>
+                    <button type="submit" name="language" value="en" style="background: {% if LANGUAGE_CODE == 'en' %}#e31e24{% else %}transparent{% endif %}; border: 1px solid #ddd; padding: 5px 10px; cursor: pointer; border-radius: 3px; color: {% if LANGUAGE_CODE == 'en' %}white{% else %}#666{% endif %}; font-size: 12px;">EN</button>
+                </form>
+                <span class="panel-topbar-user">{% trans "Hola" %}, <strong>{{ request.user.username }}</strong></span>
+                <a href="{% url 'panel:logout' %}" class="panel-logout-link"><i class="fas fa-right-from-bracket"></i> {% trans "Salir" %}</a>
             </div>
         </header>
 
@@ -163,6 +208,8 @@
     }, 4000);
 })();
 </script>
+
+{% block extra_js %}{% endblock %}
 
 </body>
 </html>

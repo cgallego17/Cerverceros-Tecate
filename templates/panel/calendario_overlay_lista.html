@@ -1,0 +1,77 @@
+{% extends 'panel/base.html' %}
+
+{% block page_title %}Overlay de Calendario{% endblock %}
+
+{% block content %}
+<div class="panel-page-header">
+    <div class="panel-page-title">
+        Overlay de Calendario
+        <small>Administra la imagen del overlay de calendario en la página de inicio</small>
+    </div>
+    <a href="{% url 'panel:calendario_overlay_nuevo' %}" class="panel-btn panel-btn-primary">+ Nuevo</a>
+</div>
+
+{% if overlays %}
+<div class="panel-card">
+    <table class="panel-table">
+        <thead>
+            <tr>
+                <th>Estado</th>
+                <th>Título</th>
+                <th>Imagen</th>
+                <th>URL Destino</th>
+                <th>Orden</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for overlay in overlays %}
+            <tr {% if overlay.activo %}style="background-color: #f0fdf4;"{% endif %}>
+                <td>
+                    {% if overlay.activo %}
+                    <span class="panel-badge panel-badge-success">Activo</span>
+                    {% else %}
+                    <span class="panel-badge panel-badge-secondary">Inactivo</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <strong>{{ overlay.titulo }}</strong>
+                </td>
+                <td>
+                    {% if overlay.imagen %}
+                    <img src="{{ overlay.imagen.url }}" alt="{{ overlay.titulo }}" style="max-width: 150px; max-height: 60px; object-fit: cover; border-radius: 4px;">
+                    {% else %}
+                    <span style="color: #9ca3af;">Sin imagen</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if overlay.url_destino %}
+                    <a href="{{ overlay.url_destino }}" target="_blank" rel="noopener noreferrer" style="color: #2563eb; text-decoration: underline;">
+                        {{ overlay.url_destino|truncatechars:40 }}
+                    </a>
+                    {% else %}
+                    <span style="color: #9ca3af;">—</span>
+                    {% endif %}
+                </td>
+                <td>{{ overlay.orden }}</td>
+                <td class="text-right">
+                    <a href="{% url 'panel:calendario_overlay_editar' overlay.pk %}" class="panel-btn-icon" title="Editar">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <a href="{% url 'panel:calendario_overlay_eliminar' overlay.pk %}" class="panel-btn-icon panel-btn-danger" title="Eliminar">
+                        <i class="fas fa-trash"></i>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="panel-empty-state">
+    <i class="fas fa-calendar"></i>
+    <p>No hay overlays de calendario configurados</p>
+    <a href="{% url 'panel:calendario_overlay_nuevo' %}" class="panel-btn panel-btn-primary">Crear primero</a>
+</div>
+{% endif %}
+{% endblock %}

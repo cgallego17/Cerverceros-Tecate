@@ -1,31 +1,153 @@
 {% extends 'equipo/base.html' %}
-{% load i18n %}
+{% load static i18n %}
 
 {% block title %}{{ noticia.titulo }} - Cerveceros de Tecate{% endblock %}
 
 {% block content %}
-<div class="hero">
-    <div class="hero-content">
-        <h1>{{ noticia.titulo }}</h1>
-        <p>{{ noticia.fecha_publicacion|date:"d/m/Y" }}{% if noticia.autor %} - Por {{ noticia.autor }}{% endif %}</p>
-    </div>
-</div>
 
-<div class="container">
-    <div style="max-width: 800px; margin: 0 auto;">
-        {% if noticia.imagen %}
-        <img src="{{ noticia.imagen.url }}" alt="{{ noticia.titulo }}" style="width: 100%; border-radius: 10px; margin-bottom: 2rem;">
-        {% endif %}
-        
-        <div class="card">
-            <div class="card-content">
-                <div style="line-height: 1.8; font-size: 1.1rem;">
-                    {{ noticia.contenido|linebreaks }}
-                </div>
-                
-                <a href="{% url 'equipo:noticias' %}" class="btn" style="margin-top: 2rem;">{% trans "Volver a Noticias" %}</a>
+{# ─── HERO DE NOTICIA ─────────────────────────────────────── #}
+<section class="news-detail-hero" {% if noticia.imagen %}style="background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('{{ noticia.imagen.url }}');"{% endif %}>
+    <div class="container">
+        <div class="news-detail-hero-content">
+            <div class="news-detail-category">
+                <span class="news-badge">{% trans "NOTICIAS" %}</span>
+                {% if noticia.destacada %}
+                <span class="news-badge news-badge-featured">{% trans "DESTACADA" %}</span>
+                {% endif %}
+            </div>
+            <h1 class="news-detail-title">{{ noticia.titulo }}</h1>
+            <div class="news-detail-meta">
+                <span class="news-meta-item">
+                    <i class="far fa-calendar"></i>
+                    {{ noticia.fecha_publicacion|date:"d \d\e F \d\e Y" }}
+                </span>
+                {% if noticia.autor %}
+                <span class="news-meta-item">
+                    <i class="far fa-user"></i>
+                    {{ noticia.autor }}
+                </span>
+                {% endif %}
             </div>
         </div>
     </div>
-</div>
+</section>
+
+{# ─── CONTENIDO DE NOTICIA ────────────────────────────────── #}
+<section class="news-detail-content">
+    <div class="container">
+        <div class="news-detail-layout">
+            
+            {# Contenido Principal #}
+            <article class="news-detail-main">
+                {% if noticia.imagen %}
+                <div class="news-detail-image">
+                    <img src="{{ noticia.imagen.url }}" alt="{{ noticia.titulo }}">
+                </div>
+                {% endif %}
+                
+                <div class="news-detail-body">
+                    {{ noticia.contenido|linebreaks }}
+                </div>
+                
+                {# Compartir en Redes Sociales #}
+                <div class="news-detail-share">
+                    <h3>{% trans "Compartir esta noticia" %}</h3>
+                    <div class="share-buttons">
+                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" target="_blank" rel="noopener noreferrer" class="share-btn share-facebook">
+                            <i class="fab fa-facebook-f"></i>
+                            <span>Facebook</span>
+                        </a>
+                        <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}&text={{ noticia.titulo }}" target="_blank" rel="noopener noreferrer" class="share-btn share-twitter">
+                            <i class="fab fa-twitter"></i>
+                            <span>Twitter</span>
+                        </a>
+                        <a href="https://wa.me/?text={{ noticia.titulo }}%20{{ request.build_absolute_uri }}" target="_blank" rel="noopener noreferrer" class="share-btn share-whatsapp">
+                            <i class="fab fa-whatsapp"></i>
+                            <span>WhatsApp</span>
+                        </a>
+                        <button onclick="navigator.clipboard.writeText('{{ request.build_absolute_uri }}'); alert('{% trans "Enlace copiado al portapapeles" %}');" class="share-btn share-copy">
+                            <i class="far fa-copy"></i>
+                            <span>{% trans "Copiar enlace" %}</span>
+                        </button>
+                    </div>
+                </div>
+                
+                {# Navegación #}
+                <div class="news-detail-navigation">
+                    <a href="{% url 'equipo:noticias' %}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i>
+                        {% trans "Volver a Noticias" %}
+                    </a>
+                </div>
+            </article>
+            
+            {# Sidebar #}
+            <aside class="news-detail-sidebar">
+                
+                {# Noticias Relacionadas #}
+                <div class="sidebar-widget">
+                    <h3 class="sidebar-widget-title">{% trans "Más Noticias" %}</h3>
+                    <div class="sidebar-news-list">
+                        {% for noticia_relacionada in noticias_relacionadas %}
+                        <a href="{% url 'equipo:noticia_detalle' noticia_relacionada.pk %}" class="sidebar-news-item">
+                            {% if noticia_relacionada.imagen %}
+                            <div class="sidebar-news-image">
+                                <img src="{{ noticia_relacionada.imagen.url }}" alt="{{ noticia_relacionada.titulo }}">
+                            </div>
+                            {% endif %}
+                            <div class="sidebar-news-content">
+                                <h4>{{ noticia_relacionada.titulo|truncatechars:60 }}</h4>
+                                <span class="sidebar-news-date">
+                                    <i class="far fa-calendar"></i>
+                                    {{ noticia_relacionada.fecha_publicacion|date:"d/m/Y" }}
+                                </span>
+                            </div>
+                        </a>
+                        {% empty %}
+                        <p class="sidebar-empty">{% trans "No hay más noticias disponibles" %}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                {# Próximos Partidos #}
+                {% if proximos_partidos %}
+                <div class="sidebar-widget">
+                    <h3 class="sidebar-widget-title">{% trans "Próximos Juegos" %}</h3>
+                    <div class="sidebar-fixtures">
+                        {% for partido in proximos_partidos|slice:":3" %}
+                        <div class="sidebar-fixture">
+                            <div class="sidebar-fixture-date">
+                                {{ partido.fecha|date:"d M" }}
+                            </div>
+                            <div class="sidebar-fixture-teams">
+                                <span>{{ partido.equipo_local.nombre }}</span>
+                                <span class="vs">VS</span>
+                                <span>{{ partido.equipo_visitante.nombre }}</span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <a href="{% url 'equipo:calendario' %}" class="sidebar-link">
+                        {% trans "Ver calendario completo" %}
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+                {% endif %}
+                
+                {# Comprar Boletos #}
+                <div class="sidebar-widget sidebar-widget-cta">
+                    <h3 class="sidebar-widget-title">{% trans "Compra tus Boletos" %}</h3>
+                    <p>{% trans "No te pierdas ningún partido de los Cerveceros" %}</p>
+                    <a href="https://arema.mx/e/17890" class="btn" target="_blank" rel="noopener noreferrer">
+                        <i class="fas fa-ticket-alt"></i>
+                        {% trans "Comprar Boletos" %}
+                    </a>
+                </div>
+                
+            </aside>
+            
+        </div>
+    </div>
+</section>
+
 {% endblock %}

@@ -1,0 +1,80 @@
+{% extends 'panel/base.html' %}
+
+{% block page_title %}Juegos{% endblock %}
+
+{% block content %}
+<div class="panel-page-header">
+    <div class="panel-page-title">
+        Juegos
+        <small>Administra los juegos y marcadores</small>
+    </div>
+    <a href="{% url 'panel:partido_nuevo' %}" class="panel-btn panel-btn-primary">+ Nuevo Juego</a>
+</div>
+
+{% if partidos %}
+<div class="panel-card">
+    <table class="panel-table">
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Equipos</th>
+                <th>Marcador</th>
+                <th>Estado</th>
+                <th>Estadio</th>
+                <th class="text-right">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for partido in partidos %}
+            <tr {% if partido.destacado %}style="background-color: #fef3c7;"{% endif %}>
+                <td>
+                    <strong>{{ partido.fecha|date:"d/m/Y" }}</strong><br>
+                    <small style="color: #6b7280;">{{ partido.fecha|date:"H:i" }} hrs</small>
+                    {% if partido.destacado %}
+                    <br><span class="panel-badge panel-badge-warning" style="margin-top: 0.25rem;"><i class="fas fa-star"></i> Destacado</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <div style="display: flex; flex-direction: column; gap: 0.25rem;">
+                        <div><strong>{{ partido.equipo_local.nombre }}</strong> (Local)</div>
+                        <div>{{ partido.equipo_visitante.nombre }} (Visitante)</div>
+                    </div>
+                </td>
+                <td>
+                    <strong style="font-size: 1.1rem;">{{ partido.carreras_local }} - {{ partido.carreras_visitante }}</strong>
+                </td>
+                <td>
+                    {% if partido.estado == 'programado' %}
+                    <span class="panel-badge panel-badge-info">Programado</span>
+                    {% elif partido.estado == 'en_curso' %}
+                    <span class="panel-badge panel-badge-warning">En Curso</span>
+                    {% elif partido.estado == 'finalizado' %}
+                    <span class="panel-badge panel-badge-success">Finalizado</span>
+                    {% elif partido.estado == 'pospuesto' %}
+                    <span class="panel-badge panel-badge-secondary">Pospuesto</span>
+                    {% elif partido.estado == 'cancelado' %}
+                    <span class="panel-badge panel-badge-danger">Cancelado</span>
+                    {% endif %}
+                </td>
+                <td>{{ partido.estadio|default:"—" }}</td>
+                <td class="text-right">
+                    <a href="{% url 'panel:partido_editar' partido.pk %}" class="panel-btn-icon" title="Editar">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <a href="{% url 'panel:partido_eliminar' partido.pk %}" class="panel-btn-icon panel-btn-danger" title="Eliminar">
+                        <i class="fas fa-trash"></i>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="panel-empty-state">
+    <i class="fas fa-baseball"></i>
+    <p>No hay juegos registrados</p>
+    <a href="{% url 'panel:partido_nuevo' %}" class="panel-btn panel-btn-primary">Crear primer juego</a>
+</div>
+{% endif %}
+{% endblock %}

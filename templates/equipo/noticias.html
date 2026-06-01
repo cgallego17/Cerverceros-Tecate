@@ -1,36 +1,89 @@
 {% extends 'equipo/base.html' %}
-{% load i18n %}
+{% load static i18n %}
 
 {% block title %}Noticias - Cerveceros de Tecate{% endblock %}
 
 {% block content %}
-<div class="hero">
-    <div class="hero-content">
-        <h1>{% trans "Noticias" %}</h1>
-        <p>{% trans "Manténte al día con las últimas novedades del equipo" %}</p>
-    </div>
-</div>
 
-<div class="container">
-    <div class="card-grid">
-        {% for noticia in noticias %}
-        <div class="card {% if noticia.destacada %}noticia-destacada{% endif %}">
-            {% if noticia.imagen %}
-            <img src="{{ noticia.imagen.url }}" alt="{{ noticia.titulo }}" class="card-image">
-            {% endif %}
-            <div class="card-content">
-                <h3 class="card-title">{{ noticia.titulo }}</h3>
-                <p class="card-text" style="color: #999; font-size: 0.9rem;">
-                    {{ noticia.fecha_publicacion|date:"d/m/Y" }}
-                    {% if noticia.autor %} - Por {{ noticia.autor }}{% endif %}
-                </p>
-                <p class="card-text">{{ noticia.contenido|truncatewords:30 }}</p>
-                <a href="{% url 'equipo:noticia_detalle' noticia.pk %}" class="btn">{% trans "Leer más" %}</a>
-            </div>
+{# ─── PAGE HEADER ─────────────────────────────────────────── #}
+<section class="page-header-section">
+    <div class="page-header-overlay"></div>
+    <div class="page-header-content">
+        <div class="page-header-breadcrumb">
+            <a href="{% url 'equipo:inicio' %}">{% trans "INICIO" %}</a>
+            <span class="breadcrumb-separator">/</span>
+            <span>{% trans "NOTICIAS" %}</span>
         </div>
-        {% empty %}
-        <p>{% trans "No hay noticias disponibles en este momento." %}</p>
-        {% endfor %}
+        <h1 class="page-header-title">{% trans "NOTICIAS" %}</h1>
+        <p class="page-header-description">{% trans "Manténte al día con las últimas novedades del equipo" %}</p>
+        <div class="page-header-decoration">
+            <i class="fas fa-newspaper"></i>
+        </div>
     </div>
-</div>
+</section>
+
+{# ─── NOTICIAS GRID (ARCHIVO) ────────────────────────────── #}
+<section class="news-archive-section">
+    <div class="container">
+        <div class="news-archive-grid">
+            {% for noticia in noticias %}
+            <article class="news-archive-card {% if noticia.destacada %}is-featured{% endif %}">
+                <a href="{% url 'equipo:noticia_detalle' noticia.pk %}" class="news-archive-media" aria-label="{{ noticia.titulo }}">
+                    {% if noticia.imagen_src %}
+                        <img src="{{ noticia.imagen_src }}" alt="{{ noticia.titulo }}" loading="lazy">
+                    {% else %}
+                        <div class="news-archive-placeholder"><i class="fas fa-newspaper"></i></div>
+                    {% endif %}
+                    {% if noticia.destacada %}
+                    <span class="news-archive-badge"><i class="fas fa-star"></i> {% trans "Destacada" %}</span>
+                    {% endif %}
+                </a>
+                <div class="news-archive-content">
+                    <div class="news-archive-meta">
+                        <span class="news-archive-date"><i class="fas fa-calendar-alt"></i> {{ noticia.fecha_publicacion|date:"d/m/Y" }}</span>
+                        {% if noticia.autor %}
+                        <span class="news-archive-author"><i class="fas fa-user"></i> {{ noticia.autor }}</span>
+                        {% endif %}
+                    </div>
+                    <h3 class="news-archive-title">
+                        <a href="{% url 'equipo:noticia_detalle' noticia.pk %}" aria-label="{{ noticia.titulo }}">{{ noticia.titulo }}</a>
+                    </h3>
+                    <p class="news-archive-excerpt">{{ noticia.contenido|striptags|truncatewords:28 }}</p>
+                    <div class="news-archive-actions">
+                        <a href="{% url 'equipo:noticia_detalle' noticia.pk %}" class="btn btn-outline">{% trans "Leer más" %} <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </article>
+            {% empty %}
+            <div class="news-empty">
+                <i class="fas fa-newspaper"></i>
+                <h3>{% trans "No hay noticias disponibles" %}</h3>
+                <p>{% trans "Las últimas noticias del equipo aparecerán aquí." %}</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% if is_paginated %}
+        <nav class="news-archive-pagination" aria-label="Paginación de noticias">
+            <ul class="pagination-list">
+                {% if page_obj.has_previous %}
+                <li><a class="page-link prev" href="?page={{ page_obj.previous_page_number }}" aria-label="Anterior">«</a></li>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                    {% if num == page_obj.number %}
+                        <li><span class="page-link current" aria-current="page">{{ num }}</span></li>
+                    {% elif num >= page_obj.number|add:-2 and num <= page_obj.number|add:2 %}
+                        <li><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                <li><a class="page-link next" href="?page={{ page_obj.next_page_number }}" aria-label="Siguiente">»</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+    </section>
+
 {% endblock %}

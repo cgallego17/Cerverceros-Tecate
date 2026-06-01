@@ -1,58 +1,192 @@
 {% extends 'equipo/base.html' %}
-{% load i18n %}
+{% load static i18n %}
 
 {% block title %}Calendario - Cerveceros de Tecate{% endblock %}
 
 {% block content %}
-<div class="hero">
-    <div class="hero-content">
-        <h1>{% trans "Calendario de Partidos" %}</h1>
-        <p>{% trans "Todos los partidos de la temporada" %}</p>
+
+{# ─── PAGE HEADER ─────────────────────────────────────────── #}
+<section class="page-header-section">
+    <div class="page-header-overlay"></div>
+    <div class="page-header-content">
+        <div class="page-header-breadcrumb">
+            <a href="{% url 'equipo:inicio' %}">{% trans "INICIO" %}</a>
+            <span class="breadcrumb-separator">/</span>
+            <span>{% trans "CALENDARIO" %}</span>
+        </div>
+        <h1 class="page-header-title">{% trans "CALENDARIO" %}</h1>
+        <p class="page-header-description">{% trans "Todos los partidos de la temporada" %}</p>
+        <div class="page-header-decoration">
+            <i class="fas fa-calendar-alt"></i>
+        </div>
+    </div>
+</section>
+
+{# ─── CALENDARIO MENSUAL ──────────────────────────────────── #}
+<section class="calendar-section">
+    <div class="container">
+        {# Navegación del calendario #}
+        <div class="calendar-navigation">
+            <a href="?mes={{ mes_anterior.month }}&anio={{ mes_anterior.year }}" class="calendar-nav-btn">
+                <i class="fas fa-chevron-left"></i>
+                <span>{% trans "Anterior" %}</span>
+            </a>
+            <h2 class="calendar-month-title">{{ mes_nombre }} {{ anio }}</h2>
+            <a href="?mes={{ mes_siguiente.month }}&anio={{ mes_siguiente.year }}" class="calendar-nav-btn">
+                <span>{% trans "Siguiente" %}</span>
+                <i class="fas fa-chevron-right"></i>
+            </a>
+        </div>
+
+        {# Grid del calendario #}
+        <div class="calendar-grid">
+            {# Encabezados de días de la semana #}
+            <div class="calendar-header">
+                <div class="calendar-day-name">DOM</div>
+                <div class="calendar-day-name">LUN</div>
+                <div class="calendar-day-name">MAR</div>
+                <div class="calendar-day-name">MIÉ</div>
+                <div class="calendar-day-name">JUE</div>
+                <div class="calendar-day-name">VIE</div>
+                <div class="calendar-day-name">SÁB</div>
+            </div>
+
+            {# Días del mes #}
+            <div class="calendar-days">
+                {% for semana in calendario %}
+                    {% for dia in semana %}
+                        {% if dia == 0 %}
+                            <div class="calendar-day calendar-day-empty"></div>
+                        {% else %}
+                            <div class="calendar-day {% if dia == hoy.day and mes == hoy.month and anio == hoy.year %}calendar-day-today{% endif %}">
+                                <div class="calendar-day-number">{{ dia }}</div>
+                                
+                                {# Partidos del día #}
+                                {% for key, partidos in partidos_por_dia.items %}
+                                    {% if key == dia %}
+                                        <div class="calendar-day-games">
+                                            {% for p in partidos %}
+                                                <div class="calendar-game {% if p.estado == 'finalizado' %}calendar-game-finished{% endif %}" 
+                                                     onclick="openGameModal(this)"
+                                                     data-local="{{ p.equipo_local.nombre }}"
+                                                     data-visitante="{{ p.equipo_visitante.nombre }}"
+                                                     data-local-logo="{% if p.equipo_local.logo %}{{ p.equipo_local.logo.url }}{% endif %}"
+                                                     data-visitante-logo="{% if p.equipo_visitante.logo %}{{ p.equipo_visitante.logo.url }}{% endif %}"
+                                                     data-fecha="{{ p.fecha|date:'d/m/Y H:i' }}"
+                                                     data-estadio="{{ p.estadio|default:'' }}"
+                                                     data-estado="{{ p.get_estado_display }}"
+                                                     data-carreras-local="{{ p.carreras_local|default:'0' }}"
+                                                     data-carreras-visitante="{{ p.carreras_visitante|default:'0' }}"
+                                                     style="cursor: pointer;">
+                                                    <div class="calendar-game-teams">
+                                                        <div class="calendar-team">
+                                                            {% if p.equipo_local.logo %}
+                                                                <img src="{{ p.equipo_local.logo.url }}" alt="{{ p.equipo_local.nombre }}" class="calendar-team-logo">
+                                                            {% else %}
+                                                                <div class="calendar-team-logo-placeholder">
+                                                                    {{ p.equipo_local.nombre|slice:":3"|upper }}
+                                                                </div>
+                                                            {% endif %}
+                                                            {% if p.estado == 'finalizado' %}
+                                                                <span class="calendar-score">{{ p.carreras_local }}</span>
+                                                            {% endif %}
+                                                        </div>
+                                                        <span class="calendar-vs">{% if p.estado == 'finalizado' %}-{% else %}vs{% endif %}</span>
+                                                        <div class="calendar-team">
+                                                            {% if p.estado == 'finalizado' %}
+                                                                <span class="calendar-score">{{ p.carreras_visitante }}</span>
+                                                            {% endif %}
+                                                            {% if p.equipo_visitante.logo %}
+                                                                <img src="{{ p.equipo_visitante.logo.url }}" alt="{{ p.equipo_visitante.nombre }}" class="calendar-team-logo">
+                                                            {% else %}
+                                                                <div class="calendar-team-logo-placeholder">
+                                                                    {{ p.equipo_visitante.nombre|slice:":3"|upper }}
+                                                                </div>
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+                                                    {% if p.estado != 'finalizado' %}
+                                                        <div class="calendar-game-time">
+                                                            {{ p.fecha|date:"H:i" }}
+                                                        </div>
+                                                    {% else %}
+                                                        <div class="calendar-game-final">FINAL</div>
+                                                    {% endif %}
+                                                    {% if p.estado == 'en_curso' %}
+                                                        <span class="calendar-game-live">EN VIVO</span>
+                                                    {% endif %}
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        </div>
+
+        {# Leyenda #}
+        <div class="calendar-legend">
+            <div class="calendar-legend-item">
+                <div class="calendar-legend-box calendar-legend-today"></div>
+                <span>Hoy</span>
+            </div>
+            <div class="calendar-legend-item">
+                <div class="calendar-legend-box calendar-legend-game"></div>
+                <span>Partido programado</span>
+            </div>
+            <div class="calendar-legend-item">
+                <span class="calendar-game-live" style="position: static; margin: 0;">EN VIVO</span>
+                <span>Partido en curso</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+{# ─── MODAL DE DETALLES DEL PARTIDO ──────────────────────── #}
+<div id="gameModal" class="game-modal">
+    <div class="game-modal-overlay" onclick="closeGameModal()"></div>
+    <div class="game-modal-content">
+        <button class="game-modal-close" onclick="closeGameModal()">
+            <i class="fas fa-times"></i>
+        </button>
+        
+        <div class="game-modal-header">
+            <h2 class="game-modal-title">Detalles del Partido</h2>
+            <span class="game-modal-status" id="modalStatus"></span>
+        </div>
+        
+        <div class="game-modal-body">
+            <div class="game-modal-teams">
+                <div class="game-modal-team">
+                    <div class="game-modal-team-logo" id="modalLocalLogo"></div>
+                    <h3 class="game-modal-team-name" id="modalLocalName"></h3>
+                    <div class="game-modal-team-score" id="modalLocalScore"></div>
+                </div>
+                
+                <div class="game-modal-vs">VS</div>
+                
+                <div class="game-modal-team">
+                    <div class="game-modal-team-logo" id="modalVisitanteLogo"></div>
+                    <h3 class="game-modal-team-name" id="modalVisitanteName"></h3>
+                    <div class="game-modal-team-score" id="modalVisitanteScore"></div>
+                </div>
+            </div>
+            
+            <div class="game-modal-info">
+                <div class="game-modal-info-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span id="modalFecha"></span>
+                </div>
+                <div class="game-modal-info-item" id="modalEstadioContainer">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span id="modalEstadio"></span>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
-<div class="container">
-    <h2 class="section-title">{% trans "Próximos Partidos" %}</h2>
-    {% for partido in partidos_futuros %}
-    <div class="partido-card">
-        <div class="equipo">
-            <p class="equipo-nombre">{{ partido.equipo_local.nombre }}</p>
-        </div>
-        <div class="marcador">
-            <span class="estado-badge estado-{{ partido.estado }}">{{ partido.get_estado_display }}</span>
-            <p class="fecha-partido">{{ partido.fecha|date:"d/m/Y H:i" }}</p>
-            {% if partido.estadio %}
-            <p class="fecha-partido">{{ partido.estadio }}</p>
-            {% endif %}
-        </div>
-        <div class="equipo">
-            <p class="equipo-nombre">{{ partido.equipo_visitante.nombre }}</p>
-        </div>
-    </div>
-    {% empty %}
-    <p>{% trans "No hay partidos programados próximamente." %}</p>
-    {% endfor %}
-
-    <h2 class="section-title" style="margin-top: 3rem;">{% trans "Partidos Pasados" %}</h2>
-    {% for partido in partidos_pasados %}
-    <div class="partido-card">
-        <div class="equipo">
-            <p class="equipo-nombre">{{ partido.equipo_local.nombre }}</p>
-        </div>
-        <div class="marcador">
-            {% if partido.estado == 'finalizado' %}
-            {{ partido.carreras_local }} - {{ partido.carreras_visitante }}
-            {% else %}
-            <span class="estado-badge estado-{{ partido.estado }}">{{ partido.get_estado_display }}</span>
-            {% endif %}
-            <p class="fecha-partido">{{ partido.fecha|date:"d/m/Y" }}</p>
-        </div>
-        <div class="equipo">
-            <p class="equipo-nombre">{{ partido.equipo_visitante.nombre }}</p>
-        </div>
-    </div>
-    {% empty %}
-    <p>{% trans "No hay partidos pasados registrados." %}</p>
-    {% endfor %}
-</div>
 {% endblock %}
