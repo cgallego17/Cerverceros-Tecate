@@ -5375,32 +5375,44 @@ tbody tr:hover {
    SCROLL REVEAL ANIMATIONS
    ═══════════════════════════════════════════════════════════ */
 
+/* Fade + slide hacia arriba */
 .sr {
     opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
-                transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+    transform: translateY(65px);
+    transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
 }
+.sr.sr-visible { opacity: 1; transform: translateY(0); }
 
-.sr.sr-visible {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.sr-scale {
+/* Fade + slide desde la izquierda */
+.sr-left {
     opacity: 0;
-    transform: scale(0.96);
-    transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
-                transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+    transform: translateX(-80px);
+    transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
 }
+.sr-left.sr-visible { opacity: 1; transform: translateX(0); }
 
-.sr-scale.sr-visible {
-    opacity: 1;
-    transform: scale(1);
+/* Fade + slide desde la derecha */
+.sr-right {
+    opacity: 0;
+    transform: translateX(80px);
+    transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
 }
+.sr-right.sr-visible { opacity: 1; transform: translateX(0); }
+
+/* Fade + zoom desde pequeño */
+.sr-zoom {
+    opacity: 0;
+    transform: scale(0.78) translateY(30px);
+    transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.sr-zoom.sr-visible { opacity: 1; transform: scale(1) translateY(0); }
 
 @media (prefers-reduced-motion: reduce) {
-    .sr, .sr-scale {
+    .sr, .sr-left, .sr-right, .sr-zoom {
         opacity: 1;
         transform: none;
         transition: none;

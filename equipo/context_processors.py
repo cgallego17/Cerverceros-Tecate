@@ -112,19 +112,38 @@ def instagram_footer_items(request):
     if not getattr(settings, 'INSTAGRAM_RSS_ENABLED', True):
         return {'footer_instagram_items': []}
 
-    items = fetch_instagram_rss_items(max_items=6)
-    if not items:
-        items = [
-            {'imagen_src': '/static/images/ig-footer-1.jpg', 'enlace': 'https://www.instagram.com/cervecerosdtecate/'},
-            {'imagen_src': '/static/images/ig-footer-2.jpg', 'enlace': 'https://www.instagram.com/cervecerosdtecate/'},
-            {'imagen_src': '/static/images/ig-footer-3.jpg', 'enlace': 'https://www.instagram.com/cervecerosdtecate/'},
-            {'imagen_src': '/static/images/ig-footer-4.jpg', 'enlace': 'https://www.instagram.com/cervecerosdtecate/'},
-            {'imagen_src': '/static/images/ig-footer-5.jpg', 'enlace': 'https://www.instagram.com/cervecerosdtecate/'},
-            {'imagen_src': '/static/images/ig-footer-6.jpg', 'enlace': 'https://www.instagram.com/cervecerosdtecate/'},
-        ]
-    return {
-        'footer_instagram_items': items,
-    }
+    IG_LINK = 'https://www.instagram.com/club_cervecerostecate/'
+    TARGET = 6
+
+    items = fetch_instagram_rss_items(max_items=TARGET)
+
+    # Completar con imágenes del modelo ImagenInstagram si el RSS no alcanza 6
+    if len(items) < TARGET:
+        from .models import ImagenInstagram
+        seen = {i['imagen_src'] for i in items}
+        for db_item in ImagenInstagram.objects.filter(activo=True).order_by('orden'):
+            if len(items) >= TARGET:
+                break
+            src = db_item.imagen_src
+            if src and src not in seen:
+                items.append({'imagen_src': src, 'enlace': db_item.enlace or IG_LINK})
+                seen.add(src)
+
+    # Si aún faltan, usar placeholders estáticos
+    static_fallbacks = [
+        {'imagen_src': '/static/images/ig-footer-1.jpg', 'enlace': IG_LINK},
+        {'imagen_src': '/static/images/ig-footer-2.jpg', 'enlace': IG_LINK},
+        {'imagen_src': '/static/images/ig-footer-3.jpg', 'enlace': IG_LINK},
+        {'imagen_src': '/static/images/ig-footer-4.jpg', 'enlace': IG_LINK},
+        {'imagen_src': '/static/images/ig-footer-5.jpg', 'enlace': IG_LINK},
+        {'imagen_src': '/static/images/ig-footer-6.jpg', 'enlace': IG_LINK},
+    ]
+    idx = 0
+    while len(items) < TARGET:
+        items.append(static_fallbacks[idx % len(static_fallbacks)])
+        idx += 1
+
+    return {'footer_instagram_items': items[:TARGET]}
 
 
 def footer_fixtures(request):
