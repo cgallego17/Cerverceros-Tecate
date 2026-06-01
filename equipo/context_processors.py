@@ -11,6 +11,8 @@ from django.utils import timezone
 
 from .models import Partido
 
+
+# ==================== CONFIGURACIÓN ====================
 RSS_URL = 'https://rss.app/feeds/hS2my7AUGemCdQkI.xml'
 RSS_CACHE_TTL = 300  # segundos
 
@@ -20,6 +22,7 @@ _rss_cache = {
 }
 
 
+# ==================== FUNCIONES DE DESCARGA ====================
 def download_instagram_image(image_url):
     """Descarga imagen de Instagram y la guarda localmente"""
     if not image_url:
@@ -57,6 +60,7 @@ def download_instagram_image(image_url):
         return f'/static/images/instagram/{filename}'
     
     except Exception:
+# ==================== FUNCIONES DE RSS ====================
         return None
 
 
@@ -97,6 +101,7 @@ def fetch_instagram_rss_items(rss_url=None, max_items=6):
     _rss_cache['items'] = items
     return items[:max_items]
 
+# ==================== CONTEXT PROCESSORS ====================
 
 def instagram_footer_items(request):
     if not getattr(settings, 'INSTAGRAM_RSS_ENABLED', True):
