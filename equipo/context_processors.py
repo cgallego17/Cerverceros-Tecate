@@ -85,7 +85,12 @@ def fetch_instagram_rss_items(rss_url=None, max_items=6):
         return []
 
     items = []
-    for item in root.findall('.//item')[:max_items]:
+    # Buscar más items del RSS para asegurar obtener max_items con imagen
+    all_items = root.findall('.//item')
+    for item in all_items:
+        if len(items) >= max_items:
+            break
+            
         enlace = item.findtext('link') or '#'
         description = item.findtext('description') or ''
         match = re.search(r'<img[^>]+src=["\']([^"\']+)["\']', description)
