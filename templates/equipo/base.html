@@ -522,5 +522,64 @@
             }
         });
     </script>
+
+    <script>
+        // Scroll Reveal — IntersectionObserver, sin librerías
+        (function () {
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+            var STAGGER = 0.09; // segundos entre cada hijo del mismo contenedor
+
+            // Elementos que se animan con fade+slide hacia arriba
+            var fadeSelectors = [
+                '.scores-header',
+                '.score-card',
+                '.news-grid-section .news-item',
+                '.features-banner-section .features-content',
+                '.accordion-item',
+                '.footer-column',
+                '.footer-brand-inner',
+                '.featured-player-content',
+                '.skills-grid',
+            ];
+
+            // Elementos que se animan con escala suave
+            var scaleSelectors = [
+                '.calendario-overlay-section',
+                '.instagram-gallery-section .instagram-item',
+            ];
+
+            var observer = new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('sr-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+            function applyReveal(selectors, cls) {
+                selectors.forEach(function (selector) {
+                    // Agrupar por padre para aplicar stagger por contenedor
+                    var byParent = new Map();
+                    document.querySelectorAll(selector).forEach(function (el) {
+                        var p = el.parentElement;
+                        if (!byParent.has(p)) byParent.set(p, []);
+                        byParent.get(p).push(el);
+                    });
+                    byParent.forEach(function (children) {
+                        children.forEach(function (el, i) {
+                            el.classList.add(cls);
+                            el.style.transitionDelay = Math.min(i * STAGGER, 0.45) + 's';
+                            observer.observe(el);
+                        });
+                    });
+                });
+            }
+
+            applyReveal(fadeSelectors, 'sr');
+            applyReveal(scaleSelectors, 'sr-scale');
+        }());
+    </script>
 </body>
 </html>
